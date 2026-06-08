@@ -65,10 +65,10 @@ CREATE POLICY "Admin View" ON recovery_requests FOR SELECT TO authenticated USIN
 ```
 
 ### `app_settings`
-Stores dynamic application configuration settings.
+Stores dynamic application configuration settings (hero images, trust indicators).
 
 ```sql
-CREATE TABLE app_settings (
+CREATE TABLE IF NOT EXISTS app_settings (
   key text PRIMARY KEY,
   value text,
   updated_at timestamptz DEFAULT now()
@@ -88,6 +88,7 @@ CREATE TABLE articles (
   created_at timestamptz DEFAULT now(),
   title text NOT NULL,
   description text,
+  content text,
   tag text,
   image_url text,
   slug text UNIQUE,
@@ -97,21 +98,15 @@ CREATE TABLE articles (
 ALTER TABLE articles ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Public Read Articles" ON articles FOR SELECT TO public USING (is_published = true);
 CREATE POLICY "Admin Manage Articles" ON articles FOR ALL TO authenticated USING (true);
-
--- Initial Content
-INSERT INTO articles (title, description, tag, image_url, slug)
-VALUES 
-('How to Secure Your Crypto Wallet Against Social Engineering', 'Learn the latest tactics hackers use and how to build a robust defense.', 'Security', 'https://picsum.photos/seed/jlmoons-blog1/400/300', 'secure-wallet-social-engineering'),
-('The Anatomy of a Hardware Wallet Forensic Recovery', 'A deep dive into the technical process of extracting data from damaged devices.', 'Recovery', 'https://picsum.photos/seed/jlmoons-blog2/400/300', 'hardware-wallet-forensics'),
-('Understanding Seed Phrases: Why Your Backup Might Be At Risk', 'Common mistakes users make when storing mnemonic phrases.', 'Education', 'https://picsum.photos/seed/jlmoons-blog3/400/300', 'seed-phrase-risks');
 ```
 
-## Supabase Storage
+## Storage
 
 ### `assets` Bucket
 Used for images. Ensure the bucket is **Public**.
 
 ```sql
+-- Required Storage Policies
 CREATE POLICY "Admin Assets Manage" ON storage.objects FOR ALL TO authenticated USING (bucket_id = 'assets');
 CREATE POLICY "Public Assets View" ON storage.objects FOR SELECT TO public USING (bucket_id = 'assets');
 ```

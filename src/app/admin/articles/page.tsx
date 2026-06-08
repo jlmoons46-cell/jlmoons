@@ -6,9 +6,10 @@ import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Plus, Trash2, Edit2, Loader2, RefreshCcw, Save, X, BookOpen, ImageIcon, Upload } from 'lucide-react'
+import { Plus, Trash2, Edit2, Loader2, RefreshCcw, Save, X, BookOpen, ImageIcon, Upload, FileText } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import Image from 'next/image'
 
@@ -16,6 +17,7 @@ type Article = {
   id: string
   title: string
   description: string
+  content: string
   tag: string
   image_url: string
   slug: string
@@ -51,11 +53,12 @@ export default function ArticlesPage() {
 
     setIsSaving(true)
     try {
+      const slug = isEditing.slug || isEditing.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
       const { error } = await supabase
         .from('articles')
         .upsert({
           ...isEditing,
-          slug: isEditing.slug || isEditing.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
+          slug
         })
 
       if (error) throw error
@@ -120,7 +123,7 @@ export default function ArticlesPage() {
             <RefreshCcw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
             Sync
           </Button>
-          <Button className="gold-glow" onClick={() => setIsEditing({ id: '', title: '', description: '', tag: 'Security', image_url: '', slug: '', is_published: true })}>
+          <Button className="gold-glow" onClick={() => setIsEditing({ id: '', title: '', description: '', content: '', tag: 'Security', image_url: '', slug: '', is_published: true })}>
             <Plus className="w-4 h-4 mr-2" />
             New Article
           </Button>
@@ -204,6 +207,17 @@ export default function ArticlesPage() {
                      className="bg-background/50 text-xs"
                    />
                 </div>
+              </div>
+
+              <div className="space-y-2 mt-6">
+                <Label className="text-xs uppercase font-bold tracking-widest text-muted-foreground">Full Intelligence Content</Label>
+                <Textarea 
+                  value={isEditing.content} 
+                  onChange={e => setIsEditing({...isEditing, content: e.target.value})} 
+                  placeholder="The complete article text goes here..."
+                  className="bg-background/50 min-h-[300px] leading-relaxed text-base"
+                  required
+                />
               </div>
             </CardContent>
             <CardFooter className="flex justify-end gap-3 bg-white/5 border-t border-white/5 p-6">
