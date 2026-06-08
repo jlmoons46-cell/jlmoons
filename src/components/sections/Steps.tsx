@@ -1,25 +1,25 @@
-import { MessageSquare, Search, Cpu, ShieldCheck } from 'lucide-react'
+import { ClipboardList, Search, Binary, ShieldCheck } from 'lucide-react'
 
 const steps = [
   {
-    icon: MessageSquare,
-    title: "Private Consultation",
-    description: "Discuss your situation with a recovery specialist.",
+    icon: ClipboardList,
+    title: "Submit Case Details",
+    description: "Provide wallet information and recovery circumstances to begin your intake.",
   },
   {
     icon: Search,
-    title: "Technical Verification",
-    description: "We assess evidence, wallet data, and recovery pathways.",
+    title: "Technical Feasibility Review",
+    description: "We analyze the data to determine potential recovery pathways and technical risks.",
   },
   {
-    icon: Cpu,
-    title: "Specialist Recovery",
-    description: "Our team applies advanced forensic and blockchain recovery techniques.",
+    icon: Binary,
+    title: "Recovery Strategy",
+    description: "A tailored recovery plan is prepared based on our detailed forensic findings.",
   },
   {
     icon: ShieldCheck,
     title: "Secure Resolution",
-    description: "Access is restored and next-step security recommendations are provided.",
+    description: "Recovered access or final findings are delivered through our secure channels.",
   },
 ]
 
@@ -30,7 +30,7 @@ export function Steps() {
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-sm font-bold tracking-[0.2em] text-secondary uppercase mb-4">Our Process</h2>
           <h3 className="text-4xl lg:text-5xl font-bold mb-6">Recovery in 4 Simple Steps</h3>
-          <p className="text-muted-foreground text-lg">We've streamlined the complex world of cryptographic recovery into a transparent, guided journey.</p>
+          <p className="text-muted-foreground text-lg">We have streamlined the complex world of cryptographic recovery into a transparent, guided journey focused on technical accuracy and security.</p>
         </div>
 
         <div className="relative">
