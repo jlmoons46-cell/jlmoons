@@ -87,7 +87,7 @@ export function Hero() {
 
         <div className="mt-24 pt-12 border-t border-white/5 text-center">
           <p className="text-muted-foreground text-sm md:text-base max-w-3xl mx-auto leading-relaxed italic">
-            "Every recovery case is unique. We prioritize forensic accuracy, security, and transparency at every stage of the process. Our assessments are based on technical evidence—not assumptions—allowing clients to make informed decisions with confidence."
+            "Every recovery case is unique. We prioritize forensic accuracy, security, and transparency at every stage of the process. Our assessments are based on technical evidence, not assumptions, allowing clients to make informed decisions with confidence."
           </p>
         </div>
       </div>
