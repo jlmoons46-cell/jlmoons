@@ -58,7 +58,8 @@ export default function ArticlesPage() {
         .from('articles')
         .upsert({
           ...isEditing,
-          slug
+          slug,
+          content: isEditing.content || '' // Ensure we don't save nulls
         })
 
       if (error) throw error
@@ -145,7 +146,7 @@ export default function ArticlesPage() {
                   <div className="space-y-2">
                     <Label className="text-xs uppercase font-bold tracking-widest text-muted-foreground">Intelligence Title</Label>
                     <Input 
-                      value={isEditing.title} 
+                      value={isEditing.title || ''} 
                       onChange={e => setIsEditing({...isEditing, title: e.target.value})} 
                       placeholder="e.g. The Future of Blockchain Security"
                       className="bg-background/50 h-12"
@@ -155,7 +156,7 @@ export default function ArticlesPage() {
                   <div className="space-y-2">
                     <Label className="text-xs uppercase font-bold tracking-widest text-muted-foreground">Forensic Category (Tag)</Label>
                     <Input 
-                      value={isEditing.tag} 
+                      value={isEditing.tag || ''} 
                       onChange={e => setIsEditing({...isEditing, tag: e.target.value})} 
                       placeholder="Security, Recovery, Education"
                       className="bg-background/50 h-12"
@@ -165,7 +166,7 @@ export default function ArticlesPage() {
                   <div className="space-y-2">
                     <Label className="text-xs uppercase font-bold tracking-widest text-muted-foreground">Executive Summary</Label>
                     <Input 
-                      value={isEditing.description} 
+                      value={isEditing.description || ''} 
                       onChange={e => setIsEditing({...isEditing, description: e.target.value})} 
                       placeholder="Brief overview for the card..."
                       className="bg-background/50 h-12"
@@ -201,7 +202,7 @@ export default function ArticlesPage() {
                       )}
                    </div>
                    <Input 
-                     value={isEditing.image_url} 
+                     value={isEditing.image_url || ''} 
                      onChange={e => setIsEditing({...isEditing, image_url: e.target.value})} 
                      placeholder="Direct URL (optional)"
                      className="bg-background/50 text-xs"
@@ -212,7 +213,7 @@ export default function ArticlesPage() {
               <div className="space-y-2 mt-6">
                 <Label className="text-xs uppercase font-bold tracking-widest text-muted-foreground">Full Intelligence Content</Label>
                 <Textarea 
-                  value={isEditing.content} 
+                  value={isEditing.content || ''} 
                   onChange={e => setIsEditing({...isEditing, content: e.target.value})} 
                   placeholder="The complete article text goes here..."
                   className="bg-background/50 min-h-[300px] leading-relaxed text-base"
@@ -253,7 +254,7 @@ export default function ArticlesPage() {
                   <TableCell className="p-6">
                     <div className="flex items-center gap-4">
                       <div className="w-16 h-10 relative rounded-lg overflow-hidden border border-white/10 shrink-0">
-                        <Image src={article.image_url} alt={article.title} fill className="object-cover" unoptimized />
+                        {article.image_url && <Image src={article.image_url} alt={article.title} fill className="object-cover" unoptimized />}
                       </div>
                       <div className="flex flex-col">
                         <span className="font-bold text-foreground">{article.title}</span>
