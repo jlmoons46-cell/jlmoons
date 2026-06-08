@@ -25,13 +25,18 @@ export function Hero() {
               When access is lost, funds are misplaced, or digital assets become inaccessible, our blockchain investigators and recovery specialists conduct a comprehensive forensic assessment to identify the safest and most effective recovery path. Confidential, evidence-driven, and handled by experts.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="h-14 px-8 text-lg font-semibold gold-glow" asChild>
-                <Link href="#recovery-form">Start Your Confidential Recovery Assessment</Link>
-              </Button>
-              <Button variant="outline" size="lg" className="h-14 px-8 text-lg font-semibold border-white/10 hover:bg-white/5" asChild>
-                <Link href="#how-it-works">How It Works</Link>
-              </Button>
+            <div className="space-y-4">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button size="lg" className="h-14 px-8 text-lg font-semibold gold-glow" asChild>
+                  <Link href="#recovery-form">Start Your Confidential Recovery Assessment</Link>
+                </Button>
+                <Button variant="outline" size="lg" className="h-14 px-8 text-lg font-semibold border-white/10 hover:bg-white/5" asChild>
+                  <Link href="#how-it-works">How It Works</Link>
+                </Button>
+              </div>
+              <p className="text-sm text-muted-foreground/80 flex items-center gap-2 px-1">
+                <span className="text-primary font-bold">✓</span> Confidential case review • No obligation • Secure submission
+              </p>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-8 border-t border-white/5">
