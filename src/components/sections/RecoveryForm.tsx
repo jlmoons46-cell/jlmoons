@@ -36,7 +36,6 @@ import {
   MessageSquare, 
   Loader2, 
   Sparkles, 
-  MessageCircle, 
   ShieldCheck, 
   ClipboardCheck, 
   Binary, 
@@ -309,21 +308,6 @@ export function RecoveryForm() {
                       End-to-end encrypted communication
                     </li>
                   </ul>
-                </div>
-
-                <div className="space-y-4">
-                  <h4 className="font-bold flex items-center gap-2 text-secondary">
-                    <MessageCircle className="w-5 h-5" />
-                    Secure Support
-                  </h4>
-                  <div className="flex flex-col gap-3">
-                    <Button variant="outline" className="justify-start gap-3 border-white/10 hover:bg-white/5 h-12" asChild>
-                      <a href="#" target="_blank">
-                        <MessageSquare className="w-4 h-4 text-primary" />
-                        WhatsApp Secure Channel
-                      </a>
-                    </Button>
-                  </div>
                 </div>
               </div>
             </div>
