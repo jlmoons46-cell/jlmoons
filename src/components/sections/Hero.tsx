@@ -1,8 +1,9 @@
+
 "use client"
 
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { ShieldCheck, ArrowRight, Shield, Share2, Wallet, Loader2, Binary, Activity, Radar, Lock } from 'lucide-react'
+import { ShieldCheck, ArrowRight, Shield, Binary, Activity, Radar, Lock, Search, Cpu } from 'lucide-react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 
@@ -12,9 +13,18 @@ export function Hero() {
   useEffect(() => {
     const timer = setInterval(() => {
       setPhase((p) => (p + 1) % 6)
-    }, 3000)
+    }, 3500)
     return () => clearInterval(timer)
   }, [])
+
+  const forensicLabels = [
+    "Analyzing...",
+    "Cross-chain bridge detected",
+    "Entity identified",
+    "Forensic attribution in progress",
+    "Recovery route established",
+    "Asset secured"
+  ]
 
   return (
     <section className="relative overflow-hidden pt-24 pb-24 lg:pt-40 lg:pb-52 bg-[#050A12]">
@@ -100,27 +110,11 @@ export function Hero() {
                 </svg>
               </div>
 
-              {/* Data Particles (Visual Noise) */}
-              <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
-                 {[...Array(20)].map((_, i) => (
-                   <div 
-                    key={i} 
-                    className="absolute w-1 h-1 bg-white rounded-full animate-pulse" 
-                    style={{ 
-                      top: `${Math.random() * 100}%`, 
-                      left: `${Math.random() * 100}%`,
-                      animationDelay: `${Math.random() * 5}s`
-                    }} 
-                  />
-                 ))}
-              </div>
-
               {/* Forensic Animation Scene */}
               <div className="relative w-full h-full z-10">
                 <svg viewBox="0 0 400 400" className="w-full h-full drop-shadow-[0_0_15px_rgba(34,211,238,0.3)]">
                   {/* Paths */}
                   <g className="transition-opacity duration-500">
-                    {/* Phase 1-2: Initial Pulse & Tracing */}
                     <path 
                       d="M 50 200 L 150 100 L 250 200" 
                       fill="none" 
@@ -148,35 +142,35 @@ export function Hero() {
                       strokeWidth="4" 
                       strokeDasharray="500" 
                       strokeDashoffset="500" 
-                      className={cn("transition-all duration-1000", phase >= 5 ? "animate-draw opacity-100" : "opacity-0")}
+                      className={cn("transition-all duration-1000", phase >= 4 ? "animate-draw opacity-100" : "opacity-0")}
                     />
                   </g>
 
                   {/* Nodes */}
                   <g>
                     {/* Wallet A (Source) */}
-                    <circle cx="50" cy="200" r="10" className={cn("fill-card stroke-white stroke-2 transition-all duration-500", phase >= 1 && "scale-110 shadow-lg")} />
-                    <text x="50" y="235" textAnchor="middle" className="text-[10px] font-bold fill-white/60 tracking-widest uppercase">Wallet Alpha</text>
+                    <circle cx="50" cy="200" r="10" className={cn("fill-card stroke-white stroke-2 transition-all duration-500", phase >= 0 && "scale-110 shadow-lg")} />
+                    <text x="50" y="235" textAnchor="middle" className="text-[10px] font-bold fill-white/60 tracking-widest uppercase">Intake Node</text>
                     
                     {/* Intermediate Nodes */}
-                    <circle cx="150" cy="100" r="8" className={cn("fill-card stroke-white/30 stroke-2 transition-all", phase >= 2 ? "opacity-100" : "opacity-0")} />
-                    <circle cx="150" cy="300" r="8" className={cn("fill-card stroke-white/30 stroke-2 transition-all", phase >= 2 ? "opacity-100" : "opacity-0")} />
+                    <circle cx="150" cy="100" r="8" className={cn("fill-card stroke-white/30 stroke-2 transition-all", phase >= 1 ? "opacity-100" : "opacity-0")} />
+                    <circle cx="150" cy="300" r="8" className={cn("fill-card stroke-white/30 stroke-2 transition-all", phase >= 1 ? "opacity-100" : "opacity-0")} />
 
                     {/* Suspect Node (Mixer/Exchange) */}
-                    <g className={cn("transition-all duration-500", phase >= 3 ? "opacity-100" : "opacity-0")}>
+                    <g className={cn("transition-all duration-500", phase >= 2 ? "opacity-100" : "opacity-0")}>
                       <circle 
                         cx="250" cy="200" r="15" 
-                        className={cn("fill-card stroke-2 transition-all duration-700", phase >= 3 ? "stroke-amber-500" : "stroke-white/30")} 
+                        className={cn("fill-card stroke-2 transition-all duration-700", phase >= 2 ? "stroke-amber-500" : "stroke-white/30")} 
                       />
                       {/* Scanning Rings */}
-                      {phase === 4 && (
+                      {phase === 3 && (
                         <>
                           <circle cx="250" cy="200" r="15" fill="none" stroke="hsl(var(--secondary))" strokeWidth="1" className="animate-scan-ring" />
                           <circle cx="250" cy="200" r="15" fill="none" stroke="hsl(var(--secondary))" strokeWidth="1" className="animate-scan-ring delay-700" />
                         </>
                       )}
-                      <text x="250" y="235" textAnchor="middle" className={cn("text-[9px] font-bold tracking-widest uppercase transition-colors", phase >= 3 ? "fill-amber-500" : "fill-white/60")}>
-                        {phase >= 4 ? "Identified: Mixer" : "Unidentified Node"}
+                      <text x="250" y="235" textAnchor="middle" className={cn("text-[9px] font-bold tracking-widest uppercase transition-colors", phase >= 2 ? "fill-amber-500" : "fill-white/60")}>
+                        {phase >= 2 ? "Identified Entity" : "Scanning..."}
                       </text>
                     </g>
 
@@ -201,32 +195,27 @@ export function Hero() {
                     <div className="text-[10px] font-mono text-muted-foreground">Tracing: 0x71...f9aE</div>
                   </div>
                   
-                  <div className={cn("p-3 bg-primary/10 border border-primary/20 backdrop-blur-md rounded-xl transition-all duration-500", phase >= 4 ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2")}>
+                  <div className={cn("p-3 bg-primary/10 border border-primary/20 backdrop-blur-md rounded-xl transition-all duration-500", phase >= 2 ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2")}>
                     <div className="text-[9px] font-bold text-primary uppercase tracking-[0.2em]">Forensic Attribution Found</div>
                   </div>
                 </div>
 
-                {/* Bottom Legend */}
+                {/* Bottom Legend with Narrative Labels */}
                 <div className="absolute bottom-4 left-4 right-4 p-4 bg-black/80 border border-white/5 backdrop-blur-2xl rounded-2xl flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className={cn("w-3 h-3 rounded-full transition-colors duration-500", 
-                      phase === 0 && "bg-muted",
-                      phase === 1 && "bg-white animate-pulse",
-                      phase === 2 && "bg-white",
-                      phase === 3 && "bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]",
-                      phase === 4 && "bg-secondary animate-ping",
+                      phase === 0 && "bg-white animate-pulse",
+                      phase === 1 && "bg-white",
+                      phase === 2 && "bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]",
+                      phase === 3 && "bg-secondary animate-ping",
+                      phase === 4 && "bg-primary/50",
                       phase === 5 && "bg-primary shadow-[0_0_15px_rgba(34,211,238,0.5)]"
                     )} />
-                    <div className="text-[10px] font-bold uppercase tracking-widest text-white/90">
-                      {phase === 0 && "System Standby..."}
-                      {phase === 1 && "Investigation Initialized"}
-                      {phase === 2 && "Mapping Cross-Chain Routes"}
-                      {phase === 3 && "Analyzing High-Risk Node"}
-                      {phase === 4 && "Executing AI Attribution"}
-                      {phase === 5 && "Securing Recovery Endpoint"}
+                    <div className="text-[10px] font-bold uppercase tracking-widest text-white/90 animate-in fade-in slide-in-from-left-2 duration-500" key={phase}>
+                      {forensicLabels[phase]}
                     </div>
                   </div>
-                  <div className="text-[9px] font-mono text-white/30 uppercase tracking-tighter">MOONS-V3.0.1</div>
+                  <div className="text-[9px] font-mono text-white/30 uppercase tracking-tighter">INTEL-OPS V3.0</div>
                 </div>
               </div>
             </div>
