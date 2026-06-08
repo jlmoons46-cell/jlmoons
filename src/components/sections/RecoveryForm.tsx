@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useMemo } from 'react'
@@ -61,6 +62,7 @@ import {
 } from 'lucide-react'
 import { inquireRecoveryDetails } from '@/ai/flows/ai-recovery-inquiry-assistant'
 import { useToast } from '@/hooks/use-toast'
+import { supabase } from '@/lib/supabase'
 
 const formSchema = z.object({
   fullName: z.string().min(2, "Full name is required"),
@@ -261,14 +263,35 @@ export function RecoveryForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true)
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    setIsSubmitting(false)
-    toast({
-      title: "Forensic Case Registered",
-      description: "Our technical team will review your intake data and contact you within 72 hours.",
-    })
-    form.reset()
-    setAiSuggestions(null)
+    
+    try {
+      // Confirm Supabase integration by inserting the technical intake data
+      const { error } = await supabase
+        .from('recovery_requests')
+        .insert([{
+          ...values,
+          submitted_at: new Date().toISOString(),
+          qualification_status: qualificationStatus
+        }])
+
+      if (error) throw error
+
+      toast({
+        title: "Forensic Case Registered",
+        description: "Our technical team will review your intake data and contact you within 72 hours.",
+      })
+      form.reset()
+      setAiSuggestions(null)
+    } catch (error: any) {
+      console.error('Supabase integration error:', error)
+      toast({
+        title: "Submission Error",
+        description: "We encountered a technical issue saving your assessment. Please try again or contact our forensics team directly.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -1369,9 +1392,6 @@ export function RecoveryForm() {
                                 {...field} 
                               />
                             </FormControl>
-                            <FormDescription>
-                              Detailed descriptions help our specialists determine recovery feasibility faster.
-                            </FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
