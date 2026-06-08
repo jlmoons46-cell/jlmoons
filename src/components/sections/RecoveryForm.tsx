@@ -16,25 +16,25 @@ import {
   FormMessage, 
   FormDescription 
 } from '@/components/ui/form'
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from '@/components/ui/select'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Label } from '@/components/ui/label'
 import { Send, MessageSquare, Loader2, Sparkles, MessageCircle } from 'lucide-react'
 import { inquireRecoveryDetails } from '@/ai/flows/ai-recovery-inquiry-assistant'
 import { useToast } from '@/hooks/use-toast'
 
 const formSchema = z.object({
-  fullName: z.string().min(2, "Full name is required"),
   email: z.string().email("Invalid email address"),
-  phone: z.string().min(6, "Phone number is required"),
-  recoveryType: z.string().min(1, "Please select a recovery type"),
-  estimatedValue: z.string().min(1, "Please estimate the asset value"),
+  recoveryType: z.string().min(1, "Please select what happened"),
   message: z.string().min(20, "Message must be at least 20 characters"),
 })
+
+const recoveryOptions = [
+  { id: 'wallet', label: 'Lost password' },
+  { id: 'hardware', label: 'Hardware wallet issue' },
+  { id: 'exchange', label: 'Exchange access problem' },
+  { id: 'seed', label: 'Seed phrase issue' },
+  { id: 'other', label: 'Other' },
+]
 
 export function RecoveryForm() {
   const { toast } = useToast()
@@ -45,11 +45,8 @@ export function RecoveryForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullName: "",
       email: "",
-      phone: "",
       recoveryType: "",
-      estimatedValue: "",
       message: "",
     },
   })
@@ -67,7 +64,11 @@ export function RecoveryForm() {
 
     setIsAiLoading(true)
     try {
-      const result = await inquireRecoveryDetails(values)
+      const result = await inquireRecoveryDetails({
+        email: values.email,
+        recoveryType: values.recoveryType,
+        message: values.message
+      })
       setAiSuggestions(result.suggestions)
     } catch (error) {
       toast({
@@ -102,7 +103,7 @@ export function RecoveryForm() {
               <div>
                 <h3 className="text-3xl font-bold mb-6">Start Your Recovery</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Provide as much detail as possible. Every detail about your wallet type, the date of loss, and the nature of the issue helps our specialists build a stronger recovery plan.
+                  Every detail about your wallet type, the date of loss, and the nature of the issue helps our specialists build a stronger recovery plan.
                 </p>
               </div>
 
@@ -131,84 +132,50 @@ export function RecoveryForm() {
             <div className="lg:col-span-3">
               <div className="p-8 rounded-2xl bg-card border border-white/5 gold-glow relative">
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <FormField
-                        control={form.control}
-                        name="fullName"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Full Name</FormLabel>
-                            <FormControl>
-                              <Input placeholder="John Doe" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Email Address</FormLabel>
-                            <FormControl>
-                              <Input placeholder="john@example.com" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <FormField
-                        control={form.control}
-                        name="phone"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Phone Number</FormLabel>
-                            <FormControl>
-                              <Input placeholder="+1 (555) 000-0000" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="recoveryType"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Recovery Type</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select type" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value="wallet">Wallet Access Recovery</SelectItem>
-                                <SelectItem value="hacked">Hacked Account Recovery</SelectItem>
-                                <SelectItem value="exchange">Exchange Funds Recovery</SelectItem>
-                                <SelectItem value="hardware">Hardware Repair</SelectItem>
-                                <SelectItem value="other">Other Digital Assets</SelectItem>
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    
+                    <FormField
+                      control={form.control}
+                      name="recoveryType"
+                      render={({ field }) => (
+                        <FormItem className="space-y-4">
+                          <FormLabel className="text-lg font-bold">What happened?</FormLabel>
+                          <FormControl>
+                            <RadioGroup
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                              className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+                            >
+                              {recoveryOptions.map((option) => (
+                                <div key={option.id}>
+                                  <RadioGroupItem
+                                    value={option.id}
+                                    id={option.id}
+                                    className="peer sr-only"
+                                  />
+                                  <Label
+                                    htmlFor={option.id}
+                                    className="flex items-center justify-center rounded-xl border border-white/10 bg-background/50 p-4 hover:bg-white/5 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 peer-data-[state=checked]:text-primary cursor-pointer transition-all"
+                                  >
+                                    {option.label}
+                                  </Label>
+                                </div>
+                              ))}
+                            </RadioGroup>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
                     <FormField
                       control={form.control}
-                      name="estimatedValue"
+                      name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Estimated Value (USD)</FormLabel>
+                          <FormLabel className="text-lg font-bold">Your Email Address</FormLabel>
                           <FormControl>
-                            <Input placeholder="e.g., $10,000" {...field} />
+                            <Input placeholder="john@example.com" className="h-12" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -221,7 +188,7 @@ export function RecoveryForm() {
                       render={({ field }) => (
                         <FormItem>
                           <div className="flex justify-between items-center mb-1">
-                            <FormLabel>Case Description</FormLabel>
+                            <FormLabel className="text-lg font-bold">Case Description</FormLabel>
                             <Button 
                               type="button" 
                               variant="ghost" 
@@ -236,8 +203,8 @@ export function RecoveryForm() {
                           </div>
                           <FormControl>
                             <Textarea 
-                              placeholder="Tell us what happened. Include wallet type, dates, and any relevant details..." 
-                              className="min-h-[120px] resize-none"
+                              placeholder="Tell us what happened. Include dates and any relevant details..." 
+                              className="min-h-[150px] resize-none"
                               {...field} 
                             />
                           </FormControl>
@@ -263,7 +230,7 @@ export function RecoveryForm() {
 
                     <Button type="submit" size="lg" className="w-full h-14 text-lg font-bold" disabled={isSubmitting}>
                       {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <Send className="w-5 h-5 mr-2" />}
-                      Submit Case for Review
+                      Request a Case Review
                     </Button>
                   </form>
                 </Form>
