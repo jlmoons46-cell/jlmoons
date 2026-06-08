@@ -1,10 +1,11 @@
+
 {
   "placeholderImages": [
     {
       "id": "hero-bg",
-      "description": "Abstract digital connection lines",
-      "imageUrl": "https://picsum.photos/seed/jlmoons-hero/1200/800",
-      "imageHint": "digital connection"
+      "description": "Holographic Tracing Matrix - 3D glowing blockchain network visualization",
+      "imageUrl": "https://picsum.photos/seed/jlmoons-matrix/1200/800",
+      "imageHint": "blockchain network"
     },
     {
       "id": "team-secure",
