@@ -7,6 +7,7 @@ import { WhyTrustUs } from '@/components/sections/WhyTrustUs'
 import { TrustStrip } from '@/components/sections/TrustStrip'
 import { RecoveryForm } from '@/components/sections/RecoveryForm'
 import { Testimonials } from '@/components/sections/Testimonials'
+import { FAQ } from '@/components/sections/FAQ'
 import { KnowledgeHub } from '@/components/sections/KnowledgeHub'
 import { Footer } from '@/components/sections/Footer'
 import { Toaster } from '@/components/ui/toaster'
@@ -23,6 +24,7 @@ export default function Home() {
       <TrustStrip />
       <RecoveryForm />
       <Testimonials />
+      <FAQ />
       <KnowledgeHub />
       <Footer />
       <Toaster />
