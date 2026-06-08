@@ -42,7 +42,8 @@ import {
   Link2,
   Wallet as WalletIcon,
   AlertTriangle,
-  ArrowRightLeft
+  ArrowRightLeft,
+  Users
 } from 'lucide-react'
 import { inquireRecoveryDetails } from '@/ai/flows/ai-recovery-inquiry-assistant'
 import { useToast } from '@/hooks/use-toast'
@@ -73,6 +74,9 @@ const formSchema = z.object({
   sendingWallet: z.string().optional(),
   destinationWallet: z.string().optional(),
   destinationType: z.string().optional(),
+  // Estate specific fields
+  relationship: z.string().optional(),
+  estateDetails: z.array(z.string()).default([]),
   message: z.string().min(20, "Message must be at least 20 characters"),
 })
 
@@ -127,6 +131,15 @@ const seedChecklist = [
   { id: 'backup_notes', label: 'Original backup notes' },
 ]
 
+const estateChecklist = [
+  { id: 'death_cert', label: 'Death certificate' },
+  { id: 'device_access', label: 'Device access' },
+  { id: 'wallet_info', label: 'Wallet information' },
+  { id: 'legal_auth', label: 'Legal authorization' },
+]
+
+const relationshipOptions = ["Spouse", "Child", "Executor", "Attorney", "Other"]
+
 export function RecoveryForm() {
   const { toast } = useToast()
   const [isAiLoading, setIsAiLoading] = useState(false)
@@ -159,6 +172,8 @@ export function RecoveryForm() {
       sendingWallet: "",
       destinationWallet: "",
       destinationType: "",
+      relationship: "",
+      estateDetails: [],
       message: "",
     },
   })
@@ -992,6 +1007,109 @@ export function RecoveryForm() {
                                   ))}
                                 </RadioGroup>
                               </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    )}
+
+                    {/* Case Type 7: Estate Recovery */}
+                    {watchRecoveryType === 'inheritance' && (
+                      <div className="space-y-8 border-t border-white/5 pt-10 animate-in fade-in slide-in-from-top-4">
+                        <h4 className="text-lg font-bold text-secondary flex items-center gap-2">
+                          <Users className="w-5 h-5" />
+                          Forensic Details: Estate Recovery & Digital Inheritance
+                        </h4>
+
+                        <FormField
+                          control={form.control}
+                          name="relationship"
+                          render={({ field }) => (
+                            <FormItem className="space-y-3">
+                              <FormLabel>What is your relationship to the asset holder?</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger className="h-12 bg-background/50">
+                                    <SelectValue placeholder="Select relationship type" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {relationshipOptions.map(opt => (
+                                    <SelectItem key={opt} value={opt.toLowerCase()}>{opt}</SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="estateDetails"
+                          render={() => (
+                            <FormItem>
+                              <div className="mb-4">
+                                <FormLabel>Do you currently possess:</FormLabel>
+                              </div>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {estateChecklist.map((item) => (
+                                  <FormField
+                                    key={item.id}
+                                    control={form.control}
+                                    name="estateDetails"
+                                    render={({ field }) => {
+                                      return (
+                                        <FormItem
+                                          key={item.id}
+                                          className="flex flex-row items-start space-x-3 space-y-0"
+                                        >
+                                          <FormControl>
+                                            <Checkbox
+                                              checked={field.value?.includes(item.id)}
+                                              onCheckedChange={(checked) => {
+                                                return checked
+                                                  ? field.onChange([...(field.value || []), item.id])
+                                                  : field.onChange(
+                                                      field.value?.filter(
+                                                        (value) => value !== item.id
+                                                      )
+                                                    )
+                                              }}
+                                            />
+                                          </FormControl>
+                                          <FormLabel className="text-sm font-medium leading-none cursor-pointer">
+                                            {item.label}
+                                          </FormLabel>
+                                        </FormItem>
+                                      )
+                                    }}
+                                  />
+                                ))}
+                              </div>
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="estimatedValue"
+                          render={({ field }) => (
+                            <FormItem className="space-y-3">
+                              <FormLabel>Approximate total portfolio value</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger className="h-12 bg-background/50">
+                                    <SelectValue placeholder="Select value range" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="less_10k">Less than $10,000</SelectItem>
+                                  <SelectItem value="10k_100k">$10,000 to $100,000</SelectItem>
+                                  <SelectItem value="100k_500k">$100,000 to $500,000</SelectItem>
+                                  <SelectItem value="500k_1m">$500,000 to $1M</SelectItem>
+                                  <SelectItem value="more_1m">Over $1M (Premium Estate Case)</SelectItem>
+                                </SelectContent>
+                              </Select>
                             </FormItem>
                           )}
                         />
