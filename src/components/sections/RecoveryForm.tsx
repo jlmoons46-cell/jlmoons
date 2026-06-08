@@ -17,14 +17,25 @@ import {
   FormDescription 
 } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Checkbox } from '@/components/ui/checkbox'
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
-import { Send, MessageSquare, Loader2, Sparkles, MessageCircle, ShieldCheck, ClipboardCheck } from 'lucide-react'
+import { Send, MessageSquare, Loader2, Sparkles, MessageCircle, ShieldCheck, ClipboardCheck, Binary } from 'lucide-react'
 import { inquireRecoveryDetails } from '@/ai/flows/ai-recovery-inquiry-assistant'
 import { useToast } from '@/hooks/use-toast'
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
   recoveryType: z.string().min(1, "Please select what best describes your situation"),
+  walletName: z.string().optional(),
+  accessDetails: z.array(z.string()).default([]),
+  estimatedValue: z.string().optional(),
   message: z.string().min(20, "Message must be at least 20 characters"),
 })
 
@@ -32,11 +43,20 @@ const recoveryOptions = [
   { id: 'lost_password', label: 'Lost Wallet Password' },
   { id: 'lost_seed', label: 'Lost Seed Phrase' },
   { id: 'hardware_issue', label: 'Hardware Wallet Issue' },
-  { id: 'exchange_access', label: 'Exchange Account Access Problem' },
+  { id: 'exchange_access', label: 'Exchange Account Access' },
   { id: 'stolen_crypto', label: 'Stolen Crypto / Scam' },
-  { id: 'wrong_address', label: 'Sent Funds to Wrong Address' },
-  { id: 'inheritance', label: 'Inheritance / Estate Recovery' },
-  { id: 'other', label: 'Other' },
+  { id: 'wrong_address', label: 'Wrong Address Transaction' },
+  { id: 'inheritance', label: 'Inheritance / Estate Case' },
+  { id: 'other', label: 'Other Technical Issue' },
+]
+
+const walletOptions = ["Electrum", "Exodus", "Atomic", "Trust Wallet", "MetaMask", "Other"]
+
+const accessChecklist = [
+  { id: 'wallet_file', label: 'Wallet file (.dat, .json, etc.)' },
+  { id: 'recovery_phrase', label: 'Recovery / Seed phrase' },
+  { id: 'password_variations', label: 'Old password variations' },
+  { id: 'original_device', label: 'Original device used' },
 ]
 
 export function RecoveryForm() {
@@ -50,9 +70,14 @@ export function RecoveryForm() {
     defaultValues: {
       email: "",
       recoveryType: "",
+      walletName: "",
+      accessDetails: [],
+      estimatedValue: "",
       message: "",
     },
   })
+
+  const watchRecoveryType = form.watch("recoveryType")
 
   async function handleGetAiSuggestions() {
     const values = form.getValues()
@@ -70,6 +95,7 @@ export function RecoveryForm() {
       const result = await inquireRecoveryDetails({
         email: values.email,
         recoveryType: values.recoveryType,
+        estimatedValue: values.estimatedValue,
         message: values.message
       })
       setAiSuggestions(result.suggestions)
@@ -86,12 +112,12 @@ export function RecoveryForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true)
-    // Simulate API call
+    // Simulate API call to investigation backend
     await new Promise(resolve => setTimeout(resolve, 2000))
     setIsSubmitting(false)
     toast({
-      title: "Intake Request Submitted",
-      description: "Our forensic team will review your case and contact you within 72 hours.",
+      title: "Forensic Case Registered",
+      description: "Our technical team will review your intake data and contact you within 72 hours.",
     })
     form.reset()
     setAiSuggestions(null)
@@ -106,11 +132,11 @@ export function RecoveryForm() {
               <div className="space-y-6">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-wider">
                   <ShieldCheck className="w-4 h-4" />
-                  Secure Intake Portal
+                  Forensic Intake Portal
                 </div>
-                <h3 className="text-4xl font-bold leading-tight">Start Your Forensic Assessment</h3>
+                <h3 className="text-4xl font-bold leading-tight">Begin Technical Assessment</h3>
                 <p className="text-muted-foreground text-lg leading-relaxed">
-                  Every recovery case begins with a detailed technical intake. This information is critical for our specialists to build an accurate recovery roadmap.
+                  Every recovery begins with a technical intake. This data is essential for our specialists to build an accurate forensic roadmap.
                 </p>
               </div>
 
@@ -118,20 +144,20 @@ export function RecoveryForm() {
                 <div className="p-6 rounded-2xl bg-card border border-white/5 space-y-4">
                   <h4 className="font-bold flex items-center gap-2 text-primary">
                     <ClipboardCheck className="w-5 h-5" />
-                    What to Expect
+                    Intake Standards
                   </h4>
                   <ul className="space-y-3 text-sm text-muted-foreground">
                     <li className="flex items-start gap-2">
                       <span className="text-primary mt-0.5">✓</span>
-                      Confidential assessment with no obligation
+                      Confidential technical assessment
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-primary mt-0.5">✓</span>
-                      Technical feasibility determined before work
+                      Feasibility determined before engagement
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-primary mt-0.5">✓</span>
-                      Direct communication with forensic experts
+                      End-to-end encrypted communication
                     </li>
                   </ul>
                 </div>
@@ -139,19 +165,19 @@ export function RecoveryForm() {
                 <div className="space-y-4">
                   <h4 className="font-bold flex items-center gap-2">
                     <MessageCircle className="w-5 h-5 text-secondary" />
-                    Immediate Support
+                    Secure Support
                   </h4>
                   <div className="flex flex-col gap-3">
                     <Button variant="outline" className="justify-start gap-3 border-secondary/20 text-secondary hover:bg-secondary/5 h-12" asChild>
                       <a href="https://wa.me/jlmoons" target="_blank">
                         <MessageSquare className="w-4 h-4" />
-                        WhatsApp Secure Chat
+                        WhatsApp Secure Channel
                       </a>
                     </Button>
                     <Button variant="outline" className="justify-start gap-3 border-primary/20 text-primary hover:bg-primary/5 h-12" asChild>
                       <a href="https://t.me/jlmoons" target="_blank">
                         <Send className="w-4 h-4" />
-                        Telegram Technical Support
+                        Telegram Technical Portal
                       </a>
                     </Button>
                   </div>
@@ -170,9 +196,12 @@ export function RecoveryForm() {
                       render={({ field }) => (
                         <FormItem className="space-y-6">
                           <div>
-                            <FormLabel className="text-xl font-bold">Step 1: What best describes your situation?</FormLabel>
+                            <FormLabel className="text-xl font-bold flex items-center gap-2">
+                              <Binary className="w-5 h-5 text-primary" />
+                              Step 1: Situation Analysis
+                            </FormLabel>
                             <FormDescription className="mt-2">
-                              Select the primary issue to begin the tailored intake process.
+                              Select the scenario that best describes your current asset loss.
                             </FormDescription>
                           </div>
                           <FormControl>
@@ -203,13 +232,113 @@ export function RecoveryForm() {
                       )}
                     />
 
+                    {/* Dynamic Case Details for Lost Password */}
+                    {watchRecoveryType === 'lost_password' && (
+                      <div className="space-y-8 border-t border-white/5 pt-10 animate-in fade-in slide-in-from-top-4">
+                        <h4 className="text-lg font-bold text-secondary">Forensic Details: Password Recovery</h4>
+                        
+                        <FormField
+                          control={form.control}
+                          name="walletName"
+                          render={({ field }) => (
+                            <FormItem className="space-y-3">
+                              <FormLabel>What wallet software are you using?</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger className="h-12 bg-background/50">
+                                    <SelectValue placeholder="Select wallet software" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {walletOptions.map(opt => (
+                                    <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="accessDetails"
+                          render={() => (
+                            <FormItem>
+                              <div className="mb-4">
+                                <FormLabel>Do you still have access to:</FormLabel>
+                              </div>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {accessChecklist.map((item) => (
+                                  <FormField
+                                    key={item.id}
+                                    control={form.control}
+                                    name="accessDetails"
+                                    render={({ field }) => {
+                                      return (
+                                        <FormItem
+                                          key={item.id}
+                                          className="flex flex-row items-start space-x-3 space-y-0"
+                                        >
+                                          <FormControl>
+                                            <Checkbox
+                                              checked={field.value?.includes(item.id)}
+                                              onCheckedChange={(checked) => {
+                                                return checked
+                                                  ? field.onChange([...field.value, item.id])
+                                                  : field.onChange(
+                                                      field.value?.filter(
+                                                        (value) => value !== item.id
+                                                      )
+                                                    )
+                                              }}
+                                            />
+                                          </FormControl>
+                                          <FormLabel className="text-sm font-medium leading-none cursor-pointer">
+                                            {item.label}
+                                          </FormLabel>
+                                        </FormItem>
+                                      )
+                                    }}
+                                  />
+                                ))}
+                              </div>
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="estimatedValue"
+                          render={({ field }) => (
+                            <FormItem className="space-y-3">
+                              <FormLabel>Approximate total asset value</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger className="h-12 bg-background/50">
+                                    <SelectValue placeholder="Select value range" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="less_1k">Less than $1,000</SelectItem>
+                                  <SelectItem value="1k_10k">$1,000 to $10,000</SelectItem>
+                                  <SelectItem value="10k_50k">$10,000 to $50,000</SelectItem>
+                                  <SelectItem value="50k_100k">$50,000 to $100,000</SelectItem>
+                                  <SelectItem value="more_100k">Over $100,000</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    )}
+
                     <div className="grid gap-8 border-t border-white/5 pt-10">
                       <FormField
                         control={form.control}
                         name="email"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-lg font-bold">Step 2: Your Professional Email Address</FormLabel>
+                            <FormLabel className="text-lg font-bold">Step 2: Secure Contact Email</FormLabel>
                             <FormControl>
                               <Input placeholder="name@domain.com" className="h-14 bg-background/50" {...field} />
                             </FormControl>
@@ -224,7 +353,7 @@ export function RecoveryForm() {
                         render={({ field }) => (
                           <FormItem>
                             <div className="flex justify-between items-center mb-1">
-                              <FormLabel className="text-lg font-bold">Step 3: Preliminary Case Description</FormLabel>
+                              <FormLabel className="text-lg font-bold">Step 3: Brief Description of Loss</FormLabel>
                               <Button 
                                 type="button" 
                                 variant="ghost" 
@@ -234,18 +363,18 @@ export function RecoveryForm() {
                                 disabled={isAiLoading}
                               >
                                 {isAiLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
-                                Forensic Assistant
+                                AI Forensic Assistant
                               </Button>
                             </div>
                             <FormControl>
                               <Textarea 
                                 placeholder="Describe the loss event. Include relevant dates, wallet software/hardware used, and any specific error messages..." 
-                                className="min-h-[180px] resize-none bg-background/50 text-base leading-relaxed"
+                                className="min-h-[160px] resize-none bg-background/50 text-base leading-relaxed"
                                 {...field} 
                               />
                             </FormControl>
                             <FormDescription>
-                              The more technical detail provided, the faster our specialists can determine recovery feasibility.
+                              Detailed technical descriptions help our specialists determine recovery feasibility faster.
                             </FormDescription>
                             <FormMessage />
                           </FormItem>
@@ -257,7 +386,7 @@ export function RecoveryForm() {
                       <div className="p-5 rounded-2xl bg-secondary/10 border border-secondary/20 animate-in fade-in slide-in-from-top-4">
                         <div className="flex items-center gap-2 text-secondary font-bold text-sm mb-3">
                           <Sparkles className="w-4 h-4" />
-                          Recommended Forensic Details:
+                          Recommended Technical Details:
                         </div>
                         <div className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed italic">
                           {aiSuggestions}
