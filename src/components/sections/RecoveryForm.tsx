@@ -24,6 +24,13 @@ import {
   AlertTitle,
   AlertDescription
 } from '@/components/ui/alert'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { 
   Send, 
   MessageSquare, 
@@ -112,6 +119,29 @@ const materialOptions = [
   { id: 'backup', label: 'Backup' },
   { id: 'device', label: 'Device' },
 ]
+
+const trustIndicators: Record<string, string[]> = {
+  wallet_recovery: ["Cryptographic Audit", "Seed Fragment Analysis", "Technical Feasibility Study"],
+  fake_trading: ["Blockchain Tracing", "Exchange Intelligence", "Evidence Collection"],
+  bad_broker: ["Asset Flow Investigation", "Transaction Analysis", "Recovery Strategy Review"],
+  romance_scam: ["Blockchain Tracing", "Exchange Intelligence", "Evidence Collection"],
+  investment_scam: ["Asset Flow Investigation", "Transaction Analysis", "Recovery Strategy Review"],
+}
+
+function CaseTrustHeader({ type }: { type: string }) {
+  const items = trustIndicators[type]
+  if (!items) return null
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+      {items.map((item, i) => (
+        <div key={i} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/5 border border-primary/10 text-[10px] font-bold uppercase tracking-wider text-primary">
+          <CheckCircle2 className="w-3.5 h-3.5" />
+          {item}
+        </div>
+      ))}
+    </div>
+  )
+}
 
 export function RecoveryForm() {
   const { toast } = useToast()
@@ -330,6 +360,8 @@ export function RecoveryForm() {
                           Forensic Details: Wallet Recovery Intake
                         </h4>
 
+                        <CaseTrustHeader type="wallet_recovery" />
+
                         <FormField
                           control={form.control}
                           name="walletType"
@@ -461,6 +493,8 @@ export function RecoveryForm() {
                           <Activity className="w-5 h-5" />
                           Forensic Details: Fake Trading Platform Investigation
                         </h4>
+
+                        <CaseTrustHeader type="fake_trading" />
                         
                         <div className="grid sm:grid-cols-2 gap-6">
                           <FormField
@@ -575,6 +609,8 @@ export function RecoveryForm() {
                           <Landmark className="w-5 h-5" />
                           Forensic Details: Bad Broker Investigation
                         </h4>
+
+                        <CaseTrustHeader type="bad_broker" />
                         
                         <div className="grid sm:grid-cols-2 gap-6">
                           <FormField
@@ -693,6 +729,8 @@ export function RecoveryForm() {
                           <Heart className="w-5 h-5" />
                           Forensic Details: Romance Scam Investigation
                         </h4>
+
+                        <CaseTrustHeader type="romance_scam" />
                         
                         <FormField
                           control={form.control}
@@ -799,6 +837,8 @@ export function RecoveryForm() {
                           <TrendingUp className="w-5 h-5" />
                           Forensic Details: Investment Scam Investigation
                         </h4>
+
+                        <CaseTrustHeader type="investment_scam" />
                         
                         <div className="grid sm:grid-cols-2 gap-6">
                           <FormField
