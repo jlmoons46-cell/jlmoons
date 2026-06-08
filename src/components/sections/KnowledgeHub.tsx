@@ -30,7 +30,7 @@ export function KnowledgeHub() {
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
           <div className="max-w-2xl">
-            <h2 className="text-sm font-bold tracking-[0.2em] text-secondary uppercase mb-4">Knowledge Hub</h2>
+            <h2 className="text-sm font-bold tracking-[0.2em] text-secondary uppercase mb-4">Resource Center</h2>
             <h3 className="text-4xl lg:text-5xl font-bold">Expert Insights & Education</h3>
           </div>
           <Button variant="outline" className="border-secondary/20 hover:bg-secondary/5" asChild>

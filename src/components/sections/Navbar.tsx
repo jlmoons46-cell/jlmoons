@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Send, Phone, Shield } from 'lucide-react'
+import { Shield } from 'lucide-react'
 
 export function Navbar() {
   return (
@@ -18,19 +18,13 @@ export function Navbar() {
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
           <Link href="#services" className="hover:text-primary transition-colors">Services</Link>
           <Link href="#how-it-works" className="hover:text-primary transition-colors">How It Works</Link>
-          <Link href="#blog" className="hover:text-primary transition-colors">Knowledge Hub</Link>
-          <Link href="#contact" className="hover:text-primary transition-colors">Contact</Link>
+          <Link href="#blog" className="hover:text-primary transition-colors">Resource Center</Link>
+          <Link href="#contact" className="hover:text-primary transition-colors">Contact Us</Link>
         </nav>
 
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" className="hidden lg:flex gap-2 text-secondary hover:text-secondary-foreground" asChild>
-            <a href="https://t.me/jlmoons" target="_blank" rel="noopener noreferrer">
-              <Send className="w-4 h-4" />
-              Telegram
-            </a>
-          </Button>
           <Button variant="outline" size="sm" className="hidden sm:flex border-primary/20 hover:border-primary/50" asChild>
-             <Link href="#contact">Contact</Link>
+             <Link href="#contact">Contact Us</Link>
           </Button>
           <Button size="sm" className="gold-glow animate-pulse-subtle" asChild>
             <Link href="#recovery-form">Start Recovery</Link>
