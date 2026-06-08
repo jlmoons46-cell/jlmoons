@@ -1,3 +1,27 @@
+import { Navbar } from '@/components/sections/Navbar'
+import { Hero } from '@/components/sections/Hero'
+import { Services } from '@/components/sections/Services'
+import { Steps } from '@/components/sections/Steps'
+import { TrustStrip } from '@/components/sections/TrustStrip'
+import { RecoveryForm } from '@/components/sections/RecoveryForm'
+import { Testimonials } from '@/components/sections/Testimonials'
+import { KnowledgeHub } from '@/components/sections/KnowledgeHub'
+import { Footer } from '@/components/sections/Footer'
+import { Toaster } from '@/components/ui/toaster'
+
 export default function Home() {
-  return <></>;
+  return (
+    <main className="min-h-screen">
+      <Navbar />
+      <Hero />
+      <Services />
+      <Steps />
+      <TrustStrip />
+      <RecoveryForm />
+      <Testimonials />
+      <KnowledgeHub />
+      <Footer />
+      <Toaster />
+    </main>
+  )
 }

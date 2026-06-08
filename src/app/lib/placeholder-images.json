@@ -1,0 +1,40 @@
+{
+  "placeholderImages": [
+    {
+      "id": "hero-bg",
+      "description": "Abstract digital connection lines",
+      "imageUrl": "https://picsum.photos/seed/jlmoons-hero/1200/800",
+      "imageHint": "digital connection"
+    },
+    {
+      "id": "team-secure",
+      "description": "Cybersecurity expert working",
+      "imageUrl": "https://picsum.photos/seed/jlmoons-expert/600/400",
+      "imageHint": "security expert"
+    },
+    {
+      "id": "consultation",
+      "description": "Secure client consultation",
+      "imageUrl": "https://picsum.photos/seed/jlmoons-meeting/600/400",
+      "imageHint": "business meeting"
+    },
+    {
+      "id": "blog-1",
+      "description": "Crypto wallet illustration",
+      "imageUrl": "https://picsum.photos/seed/jlmoons-blog1/400/300",
+      "imageHint": "crypto wallet"
+    },
+    {
+      "id": "blog-2",
+      "description": "Security lock digital",
+      "imageUrl": "https://picsum.photos/seed/jlmoons-blog2/400/300",
+      "imageHint": "digital security"
+    },
+    {
+      "id": "blog-3",
+      "description": "Blockchain visualization",
+      "imageUrl": "https://picsum.photos/seed/jlmoons-blog3/400/300",
+      "imageHint": "blockchain technology"
+    }
+  ]
+}
