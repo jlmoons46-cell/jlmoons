@@ -54,7 +54,7 @@ export function Hero() {
                 Track. Trace. <span className="text-primary">Recover.</span>
               </h2>
               <p className="text-lg lg:text-xl text-muted-foreground max-w-xl leading-relaxed">
-                We don't just find lost assets—we map the entire investigation. Our intelligence engine identifies attribution, follows cross-chain obfuscation, and secures restoration pathways.
+                We don't just find lost assets. We map the entire investigation. Our intelligence engine identifies attribution, follows cross-chain obfuscation, and secures restoration pathways.
               </p>
             </div>
 
