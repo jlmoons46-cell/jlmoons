@@ -1,7 +1,7 @@
 
 # JLMOONS Database Documentation
 
-This document outlines the database structure and security policies for the JLMOONS Digital Asset Recovery platform, utilizing Supabase (PostgreSQL).
+This document outlines the database structure and security policies for the JLMOONS Digital Asset Recovery platform.
 
 ## Tables
 
@@ -19,7 +19,6 @@ CREATE TABLE recovery_requests (
   recoveryType text,
   qualification_status text,
   message text,
-  -- Add other dynamic fields as needed
   walletType text,
   walletIssueType text,
   availableMaterials text[],
@@ -60,18 +59,13 @@ CREATE TABLE recovery_requests (
   loanCurrentStatus text
 );
 
--- Enable RLS
 ALTER TABLE recovery_requests ENABLE ROW LEVEL SECURITY;
-
--- Policy: Allow anyone to insert (Submit form)
 CREATE POLICY "Public Insert" ON recovery_requests FOR INSERT TO public WITH CHECK (true);
-
--- Policy: Only authenticated admins can view
 CREATE POLICY "Admin View" ON recovery_requests FOR SELECT TO authenticated USING (true);
 ```
 
 ### `app_settings`
-Stores dynamic application configuration settings managed via the Admin Portal.
+Stores dynamic application configuration settings.
 
 ```sql
 CREATE TABLE app_settings (
@@ -80,41 +74,44 @@ CREATE TABLE app_settings (
   updated_at timestamptz DEFAULT now()
 );
 
--- Enable RLS
 ALTER TABLE app_settings ENABLE ROW LEVEL SECURITY;
-
--- Policy: Anyone can read (Landing page)
 CREATE POLICY "Public Read Settings" ON app_settings FOR SELECT TO public USING (true);
-
--- Policy: Only authenticated admins can modify
 CREATE POLICY "Admin Manage Settings" ON app_settings FOR ALL TO authenticated USING (true);
+```
 
--- Initial Setup
-INSERT INTO app_settings (key, value) 
+### `articles`
+Stores educational resources for the Knowledge Hub.
+
+```sql
+CREATE TABLE articles (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at timestamptz DEFAULT now(),
+  title text NOT NULL,
+  description text,
+  tag text,
+  image_url text,
+  slug text UNIQUE,
+  is_published boolean DEFAULT true
+);
+
+ALTER TABLE articles ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public Read Articles" ON articles FOR SELECT TO public USING (is_published = true);
+CREATE POLICY "Admin Manage Articles" ON articles FOR ALL TO authenticated USING (true);
+
+-- Initial Content
+INSERT INTO articles (title, description, tag, image_url, slug)
 VALUES 
-('hero_image_url', 'https://picsum.photos/seed/jlmoons-hero/1200/800'),
-('trust_image_1_url', 'https://picsum.photos/seed/jlmoons-expert/600/400'),
-('trust_image_2_url', 'https://picsum.photos/seed/jlmoons-meeting/600/400'),
-('trust_image_3_url', 'https://picsum.photos/seed/jlmoons-system/600/400')
-ON CONFLICT (key) DO NOTHING;
+('How to Secure Your Crypto Wallet Against Social Engineering', 'Learn the latest tactics hackers use and how to build a robust defense.', 'Security', 'https://picsum.photos/seed/jlmoons-blog1/400/300', 'secure-wallet-social-engineering'),
+('The Anatomy of a Hardware Wallet Forensic Recovery', 'A deep dive into the technical process of extracting data from damaged devices.', 'Recovery', 'https://picsum.photos/seed/jlmoons-blog2/400/300', 'hardware-wallet-forensics'),
+('Understanding Seed Phrases: Why Your Backup Might Be At Risk', 'Common mistakes users make when storing mnemonic phrases.', 'Education', 'https://picsum.photos/seed/jlmoons-blog3/400/300', 'seed-phrase-risks');
 ```
 
 ## Supabase Storage
 
 ### `assets` Bucket
-Used for direct image uploads (Hero images, Trust assets).
-
-1.  **Creation**: Create a bucket named `assets` in the Supabase Storage dashboard.
-2.  **Access**: Set the bucket to **Public**.
-3.  **RLS Policies**: Run the following SQL to allow admins to manage files.
+Used for images. Ensure the bucket is **Public**.
 
 ```sql
--- Allow authenticated users to manage objects in 'assets'
-CREATE POLICY "Admin Assets Manage" ON storage.objects FOR ALL TO authenticated 
-USING (bucket_id = 'assets')
-WITH CHECK (bucket_id = 'assets');
-
--- Allow everyone to view assets
-CREATE POLICY "Public Assets View" ON storage.objects FOR SELECT TO public 
-USING (bucket_id = 'assets');
+CREATE POLICY "Admin Assets Manage" ON storage.objects FOR ALL TO authenticated USING (bucket_id = 'assets');
+CREATE POLICY "Public Assets View" ON storage.objects FOR SELECT TO public USING (bucket_id = 'assets');
 ```

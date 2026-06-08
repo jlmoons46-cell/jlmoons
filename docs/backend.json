@@ -1,0 +1,47 @@
+
+{
+  "entities": {
+    "RecoveryRequest": {
+      "title": "Recovery Request",
+      "description": "A technical intake request for digital asset recovery.",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" },
+        "country": { "type": "string" },
+        "recoveryType": { "type": "string" },
+        "qualification_status": { "type": "string", "enum": ["priority", "standard", "low_threshold"] },
+        "message": { "type": "string" },
+        "submitted_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Article": {
+      "title": "Article",
+      "description": "An educational resource or blog post.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "tag": { "type": "string" },
+        "image_url": { "type": "string" },
+        "content": { "type": "string" },
+        "slug": { "type": "string" },
+        "published_at": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "auth": {
+    "providers": ["email"]
+  },
+  "firestore": {
+    "/recovery_requests/{requestId}": {
+      "schema": "#/backend/entities/RecoveryRequest",
+      "description": "Collection of forensic intake requests."
+    },
+    "/articles/{articleId}": {
+      "schema": "#/backend/entities/Article",
+      "description": "Collection of educational resource articles."
+    }
+  }
+}
