@@ -41,7 +41,8 @@ import {
   Hash,
   Link2,
   Wallet as WalletIcon,
-  AlertTriangle
+  AlertTriangle,
+  ArrowRightLeft
 } from 'lucide-react'
 import { inquireRecoveryDetails } from '@/ai/flows/ai-recovery-inquiry-assistant'
 import { useToast } from '@/hooks/use-toast'
@@ -68,6 +69,10 @@ const formSchema = z.object({
   transactionHash: z.string().optional(),
   scammerWebsite: z.string().optional(),
   scammerContact: z.string().optional(),
+  // Wrong Address specific fields
+  sendingWallet: z.string().optional(),
+  destinationWallet: z.string().optional(),
+  destinationType: z.string().optional(),
   message: z.string().min(20, "Message must be at least 20 characters"),
 })
 
@@ -151,6 +156,9 @@ export function RecoveryForm() {
       transactionHash: "",
       scammerWebsite: "",
       scammerContact: "",
+      sendingWallet: "",
+      destinationWallet: "",
+      destinationType: "",
       message: "",
     },
   })
@@ -890,6 +898,106 @@ export function RecoveryForm() {
                       </div>
                     )}
 
+                    {/* Case Type 6: Wrong Address Transfer */}
+                    {watchRecoveryType === 'wrong_address' && (
+                      <div className="space-y-8 border-t border-white/5 pt-10 animate-in fade-in slide-in-from-top-4">
+                        <h4 className="text-lg font-bold text-secondary flex items-center gap-2">
+                          <ArrowRightLeft className="w-5 h-5" />
+                          Forensic Details: Wrong Address Recovery
+                        </h4>
+
+                        <FormField
+                          control={form.control}
+                          name="cryptoCurrency"
+                          render={({ field }) => (
+                            <FormItem className="space-y-2">
+                              <FormLabel>Which cryptocurrency was sent?</FormLabel>
+                              <FormControl>
+                                <Input placeholder="e.g. USDT (ERC20)" className="h-12 bg-background/50" {...field} />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+
+                        <div className="grid sm:grid-cols-2 gap-6">
+                          <FormField
+                            control={form.control}
+                            name="sendingWallet"
+                            render={({ field }) => (
+                              <FormItem className="space-y-2">
+                                <FormLabel className="flex items-center gap-2">
+                                  <WalletIcon className="w-4 h-4 text-primary" />
+                                  Sending Wallet Address
+                                </FormLabel>
+                                <FormControl>
+                                  <Input placeholder="0x..." className="h-12 bg-background/50" {...field} />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="destinationWallet"
+                            render={({ field }) => (
+                              <FormItem className="space-y-2">
+                                <FormLabel className="flex items-center gap-2">
+                                  <WalletIcon className="w-4 h-4 text-primary" />
+                                  Destination Wallet Address
+                                </FormLabel>
+                                <FormControl>
+                                  <Input placeholder="0x..." className="h-12 bg-background/50" {...field} />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+
+                        <FormField
+                          control={form.control}
+                          name="transactionHash"
+                          render={({ field }) => (
+                            <FormItem className="space-y-2">
+                              <FormLabel className="flex items-center gap-2">
+                                <Hash className="w-4 h-4 text-secondary" />
+                                Transaction Hash (TXID)
+                              </FormLabel>
+                              <FormControl>
+                                <Input placeholder="Full transaction hash" className="h-12 bg-background/50" {...field} />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="destinationType"
+                          render={({ field }) => (
+                            <FormItem className="space-y-3">
+                              <FormLabel>Is the destination address an exchange or a self-custody wallet?</FormLabel>
+                              <FormControl>
+                                <RadioGroup
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                  className="flex flex-col sm:flex-row gap-6"
+                                >
+                                  {[
+                                    { id: 'exchange', label: 'Exchange' },
+                                    { id: 'self_custody', label: 'Self-custody wallet' },
+                                    { id: 'unknown', label: 'Unknown' }
+                                  ].map((opt) => (
+                                    <div key={opt.id} className="flex items-center space-x-3">
+                                      <RadioGroupItem value={opt.id} id={`dest-${opt.id}`} />
+                                      <Label htmlFor={`dest-${opt.id}`} className="cursor-pointer font-medium">{opt.label}</Label>
+                                    </div>
+                                  ))}
+                                </RadioGroup>
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    )}
+
                     <div className="grid gap-8 border-t border-white/5 pt-10">
                       <FormField
                         control={form.control}
@@ -959,7 +1067,7 @@ export function RecoveryForm() {
                       </Button>
                       <div className="space-y-2">
                         <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground text-center font-bold">
-                          Receive an expert evaluation before deciding on next steps.
+                          Confidential assessment. No obligation. Recovery feasibility determined before any recovery work begins.
                         </p>
                         <p className="text-[10px] text-muted-foreground/60 text-center italic">
                           All submissions are encrypted using 256-bit bank-grade protocols.
