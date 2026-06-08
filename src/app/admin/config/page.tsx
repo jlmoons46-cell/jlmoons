@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useEffect, useCallback } from 'react'
@@ -27,18 +28,23 @@ export default function AppConfigPage() {
 
   const fetchSettings = async () => {
     setIsLoading(true)
-    const { data, error } = await supabase
-      .from('app_settings')
-      .select('key, value')
-    
-    if (data) {
-      const newSettings = { ...settings }
-      data.forEach((item: any) => {
-        newSettings[item.key] = item.value
-      })
-      setSettings(newSettings)
+    try {
+      const { data, error } = await supabase
+        .from('app_settings')
+        .select('key, value')
+      
+      if (data) {
+        const newSettings = { ...settings }
+        data.forEach((item: any) => {
+          newSettings[item.key] = item.value
+        })
+        setSettings(newSettings)
+      }
+    } catch (err) {
+      console.error('Fetch settings error:', err)
+    } finally {
+      setIsLoading(false)
     }
-    setIsLoading(false)
   }
 
   useEffect(() => {
@@ -89,13 +95,22 @@ export default function AppConfigPage() {
     try {
       const fileExt = file.name.split('.').pop()
       const fileName = `${key}-${Math.random().toString(36).substring(2)}.${fileExt}`
-      const filePath = `assets/${fileName}`
+      
+      // We use the filename directly in the root of the 'assets' bucket
+      const filePath = fileName 
 
-      const { error: uploadError } = await supabase.storage
+      const { data: uploadData, error: uploadError } = await supabase.storage
         .from('assets')
-        .upload(filePath, file)
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: true,
+          contentType: file.type
+        })
 
-      if (uploadError) throw uploadError
+      if (uploadError) {
+        console.error('Storage Upload Error:', uploadError)
+        throw new Error(uploadError.message || 'Upload failed. Ensure "assets" bucket exists and is public.')
+      }
 
       const { data: { publicUrl } } = supabase.storage
         .from('assets')
@@ -111,7 +126,7 @@ export default function AppConfigPage() {
     } catch (error: any) {
       toast({
         title: "Upload Failed",
-        description: "Ensure the 'assets' bucket exists and is public.",
+        description: error.message || "Ensure the 'assets' bucket exists in Supabase Storage and is set to Public.",
         variant: "destructive",
       })
     } finally {
@@ -121,9 +136,15 @@ export default function AppConfigPage() {
 
   return (
     <div className="p-8 max-w-6xl space-y-12">
-      <div>
-        <h1 className="text-3xl font-extrabold uppercase tracking-tight mb-2">Platform Visuals</h1>
-        <p className="text-muted-foreground">Manage dynamic identity assets and trust indicators.</p>
+      <div className="flex justify-between items-start">
+        <div>
+          <h1 className="text-3xl font-extrabold uppercase tracking-tight mb-2">Platform Visuals</h1>
+          <p className="text-muted-foreground">Manage dynamic identity assets and trust indicators.</p>
+        </div>
+        <Button variant="outline" size="sm" onClick={fetchSettings} disabled={isLoading} className="border-white/10">
+          <RefreshCcw className={cn("w-4 h-4 mr-2", isLoading && "animate-spin")} />
+          Reload Settings
+        </Button>
       </div>
 
       <div className="grid gap-12">

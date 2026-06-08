@@ -1,3 +1,4 @@
+
 # JLMOONS Database Documentation
 
 This document outlines the database structure and security policies for the JLMOONS Digital Asset Recovery platform, utilizing Supabase (PostgreSQL).
@@ -36,6 +37,18 @@ Used for direct image uploads (Hero images, Trust assets).
 
 1.  **Creation**: Create a bucket named `assets` in the Supabase Storage dashboard.
 2.  **Access**: Set the bucket to **Public**.
+3.  **RLS Policies**: Ensure you have a policy that allows **Authenticated** users to `INSERT` and `UPDATE` objects, and allows **Public** (anon) users to `SELECT` (read) objects.
+
+Example SQL for Storage RLS:
+```sql
+-- Allow authenticated users to upload/update
+CREATE POLICY "Admin Upload" ON storage.objects FOR INSERT TO authenticated WITH CHECK (bucket_id = 'assets');
+CREATE POLICY "Admin Update" ON storage.objects FOR UPDATE TO authenticated USING (bucket_id = 'assets');
+CREATE POLICY "Admin Delete" ON storage.objects FOR DELETE TO authenticated USING (bucket_id = 'assets');
+
+-- Allow everyone to view assets
+CREATE POLICY "Public View" ON storage.objects FOR SELECT TO public USING (bucket_id = 'assets');
+```
 
 ## Initial Configuration
 To enable dynamic visuals, run this SQL:
