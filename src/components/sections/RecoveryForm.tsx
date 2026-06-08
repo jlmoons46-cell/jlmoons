@@ -294,12 +294,6 @@ export function RecoveryForm() {
                         WhatsApp Secure Channel
                       </a>
                     </Button>
-                    <Button variant="outline" className="justify-start gap-3 border-white/10 hover:bg-white/5 h-12" asChild>
-                      <a href="#" target="_blank">
-                        <Send className="w-4 h-4 text-primary" />
-                        Telegram Technical Portal
-                      </a>
-                    </Button>
                   </div>
                 </div>
               </div>
@@ -889,19 +883,25 @@ export function RecoveryForm() {
                             render={({ field }) => (
                               <FormItem className="space-y-2">
                                 <FormLabel>Cryptocurrency Used</FormLabel>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                                  {['BTC', 'ETH', 'USDT', 'SOL', 'Other'].map(opt => (
-                                    <div key={opt}>
-                                      <RadioGroupItem value={opt} id={`crypto-${opt}`} className="peer sr-only" />
-                                      <Label 
-                                        htmlFor={`crypto-${opt}`}
-                                        className="flex items-center justify-center h-10 rounded-lg border border-white/10 bg-background/50 hover:bg-white/5 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 peer-data-[state=checked]:text-primary cursor-pointer transition-all text-xs font-semibold"
-                                      >
-                                        {opt}
-                                      </Label>
-                                    </div>
-                                  ))}
-                                </div>
+                                <FormControl>
+                                  <RadioGroup
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                    className="grid grid-cols-2 sm:grid-cols-3 gap-3"
+                                  >
+                                    {['BTC', 'ETH', 'USDT', 'SOL', 'Other'].map(opt => (
+                                      <div key={opt}>
+                                        <RadioGroupItem value={opt} id={`crypto-${opt}`} className="peer sr-only" />
+                                        <Label 
+                                          htmlFor={`crypto-${opt}`}
+                                          className="flex items-center justify-center h-10 rounded-lg border border-white/10 bg-background/50 hover:bg-white/5 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 peer-data-[state=checked]:text-primary cursor-pointer transition-all text-xs font-semibold"
+                                        >
+                                          {opt}
+                                        </Label>
+                                      </div>
+                                    ))}
+                                  </RadioGroup>
+                                </FormControl>
                               </FormItem>
                             )}
                           />
