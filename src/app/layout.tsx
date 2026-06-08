@@ -2,8 +2,8 @@ import type {Metadata} from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'JLMOONS | Expert Crypto & Digital Asset Recovery',
-  description: 'Trusted specialists worldwide for recovering lost crypto, wallet access, and hacked accounts. $8M+ recovered with a 94% success rate.',
+  title: 'JLMOONS | Digital Asset Recovery & Forensics',
+  description: 'Investigate. Recover. Restore. Professional blockchain forensics and crypto recovery specialists specializing in wallet restoration and scam investigations.',
 };
 
 export default function RootLayout({

@@ -11,19 +11,22 @@ export function Footer() {
               <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-headline text-xl font-bold gold-glow">
                 JL
               </div>
-              <span className="font-headline text-2xl font-bold tracking-tight">MOONS</span>
+              <div className="flex flex-col">
+                <span className="font-headline text-2xl font-bold tracking-tight">MOONS</span>
+                <span className="text-[10px] text-primary font-bold uppercase tracking-widest -mt-1">Forensics</span>
+              </div>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Leading global specialists in cryptographic asset recovery and digital forensics. Trusted by private holders and enterprise exchanges since 2018.
+              JLMOONS is a digital asset recovery and blockchain forensics firm specializing in wallet recovery, asset tracing, scam investigations, and technical recovery services.
             </p>
           </div>
 
           <div>
-            <h4 className="font-bold mb-6 uppercase text-xs tracking-[0.2em] text-primary">Quick Links</h4>
+            <h4 className="font-bold mb-6 uppercase text-xs tracking-[0.2em] text-primary">Technical Links</h4>
             <ul className="space-y-4 text-sm text-muted-foreground">
-              <li><Link href="#services" className="hover:text-primary transition-colors">Services</Link></li>
-              <li><Link href="#recovery-types" className="hover:text-primary transition-colors">Recovery Types</Link></li>
-              <li><Link href="#how-it-works" className="hover:text-primary transition-colors">Methodology</Link></li>
+              <li><Link href="#services" className="hover:text-primary transition-colors">Forensic Services</Link></li>
+              <li><Link href="#recovery-types" className="hover:text-primary transition-colors">Recovery Scenarios</Link></li>
+              <li><Link href="#how-it-works" className="hover:text-primary transition-colors">Our Methodology</Link></li>
               <li><Link href="#blog" className="hover:text-primary transition-colors">Resource Center</Link></li>
             </ul>
           </div>
@@ -33,29 +36,29 @@ export function Footer() {
             <ul className="space-y-4 text-sm text-muted-foreground">
               <li className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-primary" />
-                support@jlmoons.com
+                investigation@jlmoons.com
               </li>
               <li className="flex items-center gap-3">
                 <Clock className="w-4 h-4 text-primary" />
-                24/7 Monitoring
+                24/7 Forensic Monitoring
               </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-bold mb-6 uppercase text-xs tracking-[0.2em] text-primary">Legal</h4>
+            <h4 className="font-bold mb-6 uppercase text-xs tracking-[0.2em] text-primary">Standards</h4>
             <ul className="space-y-4 text-sm text-muted-foreground">
               <li><Link href="#" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
-              <li><Link href="#" className="hover:text-primary transition-colors">Terms of Service</Link></li>
-              <li><Link href="#" className="hover:text-primary transition-colors">Cookie Policy</Link></li>
+              <li><Link href="#" className="hover:text-primary transition-colors">Terms of Engagement</Link></li>
               <li><Link href="#" className="hover:text-primary transition-colors">Security Audit</Link></li>
+              <li><Link href="#" className="hover:text-primary transition-colors">Case Confidentiality</Link></li>
             </ul>
           </div>
         </div>
 
         <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground uppercase tracking-widest">
-          <p>© {new Date().getFullYear()} JLMOONS RECOVERY. All rights reserved.</p>
-          <p>Worldwide Digital Asset Restoration Specialists</p>
+          <p>© {new Date().getFullYear()} JLMOONS DIGITAL ASSET RECOVERY & FORENSICS. All rights reserved.</p>
+          <p>Global Leaders in Cryptographic Restoration</p>
         </div>
       </div>
     </footer>
