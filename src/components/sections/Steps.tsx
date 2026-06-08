@@ -75,7 +75,7 @@ export function Steps() {
   const currentMethodology = methodologies[activeType]
 
   return (
-    <section id="how-it-works" className="py-32 bg-[#07111F] relative overflow-hidden border-y border-white/5">
+    <section id="how-it-works" className="py-24 bg-[#07111F] relative overflow-hidden border-y border-white/5">
       {/* Decorative Glows */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
         <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-[120px]" />
@@ -86,12 +86,12 @@ export function Steps() {
         <div className="text-center max-w-3xl mx-auto">
           <h2 className="text-xs font-bold tracking-[0.2em] text-secondary uppercase mb-4">Forensic Standards</h2>
           <h3 className="text-4xl lg:text-5xl font-bold mb-6">Our Recovery Methodology</h3>
-          <p className="text-muted-foreground text-lg mb-12">
+          <p className="text-muted-foreground text-lg mb-10">
             Every recovery follows a specialized forensic workflow designed for your specific situation.
           </p>
 
-          {/* Case Type Switcher - Increased margin to prevent card overlap */}
-          <div className="flex flex-wrap justify-center gap-3 mb-32 lg:mb-40">
+          {/* Case Type Switcher */}
+          <div className="flex flex-wrap justify-center gap-3 mb-20">
             {(Object.keys(methodologies) as MethodologyType[]).map((type) => (
               <Button
                 key={type}
@@ -109,32 +109,32 @@ export function Steps() {
         </div>
 
         {/* Timeline - Desktop */}
-        <div className="hidden lg:block relative min-height-[950px] mt-12">
-          {/* Main Horizontal Line - Fixed position to ensure cards have room above */}
-          <div className="absolute top-[450px] left-0 w-[85%] h-[2px] bg-white/10" />
+        <div className="hidden lg:block relative min-h-[700px]">
+          {/* Main Horizontal Line - Reserving area for cards above and below */}
+          <div className="absolute top-[150px] left-0 w-[85%] h-[2px] bg-white/10" />
           
-          <div className="grid grid-cols-5 relative pt-[450px]">
+          <div className="grid grid-cols-5 relative pt-[150px]">
             {currentMethodology.steps.map((step, index) => {
               const isTop = index % 2 === 0
               return (
                 <div key={`${activeType}-${step.id}`} className="relative flex flex-col items-center">
                   {/* Connecting Vertical Line */}
                   <div className={cn(
-                    "absolute left-1/2 -translate-x-1/2 w-[1px] bg-white/15 h-32 transition-all duration-500",
+                    "absolute left-1/2 -translate-x-1/2 w-[1px] bg-white/15 h-20 transition-all duration-500",
                     isTop ? "bottom-full" : "top-0"
                   )} />
                   
-                  {/* Step Node Icon - Clean and focused */}
+                  {/* Step Node Icon */}
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
-                    <div className="w-16 h-16 rounded-full bg-[#07111F] border border-white/15 flex items-center justify-center teal-glow group transition-transform hover:scale-110">
-                      <step.icon className="w-6 h-6 text-secondary" />
+                    <div className="w-14 h-14 rounded-full bg-[#07111F] border border-white/15 flex items-center justify-center teal-glow group transition-transform hover:scale-110">
+                      <step.icon className="w-5 h-5 text-secondary" />
                     </div>
                   </div>
 
-                  {/* Step Content Card - Positioned relative to the line without negative offsets */}
+                  {/* Step Content Card - Floating above or below the node */}
                   <div className={cn(
                     "absolute left-1/2 -translate-x-1/2 w-[220px] p-5 rounded-xl bg-card border border-white/5 shadow-2xl animate-in fade-in slide-in-from-bottom-2 duration-700",
-                    isTop ? "bottom-[calc(100%+80px)]" : "top-[80px]"
+                    isTop ? "bottom-[calc(100%+60px)]" : "top-[60px]"
                   )}>
                     <div className="text-[9px] font-bold uppercase tracking-[0.2em] text-secondary mb-2">Step 0{step.id}</div>
                     <h4 className="text-sm font-bold mb-1.5 text-foreground leading-tight">{step.title}</h4>
@@ -152,9 +152,9 @@ export function Steps() {
                 <div className="w-8 h-8 bg-secondary-foreground/10 rounded-full flex items-center justify-center mb-2">
                   <CheckCircle2 className="w-4 h-4" />
                 </div>
-                <h4 className="text-base font-bold mb-1 leading-tight">{currentMethodology.finalLabel}</h4>
+                <h4 className="text-sm font-bold mb-1 leading-tight uppercase tracking-tight">{currentMethodology.finalLabel}</h4>
                 <p className="text-[9px] font-medium opacity-90 mb-3 leading-tight">
-                  Secure assessment & results delivery.
+                  Secure assessment & delivery.
                 </p>
                 <Button variant="outline" size="sm" className="h-7 px-3 bg-transparent border-secondary-foreground/20 hover:bg-secondary-foreground/10 text-secondary-foreground font-bold text-[8px] uppercase tracking-wider" asChild>
                   <Link href="#recovery-form">Start Now <ArrowRight className="ml-1 w-2.5 h-2.5" /></Link>
