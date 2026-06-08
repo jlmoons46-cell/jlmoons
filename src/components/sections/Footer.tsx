@@ -7,14 +7,13 @@ export function Footer() {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           <div className="space-y-6">
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-headline text-xl font-bold gold-glow">
-                JL
-              </div>
-              <div className="flex flex-col">
-                <span className="font-headline text-2xl font-bold tracking-tight">MOONS</span>
-                <span className="text-[10px] text-primary font-bold uppercase tracking-widest -mt-1">Forensics</span>
-              </div>
+            <Link href="/" className="flex flex-col group">
+              <span className="font-headline text-2xl font-extrabold tracking-tighter text-foreground uppercase">
+                JLMOONS
+              </span>
+              <span className="text-[10px] text-primary font-bold uppercase tracking-[0.2em] -mt-1">
+                Digital Asset Recovery & Forensics
+              </span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
               JLMOONS is a digital asset recovery and blockchain forensics firm specializing in wallet recovery, asset tracing, scam investigations, and technical recovery services.
