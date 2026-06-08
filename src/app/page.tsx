@@ -3,6 +3,7 @@ import { Hero } from '@/components/sections/Hero'
 import { Eligibility } from '@/components/sections/Eligibility'
 import { Services } from '@/components/sections/Services'
 import { Steps } from '@/components/sections/Steps'
+import { WhyTrustUs } from '@/components/sections/WhyTrustUs'
 import { TrustStrip } from '@/components/sections/TrustStrip'
 import { RecoveryForm } from '@/components/sections/RecoveryForm'
 import { Testimonials } from '@/components/sections/Testimonials'
@@ -18,6 +19,7 @@ export default function Home() {
       <Eligibility />
       <Services />
       <Steps />
+      <WhyTrustUs />
       <TrustStrip />
       <RecoveryForm />
       <Testimonials />
