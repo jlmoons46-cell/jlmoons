@@ -30,7 +30,7 @@ const services = [
   {
     icon: FileText,
     title: "Loan Scam Recovery",
-    description: "Assistance for victims of fraudulent lending platforms and advanced-fee loan traps.",
+    description: "Targeted forensic investigations for victims of fake loan offers, advance-fee fraud, and unauthorized lending schemes.",
   },
   {
     icon: Zap,

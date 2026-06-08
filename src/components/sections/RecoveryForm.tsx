@@ -54,7 +54,11 @@ import {
   Heart,
   TrendingUp,
   Key,
-  Database
+  Database,
+  FileText,
+  Search,
+  CreditCard,
+  History
 } from 'lucide-react'
 import { inquireRecoveryDetails } from '@/ai/flows/ai-recovery-inquiry-assistant'
 import { useToast } from '@/hooks/use-toast'
@@ -97,6 +101,18 @@ const formSchema = z.object({
   investWalletAddress: z.string().optional(),
   investLastTransferDate: z.string().optional(),
   investStillCommunicating: z.string().optional(),
+  // Loan Scam fields
+  loanLenderName: z.string().optional(),
+  loanLenderWebsite: z.string().optional(),
+  loanLenderCountry: z.string().optional(),
+  loanDiscoveryMethod: z.string().optional(),
+  loanUpfrontFeesPaid: z.string().optional(),
+  loanTotalPaid: z.string().optional(),
+  loanCurrency: z.string().optional(),
+  loanFundDestination: z.string().optional(),
+  loanTransactionDetails: z.string().optional(),
+  loanEvidenceItems: z.array(z.string()).default([]),
+  loanCurrentStatus: z.string().optional(),
   // General message
   message: z.string().min(20, "Message must be at least 20 characters"),
 })
@@ -107,6 +123,7 @@ const recoveryOptions = [
   { id: 'bad_broker', label: 'Bad Broker Recovery' },
   { id: 'romance_scam', label: 'Romance Scam Recovery' },
   { id: 'investment_scam', label: 'Investment Scam Recovery' },
+  { id: 'loan_scam', label: 'Loan Scam Recovery' },
   { id: 'other', label: 'Other Technical Issue' },
 ]
 
@@ -126,6 +143,7 @@ const trustIndicators: Record<string, string[]> = {
   bad_broker: ["Asset Flow Investigation", "Transaction Analysis", "Recovery Strategy Review"],
   romance_scam: ["Blockchain Tracing", "Exchange Intelligence", "Evidence Collection"],
   investment_scam: ["Asset Flow Investigation", "Transaction Analysis", "Recovery Strategy Review"],
+  loan_scam: ["Payment Trail Analysis", "Evidence Documentation", "Lender Identity Audit"],
 }
 
 function CaseTrustHeader({ type }: { type: string }) {
@@ -184,12 +202,23 @@ export function RecoveryForm() {
       investWalletAddress: "",
       investLastTransferDate: "",
       investStillCommunicating: "",
+      loanLenderName: "",
+      loanLenderWebsite: "",
+      loanLenderCountry: "",
+      loanDiscoveryMethod: "",
+      loanUpfrontFeesPaid: "",
+      loanTotalPaid: "",
+      loanCurrency: "",
+      loanFundDestination: "",
+      loanTransactionDetails: "",
+      loanEvidenceItems: [],
+      loanCurrentStatus: "",
       message: "",
     },
   })
 
   const watchRecoveryType = form.watch("recoveryType")
-  const watchEstimatedValue = form.watch("totalDeposited") || form.watch("brokerDeposited") || form.watch("estimatedAssetValue") || form.watch("romanceLoss") || form.watch("investAmount") || "0"
+  const watchEstimatedValue = form.watch("totalDeposited") || form.watch("brokerDeposited") || form.watch("estimatedAssetValue") || form.watch("romanceLoss") || form.watch("investAmount") || form.watch("loanTotalPaid") || "0"
 
   const qualificationStatus = useMemo(() => {
     const value = parseFloat(watchEstimatedValue) || 0;
@@ -960,6 +989,277 @@ export function RecoveryForm() {
                             )}
                           />
                         </div>
+                      </div>
+                    )}
+
+                    {/* Case Type: Loan Scam Recovery */}
+                    {watchRecoveryType === 'loan_scam' && (
+                      <div className="space-y-8 border-t border-white/5 pt-10 animate-in fade-in slide-in-from-top-4">
+                        <h4 className="text-lg font-bold text-secondary flex items-center gap-2">
+                          <FileText className="w-5 h-5" />
+                          Forensic Details: Loan Scam Investigation
+                        </h4>
+
+                        <CaseTrustHeader type="loan_scam" />
+                        
+                        <div className="grid sm:grid-cols-2 gap-6">
+                          <FormField
+                            control={form.control}
+                            name="loanLenderName"
+                            render={({ field }) => (
+                              <FormItem className="space-y-2">
+                                <FormLabel>Lender Name / Platform</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="e.g. FastCapital Loans" className="h-12 bg-background/50" {...field} />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="loanLenderWebsite"
+                            render={({ field }) => (
+                              <FormItem className="space-y-2">
+                                <FormLabel className="flex items-center gap-2">
+                                  <Link2 className="w-4 h-4 text-primary" />
+                                  Website URL
+                                </FormLabel>
+                                <FormControl>
+                                  <Input placeholder="https://..." className="h-12 bg-background/50" {...field} />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+
+                        <FormField
+                          control={form.control}
+                          name="loanLenderCountry"
+                          render={({ field }) => (
+                            <FormItem className="space-y-2">
+                              <FormLabel>Country of Operation (If Known)</FormLabel>
+                              <FormControl>
+                                <Input placeholder="e.g. Panama, UK" className="h-12 bg-background/50" {...field} />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="loanDiscoveryMethod"
+                          render={({ field }) => (
+                            <FormItem className="space-y-4">
+                              <FormLabel className="flex items-center gap-2">
+                                <Search className="w-4 h-4 text-primary" />
+                                How Did You Discover Them?
+                              </FormLabel>
+                              <FormControl>
+                                <RadioGroup
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                  className="grid grid-cols-2 sm:grid-cols-4 gap-3"
+                                >
+                                  {['Google Search', 'Facebook', 'Instagram', 'WhatsApp', 'Telegram', 'Email', 'Referral', 'Other'].map((method) => (
+                                    <div key={method}>
+                                      <RadioGroupItem value={method.toLowerCase()} id={`discover-${method}`} className="peer sr-only" />
+                                      <Label 
+                                        htmlFor={`discover-${method}`}
+                                        className="flex items-center justify-center h-10 rounded-lg border border-white/10 bg-background/50 hover:bg-white/5 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 peer-data-[state=checked]:text-primary cursor-pointer transition-all text-[10px] font-bold uppercase tracking-tighter"
+                                      >
+                                        {method}
+                                      </Label>
+                                    </div>
+                                  ))}
+                                </RadioGroup>
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+
+                        <div className="grid sm:grid-cols-2 gap-8">
+                          <FormField
+                            control={form.control}
+                            name="loanUpfrontFeesPaid"
+                            render={({ field }) => (
+                              <FormItem className="space-y-3">
+                                <FormLabel>Did You Pay Upfront Fees?</FormLabel>
+                                <FormControl>
+                                  <RadioGroup
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                    className="flex gap-6"
+                                  >
+                                    {['Yes', 'No'].map((val) => (
+                                      <div key={val} className="flex items-center space-x-3">
+                                        <RadioGroupItem value={val.toLowerCase()} id={`fees-paid-${val}`} />
+                                        <Label htmlFor={`fees-paid-${val}`} className="cursor-pointer font-medium">{val}</Label>
+                                      </div>
+                                    ))}
+                                  </RadioGroup>
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                          <div className="grid grid-cols-2 gap-3">
+                            <FormField
+                              control={form.control}
+                              name="loanTotalPaid"
+                              render={({ field }) => (
+                                <FormItem className="space-y-2">
+                                  <FormLabel>Total Amount Paid</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="e.g. 5000" className="h-12 bg-background/50" {...field} />
+                                  </FormControl>
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name="loanCurrency"
+                              render={({ field }) => (
+                                <FormItem className="space-y-2">
+                                  <FormLabel>Currency</FormLabel>
+                                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl>
+                                      <SelectTrigger className="h-12 bg-background/50">
+                                        <SelectValue placeholder="USD" />
+                                      </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                      {['USD', 'EUR', 'GBP', 'Crypto', 'Other'].map(curr => (
+                                        <SelectItem key={curr} value={curr}>{curr}</SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="space-y-6">
+                          <FormField
+                            control={form.control}
+                            name="loanFundDestination"
+                            render={({ field }) => (
+                              <FormItem className="space-y-4">
+                                <FormLabel className="flex items-center gap-2">
+                                  <CreditCard className="w-4 h-4 text-primary" />
+                                  Where Were Funds Sent?
+                                </FormLabel>
+                                <FormControl>
+                                  <RadioGroup
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                    className="grid grid-cols-2 sm:grid-cols-3 gap-3"
+                                  >
+                                    {['Bank Transfer', 'Credit Card', 'Cryptocurrency Wallet', 'Wire Transfer', 'Other'].map((dest) => (
+                                      <div key={dest}>
+                                        <RadioGroupItem value={dest.toLowerCase()} id={`dest-${dest}`} className="peer sr-only" />
+                                        <Label 
+                                          htmlFor={`dest-${dest}`}
+                                          className="flex items-center justify-center h-10 rounded-lg border border-white/10 bg-background/50 hover:bg-white/5 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 peer-data-[state=checked]:text-primary cursor-pointer transition-all text-[10px] font-bold uppercase tracking-tighter"
+                                        >
+                                          {dest}
+                                        </Label>
+                                      </div>
+                                    ))}
+                                  </RadioGroup>
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="loanTransactionDetails"
+                            render={({ field }) => (
+                              <FormItem className="space-y-2">
+                                <FormLabel>Transaction IDs or Wallet Addresses</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="Enter details..." className="h-12 bg-background/50 font-mono text-xs" {...field} />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+
+                        <FormField
+                          control={form.control}
+                          name="loanEvidenceItems"
+                          render={() => (
+                            <FormItem className="space-y-4">
+                              <FormLabel className="flex items-center gap-2">
+                                <History className="w-4 h-4 text-primary" />
+                                Do You Have Any Evidence?
+                              </FormLabel>
+                              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                {['Emails', 'Chat Messages', 'Contracts', 'Payment Receipts', 'Screenshots', 'Website Links'].map((item) => (
+                                  <FormField
+                                    key={item}
+                                    control={form.control}
+                                    name="loanEvidenceItems"
+                                    render={({ field }) => {
+                                      return (
+                                        <FormItem
+                                          key={item}
+                                          className="flex flex-row items-start space-x-3 space-y-0"
+                                        >
+                                          <FormControl>
+                                            <Checkbox
+                                              checked={field.value?.includes(item.toLowerCase())}
+                                              onCheckedChange={(checked) => {
+                                                return checked
+                                                  ? field.onChange([...field.value, item.toLowerCase()])
+                                                  : field.onChange(
+                                                      field.value?.filter(
+                                                        (value) => value !== item.toLowerCase()
+                                                      )
+                                                    )
+                                              }}
+                                            />
+                                          </FormControl>
+                                          <FormLabel className="text-xs font-medium leading-none">
+                                            {item}
+                                          </FormLabel>
+                                        </FormItem>
+                                      )
+                                    }}
+                                  />
+                                ))}
+                              </div>
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="loanCurrentStatus"
+                          render={({ field }) => (
+                            <FormItem className="space-y-4">
+                              <FormLabel>Current Status (What happened after payment?)</FormLabel>
+                              <FormControl>
+                                <RadioGroup
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                  className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+                                >
+                                  {['Loan never issued', 'Additional fees requested', 'Account blocked', 'Website disappeared', 'Unable to contact lender', 'Other'].map((status) => (
+                                    <div key={status}>
+                                      <RadioGroupItem value={status.toLowerCase()} id={`status-${status}`} className="peer sr-only" />
+                                      <Label 
+                                        htmlFor={`status-${status}`}
+                                        className="flex items-center justify-center h-10 rounded-lg border border-white/10 bg-background/50 hover:bg-white/5 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 peer-data-[state=checked]:text-primary cursor-pointer transition-all text-[10px] font-bold uppercase tracking-tighter"
+                                      >
+                                        {status}
+                                      </Label>
+                                    </div>
+                                  ))}
+                                </RadioGroup>
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
                       </div>
                     )}
 
