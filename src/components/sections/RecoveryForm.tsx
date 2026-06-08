@@ -26,7 +26,23 @@ import {
   SelectValue 
 } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
-import { Send, MessageSquare, Loader2, Sparkles, MessageCircle, ShieldCheck, ClipboardCheck, Binary, Building2 } from 'lucide-react'
+import { 
+  Send, 
+  MessageSquare, 
+  Loader2, 
+  Sparkles, 
+  MessageCircle, 
+  ShieldCheck, 
+  ClipboardCheck, 
+  Binary, 
+  Building2, 
+  ShieldAlert,
+  Calendar as CalendarIcon,
+  Hash,
+  Link2,
+  Wallet as WalletIcon,
+  AlertTriangle
+} from 'lucide-react'
 import { inquireRecoveryDetails } from '@/ai/flows/ai-recovery-inquiry-assistant'
 import { useToast } from '@/hooks/use-toast'
 
@@ -43,6 +59,15 @@ const formSchema = z.object({
   exchangeProblem: z.string().optional(),
   contactedExchange: z.string().optional(),
   estimatedValue: z.string().optional(),
+  // Scam specific fields
+  scamType: z.string().optional(),
+  amountLost: z.string().optional(),
+  cryptoCurrency: z.string().optional(),
+  incidentDate: z.string().optional(),
+  scamWalletAddress: z.string().optional(),
+  transactionHash: z.string().optional(),
+  scammerWebsite: z.string().optional(),
+  scammerContact: z.string().optional(),
   message: z.string().min(20, "Message must be at least 20 characters"),
 })
 
@@ -55,6 +80,17 @@ const recoveryOptions = [
   { id: 'wrong_address', label: 'Wrong Address Transaction' },
   { id: 'inheritance', label: 'Inheritance / Estate Case' },
   { id: 'other', label: 'Other Technical Issue' },
+]
+
+const scamOptions = [
+  "Investment Scam",
+  "Pig Butchering",
+  "Fake Exchange",
+  "Romance Scam",
+  "Impersonation Scam",
+  "Wallet Drainer",
+  "Phishing Attack",
+  "Other"
 ]
 
 const walletOptions = ["Electrum", "Exodus", "Atomic", "Trust Wallet", "MetaMask", "Other"]
@@ -107,6 +143,14 @@ export function RecoveryForm() {
       exchangeProblem: "",
       contactedExchange: "",
       estimatedValue: "",
+      scamType: "",
+      amountLost: "",
+      cryptoCurrency: "",
+      incidentDate: "",
+      scamWalletAddress: "",
+      transactionHash: "",
+      scammerWebsite: "",
+      scammerContact: "",
       message: "",
     },
   })
@@ -266,7 +310,7 @@ export function RecoveryForm() {
                       )}
                     />
 
-                    {/* Dynamic Case Details for Lost Password */}
+                    {/* Case Type 1: Lost Password */}
                     {watchRecoveryType === 'lost_password' && (
                       <div className="space-y-8 border-t border-white/5 pt-10 animate-in fade-in slide-in-from-top-4">
                         <h4 className="text-lg font-bold text-secondary">Forensic Details: Password Recovery</h4>
@@ -366,7 +410,7 @@ export function RecoveryForm() {
                       </div>
                     )}
 
-                    {/* Dynamic Case Details for Lost Seed Phrase */}
+                    {/* Case Type 2: Lost Seed Phrase */}
                     {watchRecoveryType === 'lost_seed' && (
                       <div className="space-y-8 border-t border-white/5 pt-10 animate-in fade-in slide-in-from-top-4">
                         <h4 className="text-lg font-bold text-secondary">Forensic Details: Seed Phrase Reconstruction</h4>
@@ -490,7 +534,7 @@ export function RecoveryForm() {
                       </div>
                     )}
 
-                    {/* Dynamic Case Details for Hardware Wallet */}
+                    {/* Case Type 3: Hardware Wallet */}
                     {watchRecoveryType === 'hardware_issue' && (
                       <div className="space-y-8 border-t border-white/5 pt-10 animate-in fade-in slide-in-from-top-4">
                         <h4 className="text-lg font-bold text-secondary">Forensic Details: Hardware Wallet Investigation</h4>
@@ -580,7 +624,7 @@ export function RecoveryForm() {
                       </div>
                     )}
 
-                    {/* Dynamic Case Details for Exchange Access */}
+                    {/* Case Type 4: Exchange Access */}
                     {watchRecoveryType === 'exchange_access' && (
                       <div className="space-y-8 border-t border-white/5 pt-10 animate-in fade-in slide-in-from-top-4">
                         <h4 className="text-lg font-bold text-secondary flex items-center gap-2">
@@ -692,6 +736,157 @@ export function RecoveryForm() {
                             </FormItem>
                           )}
                         />
+                      </div>
+                    )}
+
+                    {/* Case Type 5: Scam / Stolen Funds */}
+                    {watchRecoveryType === 'stolen_crypto' && (
+                      <div className="space-y-8 border-t border-white/5 pt-10 animate-in fade-in slide-in-from-top-4">
+                        <h4 className="text-lg font-bold text-destructive flex items-center gap-2">
+                          <ShieldAlert className="w-5 h-5" />
+                          Forensic Details: Scam Investigation & Asset Tracing
+                        </h4>
+
+                        <FormField
+                          control={form.control}
+                          name="scamType"
+                          render={({ field }) => (
+                            <FormItem className="space-y-3">
+                              <FormLabel>What type of scam best describes your situation?</FormLabel>
+                              <FormControl>
+                                <RadioGroup
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                  className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+                                >
+                                  {scamOptions.map((scam) => (
+                                    <div key={scam}>
+                                      <RadioGroupItem value={scam} id={`scam-${scam}`} className="peer sr-only" />
+                                      <Label
+                                        htmlFor={`scam-${scam}`}
+                                        className="flex items-center h-12 px-4 rounded-xl border border-white/10 bg-background/50 hover:bg-white/5 peer-data-[state=checked]:border-destructive peer-data-[state=checked]:bg-destructive/5 peer-data-[state=checked]:text-destructive cursor-pointer transition-all text-sm font-semibold"
+                                      >
+                                        {scam}
+                                      </Label>
+                                    </div>
+                                  ))}
+                                </RadioGroup>
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+
+                        <div className="grid sm:grid-cols-2 gap-6">
+                          <FormField
+                            control={form.control}
+                            name="amountLost"
+                            render={({ field }) => (
+                              <FormItem className="space-y-2">
+                                <FormLabel className="flex items-center gap-2">
+                                  <AlertTriangle className="w-4 h-4 text-destructive" />
+                                  Amount Lost
+                                </FormLabel>
+                                <FormControl>
+                                  <Input placeholder="e.g. 2.5" className="h-12 bg-background/50" {...field} />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="cryptoCurrency"
+                            render={({ field }) => (
+                              <FormItem className="space-y-2">
+                                <FormLabel>Cryptocurrency (BTC, ETH, etc.)</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="e.g. BTC" className="h-12 bg-background/50" {...field} />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+
+                        <div className="grid sm:grid-cols-2 gap-6">
+                          <FormField
+                            control={form.control}
+                            name="incidentDate"
+                            render={({ field }) => (
+                              <FormItem className="space-y-2">
+                                <FormLabel className="flex items-center gap-2">
+                                  <CalendarIcon className="w-4 h-4 text-primary" />
+                                  Date of Incident
+                                </FormLabel>
+                                <FormControl>
+                                  <Input type="date" className="h-12 bg-background/50" {...field} />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="scamWalletAddress"
+                            render={({ field }) => (
+                              <FormItem className="space-y-2">
+                                <FormLabel className="flex items-center gap-2">
+                                  <WalletIcon className="w-4 h-4 text-primary" />
+                                  Scammer Wallet Address
+                                </FormLabel>
+                                <FormControl>
+                                  <Input placeholder="0x... or 1..." className="h-12 bg-background/50" {...field} />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+
+                        <FormField
+                          control={form.control}
+                          name="transactionHash"
+                          render={({ field }) => (
+                            <FormItem className="space-y-2">
+                              <FormLabel className="flex items-center gap-2">
+                                <Hash className="w-4 h-4 text-secondary" />
+                                Transaction Hash (TXID)
+                              </FormLabel>
+                              <FormControl>
+                                <Input placeholder="Full transaction hash" className="h-12 bg-background/50" {...field} />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+
+                        <div className="grid sm:grid-cols-2 gap-6">
+                          <FormField
+                            control={form.control}
+                            name="scammerWebsite"
+                            render={({ field }) => (
+                              <FormItem className="space-y-2">
+                                <FormLabel className="flex items-center gap-2">
+                                  <Link2 className="w-4 h-4 text-primary" />
+                                  Scammer Website/App
+                                </FormLabel>
+                                <FormControl>
+                                  <Input placeholder="https://..." className="h-12 bg-background/50" {...field} />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="scammerContact"
+                            render={({ field }) => (
+                              <FormItem className="space-y-2">
+                                <FormLabel className="flex items-center gap-2">
+                                  <MessageCircle className="w-4 h-4 text-primary" />
+                                  Scammer Contact (Telegram/WA)
+                                </FormLabel>
+                                <FormControl>
+                                  <Input placeholder="@username or phone" className="h-12 bg-background/50" {...field} />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                        </div>
                       </div>
                     )}
 
