@@ -18,16 +18,16 @@ export function Hero() {
             </div>
             
             <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
-              Recover Your Lost <span className="text-primary italic">Crypto</span> & Digital Assets
+              Recover Lost Crypto Assets with <span className="text-primary italic">Forensic Precision</span>
             </h1>
             
             <p className="text-lg lg:text-xl text-muted-foreground max-w-xl leading-relaxed">
-              Lost access to your hardware wallet? Victim of a sophisticated hack? Our proprietary recovery systems bridge the gap between technical loss and financial restoration.
+              When access is lost, funds are misplaced, or digital assets become inaccessible, our blockchain investigators and recovery specialists conduct a comprehensive forensic assessment to identify the safest and most effective recovery path. Confidential, evidence-driven, and handled by experts.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Button size="lg" className="h-14 px-8 text-lg font-semibold gold-glow" asChild>
-                <Link href="#recovery-form">Submit Recovery Request</Link>
+                <Link href="#recovery-form">Start Your Confidential Recovery Assessment</Link>
               </Button>
               <Button variant="outline" size="lg" className="h-14 px-8 text-lg font-semibold border-white/10 hover:bg-white/5" asChild>
                 <Link href="#how-it-works">How It Works</Link>
