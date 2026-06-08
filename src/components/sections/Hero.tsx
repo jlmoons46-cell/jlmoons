@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { ShieldCheck, ArrowRight, Shield, Binary, Activity, Radar, Lock, Search, Cpu } from 'lucide-react'
+import { ShieldCheck, ArrowRight, Shield, Binary, Activity, Radar, Lock } from 'lucide-react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 
@@ -13,7 +13,7 @@ export function Hero() {
     // 5-phase forensic narrative cycle
     const timer = setInterval(() => {
       setPhase((p) => (p + 1) % 5)
-    }, 4000)
+    }, 4500)
     return () => clearInterval(timer)
   }, [])
 
@@ -26,7 +26,7 @@ export function Hero() {
   ]
 
   return (
-    <section className="relative overflow-hidden pt-24 pb-24 lg:pt-40 lg:pb-52 bg-[#050A12]">
+    <section className="relative overflow-hidden pt-24 pb-24 lg:pt-40 lg:pb-52 bg-background">
       {/* Background Ambient Glows */}
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[900px] h-[900px] bg-primary/10 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-secondary/10 rounded-full blur-[120px] pointer-events-none" />
@@ -35,12 +35,12 @@ export function Hero() {
         <div className="grid lg:grid-cols-2 gap-20 items-center">
           <div className="space-y-10">
             <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-bold tracking-[0.2em] uppercase">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-bold tracking-[0.2em] uppercase">
                 <ShieldCheck className="w-3.5 h-3.5" />
                 Global Forensic Intelligence
               </div>
               
-              <h1 className="text-5xl lg:text-[5.5rem] font-extrabold leading-[0.9] tracking-tighter uppercase">
+              <h1 className="text-5xl lg:text-[5.5rem] font-extrabold leading-[0.9] tracking-tighter uppercase text-foreground">
                 Crypto Asset <br />
                 <span className="text-primary italic">Recovery</span>
                 <span className="block text-2xl lg:text-4xl mt-4 tracking-normal text-muted-foreground font-headline font-medium normal-case">
@@ -51,7 +51,7 @@ export function Hero() {
             
             <div className="space-y-6">
               <h2 className="text-3xl lg:text-4xl font-bold flex items-center gap-4 text-foreground">
-                Track. Trace. <span className="text-secondary">Recover.</span>
+                Track. Trace. <span className="text-primary">Recover.</span>
               </h2>
               <p className="text-lg lg:text-xl text-muted-foreground max-w-xl leading-relaxed">
                 We don't just find lost assets—we map the entire investigation. Our intelligence engine identifies attribution, follows cross-chain obfuscation, and secures restoration pathways.
@@ -91,11 +91,11 @@ export function Hero() {
 
           {/* Cinematic Forensic Matrix Visual */}
           <div className="relative group perspective-[2000px]">
-            <div className="relative z-10 w-full aspect-square rounded-[2rem] bg-gradient-to-br from-[#0A111A] to-black border border-white/10 shadow-[0_0_100px_-20px_rgba(34,211,238,0.2)] overflow-hidden transform rotate-x-6 rotate-y--12 hover:rotate-x-0 hover:rotate-y-0 transition-transform duration-1000 ease-out flex items-center justify-center p-12">
+            <div className="relative z-10 w-full aspect-square rounded-[2rem] bg-gradient-to-br from-[#0A111A] to-black border border-white/10 shadow-[0_0_100px_-20px_rgba(0,255,178,0.15)] overflow-hidden transform rotate-x-6 rotate-y--12 hover:rotate-x-0 hover:rotate-y-0 transition-transform duration-1000 ease-out flex items-center justify-center p-12">
               
               {/* Obsidian Surface Reflection */}
               <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.03] to-transparent pointer-events-none" />
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.05)_0%,transparent_70%)] pointer-events-none" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,255,178,0.05)_0%,transparent_70%)] pointer-events-none" />
 
               {/* Layer 2: Holographic Grid */}
               <div className="absolute inset-0 opacity-10 pointer-events-none">
@@ -111,7 +111,7 @@ export function Hero() {
 
               {/* Layer 3: Blockchain Network Animation */}
               <div className="relative w-full h-full z-10">
-                <svg viewBox="0 0 400 400" className="w-full h-full drop-shadow-[0_0_15px_rgba(34,211,238,0.3)]">
+                <svg viewBox="0 0 400 400" className="w-full h-full drop-shadow-[0_0_15px_rgba(0,255,178,0.2)]">
                   {/* Investigated Paths */}
                   <g className="transition-opacity duration-500">
                     {/* Path A */}
@@ -119,15 +119,15 @@ export function Hero() {
                       id="path1"
                       d="M 50 200 L 150 100 L 250 200" 
                       fill="none" 
-                      stroke="white" 
+                      stroke="hsl(var(--foreground))" 
                       strokeWidth="2" 
                       strokeDasharray="500" 
                       strokeDashoffset="500" 
-                      className={cn("transition-all duration-1000", phase >= 1 && "animate-draw opacity-40")}
+                      className={cn("transition-all duration-1000", phase >= 1 && "animate-draw opacity-30")}
                     />
                     {/* Pulse for Path A */}
                     {phase >= 1 && (
-                      <circle r="2" fill="white">
+                      <circle r="2" fill="hsl(var(--foreground))">
                         <animateMotion dur="2.5s" repeatCount="indefinite" path="M 50 200 L 150 100 L 250 200" />
                       </circle>
                     )}
@@ -137,15 +137,15 @@ export function Hero() {
                       id="path2"
                       d="M 50 200 L 150 300 L 250 200" 
                       fill="none" 
-                      stroke="white" 
+                      stroke="hsl(var(--foreground))" 
                       strokeWidth="2" 
                       strokeDasharray="500" 
                       strokeDashoffset="500" 
-                      className={cn("transition-all duration-1000 delay-300", phase >= 1 && "animate-draw opacity-40")}
+                      className={cn("transition-all duration-1000 delay-300", phase >= 1 && "animate-draw opacity-30")}
                     />
                     {/* Pulse for Path B */}
                     {phase >= 1 && (
-                      <circle r="2" fill="white">
+                      <circle r="2" fill="hsl(var(--foreground))">
                         <animateMotion dur="2.8s" repeatCount="indefinite" path="M 50 200 L 150 300 L 250 200" />
                       </circle>
                     )}
@@ -172,18 +172,18 @@ export function Hero() {
                   {/* Investigative Nodes */}
                   <g>
                     {/* Source Wallet */}
-                    <circle cx="50" cy="200" r="10" className="fill-card stroke-white stroke-2" />
-                    <text x="50" y="235" textAnchor="middle" className="text-[10px] font-bold fill-white/60 tracking-widest uppercase">Intake</text>
+                    <circle cx="50" cy="200" r="10" className="fill-card stroke-foreground/40 stroke-2" />
+                    <text x="50" y="235" textAnchor="middle" className="text-[10px] font-bold fill-foreground/60 tracking-widest uppercase">Intake</text>
                     
                     {/* Intermediate Forensic Nodes */}
-                    <circle cx="150" cy="100" r="8" className={cn("fill-card stroke-white/30 stroke-2 transition-all duration-700", phase >= 1 ? "opacity-100 scale-100" : "opacity-0 scale-50")} />
-                    <circle cx="150" cy="300" r="8" className={cn("fill-card stroke-white/30 stroke-2 transition-all duration-700 delay-300", phase >= 1 ? "opacity-100 scale-100" : "opacity-0 scale-50")} />
+                    <circle cx="150" cy="100" r="8" className={cn("fill-card stroke-foreground/20 stroke-2 transition-all duration-700", phase >= 1 ? "opacity-100 scale-100" : "opacity-0 scale-50")} />
+                    <circle cx="150" cy="300" r="8" className={cn("fill-card stroke-foreground/20 stroke-2 transition-all duration-700 delay-300", phase >= 1 ? "opacity-100 scale-100" : "opacity-0 scale-50")} />
 
-                    {/* Identified Entity (Suspicious Node) */}
+                    {/* Identified Entity (Suspicious Node - Amber) */}
                     <g className={cn("transition-all duration-500", phase >= 2 ? "opacity-100" : "opacity-0")}>
                       <circle 
                         cx="250" cy="200" r="15" 
-                        className={cn("fill-card stroke-2 transition-all duration-700 shadow-[0_0_20px_rgba(245,158,11,0.3)]", phase >= 2 ? "stroke-amber-500" : "stroke-white/30")} 
+                        className={cn("fill-card stroke-2 transition-all duration-700 shadow-[0_0_20px_rgba(255,184,77,0.3)]", phase >= 2 ? "stroke-secondary" : "stroke-foreground/20")} 
                       />
                       {/* Node Discovery / Scanning Rings */}
                       {phase === 2 && (
@@ -192,21 +192,21 @@ export function Hero() {
                           <circle cx="250" cy="200" r="15" fill="none" stroke="hsl(var(--secondary))" strokeWidth="1" className="animate-scan-ring" style={{ animationDelay: '0.6s' }} />
                         </>
                       )}
-                      <text x="250" y="235" textAnchor="middle" className={cn("text-[9px] font-bold tracking-widest uppercase transition-colors", phase >= 2 ? "fill-amber-500" : "fill-white/60")}>
-                        {phase >= 2 ? "Identified Entity" : "Scanning..."}
+                      <text x="250" y="235" textAnchor="middle" className={cn("text-[9px] font-bold tracking-widest uppercase transition-colors", phase >= 2 ? "fill-secondary" : "fill-foreground/60")}>
+                        {phase >= 2 ? "Mixer Identified" : "Scanning..."}
                       </text>
                     </g>
 
-                    {/* Final Recovery Endpoint (Shield) */}
+                    {/* Final Recovery Endpoint (Shield - Recovery Green) */}
                     <g className={cn("transition-all duration-1000 transform", phase >= 3 ? "opacity-100 translate-y-0" : "opacity-20 translate-y-4")}>
                       <circle 
                         cx="350" cy="200" r="20" 
-                        className={cn("transition-colors duration-1000", phase >= 4 ? "fill-primary/20 stroke-primary stroke-2" : "fill-white/5 stroke-white/10 stroke-1")} 
+                        className={cn("transition-colors duration-1000", phase >= 4 ? "fill-primary/20 stroke-primary stroke-2 shadow-[0_0_30px_rgba(0,255,178,0.4)]" : "fill-foreground/5 stroke-foreground/10 stroke-1")} 
                       />
                       <foreignObject x="335" y="185" width="30" height="30">
-                        <Shield className={cn("w-full h-full transition-all duration-1000", phase >= 4 ? "text-primary animate-pulse" : "text-white/20")} />
+                        <Shield className={cn("w-full h-full transition-all duration-1000", phase >= 4 ? "text-primary animate-pulse" : "text-foreground/20")} />
                       </foreignObject>
-                      <text x="350" y="245" textAnchor="middle" className={cn("text-[11px] font-black tracking-widest uppercase italic transition-colors duration-1000", phase >= 4 ? "fill-primary" : "fill-white/20")}>
+                      <text x="350" y="245" textAnchor="middle" className={cn("text-[11px] font-black tracking-widest uppercase italic transition-colors duration-1000", phase >= 4 ? "fill-primary" : "fill-foreground/20")}>
                         {phase >= 4 ? "Asset Secured" : "Awaiting Lock"}
                       </text>
                     </g>
@@ -217,8 +217,8 @@ export function Hero() {
                 <div className="absolute top-4 left-4 right-4 flex justify-between items-start pointer-events-none">
                   <div className="p-3 bg-black/60 border border-white/10 backdrop-blur-md rounded-xl space-y-1 animate-float-panel">
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                      <div className="text-[8px] font-black uppercase tracking-[0.2em] text-white/80">Intake Analysis</div>
+                      <div className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
+                      <div className="text-[8px] font-black uppercase tracking-[0.2em] text-foreground">Intake Analysis</div>
                     </div>
                     <div className="text-[10px] font-mono text-muted-foreground">Tracing: 0x71...f9aE</div>
                   </div>
@@ -232,27 +232,27 @@ export function Hero() {
                 <div className="absolute bottom-4 left-4 right-4 p-4 bg-black/80 border border-white/5 backdrop-blur-2xl rounded-2xl flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className={cn("w-3 h-3 rounded-full transition-all duration-500", 
-                      phase === 0 && "bg-white animate-pulse",
-                      phase === 1 && "bg-white",
-                      phase === 2 && "bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]",
-                      phase === 3 && "bg-secondary animate-pulse",
-                      phase >= 4 && "bg-primary shadow-[0_0_15px_rgba(34,211,238,0.5)]"
+                      phase === 0 && "bg-foreground animate-pulse",
+                      phase === 1 && "bg-foreground",
+                      phase === 2 && "bg-secondary shadow-[0_0_10px_rgba(255,184,77,0.5)]",
+                      phase === 3 && "bg-primary animate-pulse",
+                      phase >= 4 && "bg-primary shadow-[0_0_15px_rgba(0,255,178,0.5)]"
                     )} />
-                    <div className="text-[10px] font-bold uppercase tracking-widest text-white/90 animate-in fade-in slide-in-from-left-2 duration-500" key={phase}>
+                    <div className="text-[10px] font-bold uppercase tracking-widest text-foreground animate-in fade-in slide-in-from-left-2 duration-500" key={phase}>
                       {forensicLabels[phase]}
                     </div>
                   </div>
-                  <div className="text-[9px] font-mono text-white/30 uppercase tracking-tighter">INTEL-OPS V3.0</div>
+                  <div className="text-[9px] font-mono text-foreground/30 uppercase tracking-tighter">INTEL-OPS V3.0</div>
                 </div>
               </div>
             </div>
 
             {/* Contextual Hardware Indicators */}
             <div className="absolute -top-10 -right-10 p-5 bg-[#0A111A] border border-white/10 rounded-3xl shadow-2xl animate-bounce delay-700 hidden xl:block">
-              <Radar className="w-8 h-8 text-primary" />
+              <Lock className="w-8 h-8 text-primary" />
             </div>
             <div className="absolute -bottom-12 -left-12 p-6 bg-[#0A111A] border border-white/10 rounded-[2.5rem] shadow-2xl animate-pulse hidden xl:block">
-              <Lock className="w-10 h-10 text-secondary" />
+              <Shield className="w-10 h-10 text-secondary" />
             </div>
           </div>
         </div>

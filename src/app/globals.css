@@ -4,26 +4,38 @@
 
 @layer base {
   :root {
-    --background: 210 33% 6%;
-    --foreground: 214 15% 70%;
-    --card: 210 29% 11%;
-    --card-foreground: 225 25% 97%;
-    --popover: 210 33% 6%;
-    --popover-foreground: 225 25% 97%;
-    --primary: 150 100% 41%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 146 100% 68%;
-    --secondary-foreground: 210 33% 6%;
-    --muted: 210 29% 11%;
-    --muted-foreground: 214 15% 60%;
-    --accent: 150 100% 41%;
-    --accent-foreground: 0 0% 100%;
+    /* Background: Obsidian Dark */
+    --background: 225 53% 5%;
+    /* Foreground: Intelligence White */
+    --foreground: 216 100% 96%;
+    
+    --card: 225 30% 8%;
+    --card-foreground: 216 100% 96%;
+    
+    --popover: 225 53% 5%;
+    --popover-foreground: 216 100% 96%;
+    
+    /* Primary: Recovery Green */
+    --primary: 162 100% 50%;
+    --primary-foreground: 225 53% 5%;
+    
+    /* Secondary: Threat Amber */
+    --secondary: 36 100% 65%;
+    --secondary-foreground: 225 53% 5%;
+    
+    --muted: 225 30% 12%;
+    --muted-foreground: 216 15% 60%;
+    
+    --accent: 162 100% 50%;
+    --accent-foreground: 225 53% 5%;
+    
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 210 29% 18%;
-    --input: 210 29% 18%;
-    --ring: 150 100% 41%;
-    --radius: 0.5rem;
+    
+    --border: 225 30% 15%;
+    --input: 225 30% 15%;
+    --ring: 162 100% 50%;
+    --radius: 0.75rem;
   }
 }
 
