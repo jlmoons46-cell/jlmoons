@@ -83,15 +83,15 @@ export function Steps() {
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center max-w-3xl mx-auto mb-20">
+        <div className="text-center max-w-3xl mx-auto">
           <h2 className="text-sm font-bold tracking-[0.2em] text-secondary uppercase mb-4">Forensic Standards</h2>
           <h3 className="text-4xl lg:text-5xl font-bold mb-6">Our Recovery Methodology</h3>
           <p className="text-muted-foreground text-lg mb-10">
             Every recovery follows a specialized forensic workflow designed for your specific situation.
           </p>
 
-          {/* Case Type Switcher */}
-          <div className="flex flex-wrap justify-center gap-3 mb-12">
+          {/* Case Type Switcher - Increased margin to 80px (mb-20) */}
+          <div className="flex flex-wrap justify-center gap-3 mb-20">
             {(Object.keys(methodologies) as MethodologyType[]).map((type) => (
               <Button
                 key={type}
@@ -108,8 +108,8 @@ export function Steps() {
           </div>
         </div>
 
-        {/* Timeline - Desktop */}
-        <div className="hidden lg:block relative min-h-[850px] mt-12">
+        {/* Timeline - Desktop - Increased min-height to 950px */}
+        <div className="hidden lg:block relative min-h-[950px] mt-12">
           {/* Main Horizontal Line */}
           <div className="absolute top-1/2 left-0 w-[85%] h-[2px] bg-white/10 -translate-y-1/2" />
           
@@ -120,7 +120,7 @@ export function Steps() {
                 <div key={`${activeType}-${step.id}`} className="relative flex flex-col items-center">
                   {/* Connecting Vertical Line */}
                   <div className={cn(
-                    "absolute left-1/2 -translate-x-1/2 w-[1px] bg-white/15 h-24 transition-all duration-500",
+                    "absolute left-1/2 -translate-x-1/2 w-[1px] bg-white/15 h-32 transition-all duration-500",
                     isTop ? "bottom-1/2" : "top-1/2"
                   )} />
                   
@@ -131,10 +131,10 @@ export function Steps() {
                     </div>
                   </div>
 
-                  {/* Step Content Card - Compact & Floating */}
+                  {/* Step Content Card - Compact & Balanced */}
                   <div className={cn(
                     "absolute left-1/2 -translate-x-1/2 w-[220px] p-5 rounded-xl bg-card border border-white/5 shadow-2xl animate-in fade-in slide-in-from-bottom-2 duration-700",
-                    isTop ? "bottom-[calc(50%+120px)]" : "top-[calc(50%+120px)]"
+                    isTop ? "bottom-[calc(50%+140px)]" : "top-[calc(50%+140px)]"
                   )}>
                     <div className="text-[9px] font-bold uppercase tracking-[0.2em] text-secondary mb-2">Step 0{step.id}</div>
                     <h4 className="text-sm font-bold mb-1.5 text-foreground leading-tight">{step.title}</h4>
@@ -148,7 +148,7 @@ export function Steps() {
 
             {/* Final Step 5 - Destination Circle */}
             <div className="relative flex flex-col items-center justify-center">
-              <div className="relative z-20 w-[240px] h-[240px] rounded-full bg-secondary text-secondary-foreground p-7 flex flex-col items-center justify-center text-center shadow-[0_0_60px_-10px_rgba(34,211,238,0.5)] transform hover:scale-105 transition-transform duration-500 animate-in zoom-in-95">
+              <div className="relative z-20 w-[260px] h-[260px] rounded-full bg-secondary text-secondary-foreground p-7 flex flex-col items-center justify-center text-center shadow-[0_0_80px_-10px_rgba(34,211,238,0.5)] transform hover:scale-105 transition-transform duration-500 animate-in zoom-in-95">
                 <div className="w-10 h-10 bg-secondary-foreground/10 rounded-full flex items-center justify-center mb-3">
                   <CheckCircle2 className="w-5 h-5" />
                 </div>
