@@ -1,36 +1,41 @@
-import { Wallet, Key, ShieldAlert, Landmark, Cpu, Smartphone, ChevronRight } from 'lucide-react'
+import { Wallet, TrendingUp, Landmark, Activity, ShieldCheck, FileText, Zap, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 
 const services = [
   {
     icon: Wallet,
     title: "Wallet Recovery",
-    description: "Lost your seed phrase or private keys? We specialize in recovering access to dormant and locked wallets.",
+    description: "Lost access to your private keys or seed phrase? We utilize advanced cryptographic recovery techniques.",
   },
   {
-    icon: Key,
-    title: "Password Recovery",
-    description: "Forgotten the password to your encrypted wallet files? Our brute-force and decryption experts can help.",
-  },
-  {
-    icon: ShieldAlert,
-    title: "Hacked Account Recovery",
-    description: "Victim of a social engineering or phishing attack? We work to secure and reclaim your compromised digital identity.",
+    icon: TrendingUp,
+    title: "Investment Scam Recovery",
+    description: "Specialized tracing for stolen assets from fraudulent investment platforms and fake schemes.",
   },
   {
     icon: Landmark,
-    title: "Exchange Recovery",
-    description: "Funds stuck on a defunct or uncooperative exchange? Our legal and technical team navigates the complexity.",
+    title: "Bad Finance Broker",
+    description: "Legal and technical assistance for victims of dishonest or unregulated financial brokers.",
   },
   {
-    icon: Cpu,
-    title: "Hardware Wallet Recovery",
-    description: "Physical damage to your Ledger, Trezor or Coldcard? We perform hardware repairs and firmware bypasses.",
+    icon: Activity,
+    title: "Fake Trading Scam",
+    description: "Recovery services for capital stolen through manipulated trading apps and fake crypto exchanges.",
   },
   {
-    icon: Smartphone,
-    title: "Mobile Wallet Recovery",
-    description: "Locked out of your phone or mobile-based crypto app? Secure extraction for iOS and Android environments.",
+    icon: ShieldCheck,
+    title: "Romance Scam Recovery",
+    description: "Confidential assistance for victims of pig-butchering and relationship-based crypto fraud.",
+  },
+  {
+    icon: FileText,
+    title: "Loan Scam Recovery",
+    description: "Assistance for victims of fraudulent lending platforms and advanced-fee loan traps.",
+  },
+  {
+    icon: Zap,
+    title: "Crypto Assets Recovery",
+    description: "Comprehensive forensic reclamation for stolen NFTs, DeFi exploits, and cross-chain asset loss.",
   },
 ]
 
