@@ -1,5 +1,6 @@
 import { Navbar } from '@/components/sections/Navbar'
 import { Hero } from '@/components/sections/Hero'
+import { Eligibility } from '@/components/sections/Eligibility'
 import { Services } from '@/components/sections/Services'
 import { Steps } from '@/components/sections/Steps'
 import { TrustStrip } from '@/components/sections/TrustStrip'
@@ -14,6 +15,7 @@ export default function Home() {
     <main className="min-h-screen">
       <Navbar />
       <Hero />
+      <Eligibility />
       <Services />
       <Steps />
       <TrustStrip />
