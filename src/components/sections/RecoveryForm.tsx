@@ -306,7 +306,7 @@ export function RecoveryForm() {
                                           </FormControl>
                                           <FormLabel className="text-sm font-medium leading-none cursor-pointer">
                                             {item.label}
-                                          </Label>
+                                          </FormLabel>
                                         </FormItem>
                                       )
                                     }}
@@ -428,9 +428,9 @@ export function RecoveryForm() {
                                               }}
                                             />
                                           </FormControl>
-                                          <Label className="text-sm font-medium leading-none cursor-pointer">
+                                          <FormLabel className="text-sm font-medium leading-none cursor-pointer">
                                             {item.label}
-                                          </Label>
+                                          </FormLabel>
                                         </FormItem>
                                       )
                                     }}
