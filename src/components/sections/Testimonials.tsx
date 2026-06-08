@@ -3,19 +3,19 @@ import { Star, Quote } from 'lucide-react'
 const testimonials = [
   {
     rating: 5,
-    quote: "I thought my 2017 ETH was gone forever after losing my hardware wallet password. JLMOONS recovered everything within 48 hours. Absolute lifesavers.",
+    quote: "I thought my 2017 ETH was gone forever. JLMOONS conducted a deep forensic analysis of my corrupted wallet file and recovered the assets within 48 hours. Their technical depth is unmatched.",
     author: "David M.",
     result: "$42k Recovered",
   },
   {
     rating: 5,
-    quote: "Professional, transparent, and incredibly knowledgeable. They explained every step of the hacking recovery process. Highly recommend for any digital loss.",
+    quote: "The assessment was transparent from the beginning. They explained what was technically possible and what wasn't before any work began. Their forensic roadmap gave me total clarity on the hack recovery.",
     author: "Sarah J.",
     result: "Exchange Hack Case",
   },
   {
     rating: 5,
-    quote: "I was skeptical at first, but after their free assessment, I felt confident. They recovered a legacy wallet I hadn't opened in 6 years.",
+    quote: "After losing access to a hardware wallet that had been inactive for years, the team identified the issue during their forensic review and guided me through a successful recovery process. Highly recommended.",
     author: "Marcus T.",
     result: "Legacy Wallet Restored",
   },
