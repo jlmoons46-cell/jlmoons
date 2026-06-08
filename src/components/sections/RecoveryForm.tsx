@@ -57,7 +57,8 @@ import {
   Upload,
   Landmark,
   Shield,
-  Heart
+  Heart,
+  TrendingUp
 } from 'lucide-react'
 import { inquireRecoveryDetails } from '@/ai/flows/ai-recovery-inquiry-assistant'
 import { useToast } from '@/hooks/use-toast'
@@ -93,6 +94,14 @@ const formSchema = z.object({
   romancePlatform: z.string().optional(),
   romanceLoss: z.string().optional(),
   romanceWallet: z.string().optional(),
+  // Investment Scam fields
+  investPlatformName: z.string().optional(),
+  investPlatformUrl: z.string().optional(),
+  investAmount: z.string().optional(),
+  investCrypto: z.string().optional(),
+  investWalletAddress: z.string().optional(),
+  investLastTransferDate: z.string().optional(),
+  investStillCommunicating: z.string().optional(),
   // Scam specific fields
   scamType: z.string().optional(),
   amountLost: z.string().optional(),
@@ -119,7 +128,7 @@ const recoveryOptions = [
   { id: 'fake_trading', label: 'Fake Trading Scam' },
   { id: 'bad_broker', label: 'Bad Broker Recovery' },
   { id: 'romance_scam', label: 'Romance Scam Recovery' },
-  { id: 'stolen_crypto', label: 'Stolen Crypto / Scam' },
+  { id: 'investment_scam', label: 'Investment Scam Recovery' },
   { id: 'wrong_address', label: 'Wrong Address Transaction' },
   { id: 'inheritance', label: 'Inheritance / Estate Case' },
   { id: 'other', label: 'Other Technical Issue' },
@@ -163,6 +172,13 @@ export function RecoveryForm() {
       romancePlatform: "",
       romanceLoss: "",
       romanceWallet: "",
+      investPlatformName: "",
+      investPlatformUrl: "",
+      investAmount: "",
+      investCrypto: "",
+      investWalletAddress: "",
+      investLastTransferDate: "",
+      investStillCommunicating: "",
       scamType: "",
       amountLost: "",
       cryptoCurrency: "",
@@ -181,7 +197,7 @@ export function RecoveryForm() {
   })
 
   const watchRecoveryType = form.watch("recoveryType")
-  const watchEstimatedValue = form.watch("totalDeposited") || form.watch("brokerDeposited") || form.watch("amountLost") || form.watch("romanceLoss") || "0"
+  const watchEstimatedValue = form.watch("totalDeposited") || form.watch("brokerDeposited") || form.watch("amountLost") || form.watch("romanceLoss") || form.watch("investAmount") || "0"
 
   const qualificationStatus = useMemo(() => {
     const value = parseFloat(watchEstimatedValue) || 0;
@@ -707,6 +723,136 @@ export function RecoveryForm() {
                             </FormItem>
                           )}
                         />
+                      </div>
+                    )}
+
+                    {/* Case Type: Investment Scam Recovery */}
+                    {watchRecoveryType === 'investment_scam' && (
+                      <div className="space-y-8 border-t border-white/5 pt-10 animate-in fade-in slide-in-from-top-4">
+                        <h4 className="text-lg font-bold text-secondary flex items-center gap-2">
+                          <TrendingUp className="w-5 h-5" />
+                          Forensic Details: Investment Scam Investigation
+                        </h4>
+                        
+                        <div className="grid sm:grid-cols-2 gap-6">
+                          <FormField
+                            control={form.control}
+                            name="investPlatformName"
+                            render={({ field }) => (
+                              <FormItem className="space-y-2">
+                                <FormLabel>Scam Platform Name</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="e.g. YieldPro AI" className="h-12 bg-background/50" {...field} />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="investPlatformUrl"
+                            render={({ field }) => (
+                              <FormItem className="space-y-2">
+                                <FormLabel className="flex items-center gap-2">
+                                  <Link2 className="w-4 h-4 text-primary" />
+                                  Website URL
+                                </FormLabel>
+                                <FormControl>
+                                  <Input placeholder="https://..." className="h-12 bg-background/50" {...field} />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+
+                        <div className="grid sm:grid-cols-2 gap-6">
+                          <FormField
+                            control={form.control}
+                            name="investAmount"
+                            render={({ field }) => (
+                              <FormItem className="space-y-2">
+                                <FormLabel>Investment Amount ($)</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="e.g. 10000" className="h-12 bg-background/50" {...field} />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="investCrypto"
+                            render={({ field }) => (
+                              <FormItem className="space-y-2">
+                                <FormLabel>Cryptocurrency Used</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                  <FormControl>
+                                    <SelectTrigger className="h-12 bg-background/50">
+                                      <SelectValue placeholder="Select cryptocurrency" />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    {['BTC', 'ETH', 'USDT', 'SOL', 'Other'].map(opt => (
+                                      <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+
+                        <FormField
+                          control={form.control}
+                          name="investWalletAddress"
+                          render={({ field }) => (
+                            <FormItem className="space-y-2">
+                              <FormLabel className="flex items-center gap-2">
+                                <WalletIcon className="w-4 h-4 text-primary" />
+                                Wallet Address Sent To
+                              </FormLabel>
+                              <FormControl>
+                                <Input placeholder="0x... or bc1..." className="h-12 bg-background/50 font-mono text-xs" {...field} />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+
+                        <div className="grid sm:grid-cols-2 gap-8">
+                          <FormField
+                            control={form.control}
+                            name="investLastTransferDate"
+                            render={({ field }) => (
+                              <FormItem className="space-y-2">
+                                <FormLabel>Date of Last Transfer</FormLabel>
+                                <FormControl>
+                                  <Input type="date" className="h-12 bg-background/50" {...field} />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="investStillCommunicating"
+                            render={({ field }) => (
+                              <FormItem className="space-y-3">
+                                <FormLabel>Still Communicating With Them?</FormLabel>
+                                <FormControl>
+                                  <RadioGroup
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                    className="flex gap-6"
+                                  >
+                                    {['Yes', 'No'].map((val) => (
+                                      <div key={val} className="flex items-center space-x-3">
+                                        <RadioGroupItem value={val.toLowerCase()} id={`comm-${val}`} />
+                                        <Label htmlFor={`comm-${val}`} className="cursor-pointer font-medium">{val}</Label>
+                                      </div>
+                                    ))}
+                                  </RadioGroup>
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                        </div>
                       </div>
                     )}
 
