@@ -90,7 +90,7 @@ export function Steps() {
             Every recovery follows a specialized forensic workflow designed for your specific situation.
           </p>
 
-          {/* Case Type Switcher - Increased margin to 80px (mb-20) */}
+          {/* Case Type Switcher */}
           <div className="flex flex-wrap justify-center gap-3 mb-20">
             {(Object.keys(methodologies) as MethodologyType[]).map((type) => (
               <Button
@@ -108,7 +108,7 @@ export function Steps() {
           </div>
         </div>
 
-        {/* Timeline - Desktop - Increased min-height to 950px */}
+        {/* Timeline - Desktop */}
         <div className="hidden lg:block relative min-h-[950px] mt-12">
           {/* Main Horizontal Line */}
           <div className="absolute top-1/2 left-0 w-[85%] h-[2px] bg-white/10 -translate-y-1/2" />
@@ -146,18 +146,18 @@ export function Steps() {
               )
             })}
 
-            {/* Final Step 5 - Destination Circle */}
+            {/* Final Step 5 - Destination Circle (Smaller Version) */}
             <div className="relative flex flex-col items-center justify-center">
-              <div className="relative z-20 w-[260px] h-[260px] rounded-full bg-secondary text-secondary-foreground p-7 flex flex-col items-center justify-center text-center shadow-[0_0_80px_-10px_rgba(34,211,238,0.5)] transform hover:scale-105 transition-transform duration-500 animate-in zoom-in-95">
-                <div className="w-10 h-10 bg-secondary-foreground/10 rounded-full flex items-center justify-center mb-3">
-                  <CheckCircle2 className="w-5 h-5" />
+              <div className="relative z-20 w-[180px] h-[180px] rounded-full bg-secondary text-secondary-foreground p-5 flex flex-col items-center justify-center text-center shadow-[0_0_60px_-10px_rgba(34,211,238,0.5)] transform hover:scale-105 transition-transform duration-500 animate-in zoom-in-95">
+                <div className="w-8 h-8 bg-secondary-foreground/10 rounded-full flex items-center justify-center mb-2">
+                  <CheckCircle2 className="w-4 h-4" />
                 </div>
-                <h4 className="text-lg font-bold mb-2 leading-tight">{currentMethodology.finalLabel}</h4>
-                <p className="text-[10px] font-medium opacity-90 mb-5 leading-relaxed">
-                  Receive your case assessment and recommended results securely.
+                <h4 className="text-base font-bold mb-1 leading-tight">{currentMethodology.finalLabel}</h4>
+                <p className="text-[9px] font-medium opacity-90 mb-3 leading-tight">
+                  Secure assessment & results delivery.
                 </p>
-                <Button variant="outline" size="sm" className="h-9 bg-transparent border-secondary-foreground/20 hover:bg-secondary-foreground/10 text-secondary-foreground font-bold text-[9px] uppercase tracking-wider" asChild>
-                  <Link href="#recovery-form">Start Now <ArrowRight className="ml-2 w-3 h-3" /></Link>
+                <Button variant="outline" size="sm" className="h-7 px-3 bg-transparent border-secondary-foreground/20 hover:bg-secondary-foreground/10 text-secondary-foreground font-bold text-[8px] uppercase tracking-wider" asChild>
+                  <Link href="#recovery-form">Start Now <ArrowRight className="ml-1 w-2.5 h-2.5" /></Link>
                 </Button>
               </div>
             </div>
@@ -183,17 +183,17 @@ export function Steps() {
             </div>
           ))}
 
-          {/* Mobile Final Node */}
+          {/* Mobile Final Node (Slightly Smaller) */}
           <div className="relative pl-16 animate-in fade-in slide-in-from-left-4">
             <div className="absolute left-0 w-12 h-12 rounded-full bg-secondary flex items-center justify-center z-10">
               <CheckCircle2 className="w-5 h-5 text-secondary-foreground" />
             </div>
-            <div className="p-8 rounded-2xl bg-secondary text-secondary-foreground shadow-2xl">
-              <h4 className="text-xl font-bold mb-2 leading-tight">{currentMethodology.finalLabel}</h4>
-              <p className="text-xs font-medium opacity-90 mb-6">
-                Our specialists deliver results securely.
+            <div className="p-6 rounded-2xl bg-secondary text-secondary-foreground shadow-2xl">
+              <h4 className="text-lg font-bold mb-1 leading-tight">{currentMethodology.finalLabel}</h4>
+              <p className="text-xs font-medium opacity-90 mb-4">
+                Secure forensic delivery.
               </p>
-              <Button size="lg" className="w-full bg-secondary-foreground text-secondary hover:bg-secondary-foreground/90 font-bold uppercase tracking-widest text-xs h-12" asChild>
+              <Button size="lg" className="w-full bg-secondary-foreground text-secondary hover:bg-secondary-foreground/90 font-bold uppercase tracking-widest text-xs h-10" asChild>
                 <Link href="#recovery-form">Start Assessment</Link>
               </Button>
             </div>
