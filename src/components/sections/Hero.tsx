@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { ShieldCheck, ArrowRight, Users, CheckCircle, Clock, DollarSign } from 'lucide-react'
+import { ShieldCheck, ArrowRight, Users, CheckCircle, Clock, DollarSign, Shield } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -18,25 +18,38 @@ export function Hero() {
             </div>
             
             <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
-              Recover Lost Crypto Assets with <span className="text-primary italic">Forensic Precision</span>
+              Secure. Discreet. <span className="text-primary italic">Expert Crypto Recovery.</span>
             </h1>
             
             <p className="text-lg lg:text-xl text-muted-foreground max-w-xl leading-relaxed">
-              When access is lost, funds are misplaced, or digital assets become inaccessible, our blockchain investigators and recovery specialists conduct a comprehensive forensic assessment to identify the safest and most effective recovery path. Confidential, evidence-driven, and handled by experts.
+              Every recovery case begins with a detailed forensic evaluation. Our specialists analyze wallet data, transaction history, and technical evidence to determine recovery feasibility and guide you through a secure, transparent process.
             </p>
 
-            <div className="space-y-4">
+            <div className="space-y-6">
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button size="lg" className="h-14 px-8 text-lg font-semibold gold-glow" asChild>
-                  <Link href="#recovery-form">Start Your Confidential Recovery Assessment</Link>
+                  <Link href="#recovery-form">Speak With a Recovery Specialist</Link>
                 </Button>
                 <Button variant="outline" size="lg" className="h-14 px-8 text-lg font-semibold border-white/10 hover:bg-white/5" asChild>
                   <Link href="#how-it-works">How It Works</Link>
                 </Button>
               </div>
-              <p className="text-sm text-muted-foreground/80 flex items-center gap-2 px-1">
-                <span className="text-primary font-bold">✓</span> Confidential case review • No obligation • Secure submission
-              </p>
+
+              {/* Trust Bar */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 pt-6 border-t border-white/5">
+                <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                  <span className="text-primary font-bold">✓</span> Confidential Case Review
+                </div>
+                <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                  <span className="text-primary font-bold">✓</span> Blockchain Investigation Experts
+                </div>
+                <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                  <span className="text-primary font-bold">✓</span> Evidence-Based Recovery Assessment
+                </div>
+                <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                  <span className="text-primary font-bold">✓</span> Secure Encrypted Submissions
+                </div>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-8 border-t border-white/5">
