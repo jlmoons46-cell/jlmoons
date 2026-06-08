@@ -53,7 +53,8 @@ import {
   CheckCircle2,
   User,
   Globe,
-  Phone
+  Phone,
+  Upload
 } from 'lucide-react'
 import { inquireRecoveryDetails } from '@/ai/flows/ai-recovery-inquiry-assistant'
 import { useToast } from '@/hooks/use-toast'
@@ -70,10 +71,12 @@ const formSchema = z.object({
   seedDetails: z.array(z.string()).default([]),
   hardwareDevice: z.string().optional(),
   hardwareIssue: z.string().optional(),
+  // Fake Trading fields
   exchangeName: z.string().optional(),
-  exchangeProblem: z.string().optional(),
-  contactedExchange: z.string().optional(),
-  estimatedValue: z.string().optional(),
+  platformUrl: z.string().optional(),
+  withdrawalBlocked: z.string().optional(),
+  feesRequested: z.string().optional(),
+  totalDeposited: z.string().optional(),
   // Scam specific fields
   scamType: z.string().optional(),
   amountLost: z.string().optional(),
@@ -118,15 +121,11 @@ const scamOptions = [
 const walletOptions = ["Electrum", "Exodus", "Atomic", "Trust Wallet", "MetaMask", "Other"]
 
 const exchangeOptions = [
-  "Binance", 
-  "Coinbase", 
-  "Kraken", 
-  "KuCoin", 
-  "OKX", 
-  "Bybit", 
-  "Gate.io", 
-  "Bitfinex", 
-  "Gemini", 
+  "Binance (Clone)", 
+  "MetaTrader 4/5 (Unregulated)", 
+  "Fake Exchange", 
+  "Telegram Trading Bot", 
+  "WhatsApp Investment Group",
   "Other"
 ]
 
@@ -174,9 +173,10 @@ export function RecoveryForm() {
       hardwareDevice: "",
       hardwareIssue: "",
       exchangeName: "",
-      exchangeProblem: "",
-      contactedExchange: "",
-      estimatedValue: "",
+      platformUrl: "",
+      withdrawalBlocked: "",
+      feesRequested: "",
+      totalDeposited: "",
       scamType: "",
       amountLost: "",
       cryptoCurrency: "",
@@ -195,23 +195,13 @@ export function RecoveryForm() {
   })
 
   const watchRecoveryType = form.watch("recoveryType")
-  const watchEstimatedValue = form.watch("estimatedValue")
-  const watchAmountLost = form.watch("amountLost")
+  const watchEstimatedValue = form.watch("totalDeposited") || "0"
+  const watchAmountLost = form.watch("amountLost") || "0"
 
   const qualificationStatus = useMemo(() => {
-    // Check for high value thresholds
-    const highValueTags = ['50k_100k', 'more_100k', '100k_500k', '500k_1m', 'more_1m'];
-    const amountLostValue = parseFloat(watchAmountLost || "0");
-
-    if (highValueTags.includes(watchEstimatedValue || "") || amountLostValue >= 50000) {
-      return 'priority';
-    }
-
-    // Check for low value thresholds
-    if (watchEstimatedValue === 'less_1k') {
-      return 'low_threshold';
-    }
-
+    const value = parseFloat(watchEstimatedValue) || parseFloat(watchAmountLost) || 0;
+    if (value >= 50000) return 'priority';
+    if (value < 1000 && value > 0) return 'low_threshold';
     return 'standard';
   }, [watchEstimatedValue, watchAmountLost]);
 
@@ -233,7 +223,7 @@ export function RecoveryForm() {
         email: values.email,
         phone: values.phone,
         recoveryType: values.recoveryType,
-        estimatedValue: values.estimatedValue,
+        estimatedValue: values.totalDeposited || values.amountLost || "0",
         message: values.message
       })
       setAiSuggestions(result.suggestions)
@@ -250,7 +240,6 @@ export function RecoveryForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true)
-    // Simulate API call to investigation backend
     await new Promise(resolve => setTimeout(resolve, 2000))
     setIsSubmitting(false)
     toast({
@@ -301,20 +290,20 @@ export function RecoveryForm() {
                 </div>
 
                 <div className="space-y-4">
-                  <h4 className="font-bold flex items-center gap-2">
-                    <MessageCircle className="w-5 h-5 text-secondary" />
+                  <h4 className="font-bold flex items-center gap-2 text-secondary">
+                    <MessageCircle className="w-5 h-5" />
                     Secure Support
                   </h4>
                   <div className="flex flex-col gap-3">
-                    <Button variant="outline" className="justify-start gap-3 border-secondary/20 text-secondary hover:bg-secondary/5 h-12" asChild>
-                      <a href="https://wa.me/jlmoons" target="_blank">
-                        <MessageSquare className="w-4 h-4" />
+                    <Button variant="outline" className="justify-start gap-3 border-white/10 hover:bg-white/5 h-12" asChild>
+                      <a href="#" target="_blank">
+                        <MessageSquare className="w-4 h-4 text-primary" />
                         WhatsApp Secure Channel
                       </a>
                     </Button>
-                    <Button variant="outline" className="justify-start gap-3 border-primary/20 text-primary hover:bg-primary/5 h-12" asChild>
-                      <a href="https://t.me/jlmoons" target="_blank">
-                        <Send className="w-4 h-4" />
+                    <Button variant="outline" className="justify-start gap-3 border-white/10 hover:bg-white/5 h-12" asChild>
+                      <a href="#" target="_blank">
+                        <Send className="w-4 h-4 text-primary" />
                         Telegram Technical Portal
                       </a>
                     </Button>
@@ -370,11 +359,10 @@ export function RecoveryForm() {
                       )}
                     />
 
-                    {/* Case Type 1: Lost Password */}
+                    {/* Case Type: Lost Password */}
                     {watchRecoveryType === 'lost_password' && (
                       <div className="space-y-8 border-t border-white/5 pt-10 animate-in fade-in slide-in-from-top-4">
                         <h4 className="text-lg font-bold text-secondary">Forensic Details: Password Recovery</h4>
-                        
                         <FormField
                           control={form.control}
                           name="walletName"
@@ -396,534 +384,38 @@ export function RecoveryForm() {
                             </FormItem>
                           )}
                         />
-
-                        <FormField
-                          control={form.control}
-                          name="accessDetails"
-                          render={() => (
-                            <FormItem>
-                              <div className="mb-4">
-                                <FormLabel>Do you still have access to:</FormLabel>
-                              </div>
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {accessChecklist.map((item) => (
-                                  <FormField
-                                    key={item.id}
-                                    control={form.control}
-                                    name="accessDetails"
-                                    render={({ field }) => {
-                                      return (
-                                        <FormItem
-                                          key={item.id}
-                                          className="flex flex-row items-start space-x-3 space-y-0"
-                                        >
-                                          <FormControl>
-                                            <Checkbox
-                                              checked={field.value?.includes(item.id)}
-                                              onCheckedChange={(checked) => {
-                                                return checked
-                                                  ? field.onChange([...field.value, item.id])
-                                                  : field.onChange(
-                                                      field.value?.filter(
-                                                        (value) => value !== item.id
-                                                      )
-                                                    )
-                                              }}
-                                            />
-                                          </FormControl>
-                                          <FormLabel className="text-sm font-medium leading-none cursor-pointer">
-                                            {item.label}
-                                          </FormLabel>
-                                        </FormItem>
-                                      )
-                                    }}
-                                  />
-                                ))}
-                              </div>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="estimatedValue"
-                          render={({ field }) => (
-                            <FormItem className="space-y-3">
-                              <FormLabel>Approximate total asset value</FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                  <SelectTrigger className="h-12 bg-background/50">
-                                    <SelectValue placeholder="Select value range" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="less_1k">Less than $1,000</SelectItem>
-                                  <SelectItem value="1k_10k">$1,000 to $10,000</SelectItem>
-                                  <SelectItem value="10k_50k">$10,000 to $50,000</SelectItem>
-                                  <SelectItem value="50k_100k">$50,000 to $100,000</SelectItem>
-                                  <SelectItem value="more_100k">Over $100,000</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </FormItem>
-                          )}
-                        />
                       </div>
                     )}
 
-                    {/* Case Type 2: Lost Seed Phrase */}
-                    {watchRecoveryType === 'lost_seed' && (
-                      <div className="space-y-8 border-t border-white/5 pt-10 animate-in fade-in slide-in-from-top-4">
-                        <h4 className="text-lg font-bold text-secondary">Forensic Details: Seed Phrase Reconstruction</h4>
-                        
-                        <FormField
-                          control={form.control}
-                          name="walletName"
-                          render={({ field }) => (
-                            <FormItem className="space-y-3">
-                              <FormLabel>Original wallet software</FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                  <SelectTrigger className="h-12 bg-background/50">
-                                    <SelectValue placeholder="Select wallet software" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  {walletOptions.map(opt => (
-                                    <SelectItem key={opt} value={opt}>{opt}</SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="missingWords"
-                          render={({ field }) => (
-                            <FormItem className="space-y-3">
-                              <FormLabel>How many words are missing or incorrect?</FormLabel>
-                              <FormControl>
-                                <RadioGroup
-                                  onValueChange={field.onChange}
-                                  defaultValue={field.value}
-                                  className="flex flex-col sm:flex-row gap-6"
-                                >
-                                  {['1', '2', '3+'].map((val) => (
-                                    <div key={val} className="flex items-center space-x-3">
-                                      <RadioGroupItem value={val} id={`words-${val}`} />
-                                      <Label htmlFor={`words-${val}`} className="cursor-pointer font-medium">{val} {val === '1' ? 'Word' : 'Words'}</Label>
-                                    </div>
-                                  ))}
-                                </RadioGroup>
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="seedDetails"
-                          render={() => (
-                            <FormItem>
-                              <div className="mb-4">
-                                <FormLabel>Evidence available:</FormLabel>
-                              </div>
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {seedChecklist.map((item) => (
-                                  <FormField
-                                    key={item.id}
-                                    control={form.control}
-                                    name="seedDetails"
-                                    render={({ field }) => {
-                                      return (
-                                        <FormItem
-                                          key={item.id}
-                                          className="flex flex-row items-start space-x-3 space-y-0"
-                                        >
-                                          <FormControl>
-                                            <Checkbox
-                                              checked={field.value?.includes(item.id)}
-                                              onCheckedChange={(checked) => {
-                                                return checked
-                                                  ? field.onChange([...(field.value || []), item.id])
-                                                  : field.onChange(
-                                                      field.value?.filter(
-                                                        (value) => value !== item.id
-                                                      )
-                                                    )
-                                              }}
-                                            />
-                                          </FormControl>
-                                          <FormLabel className="text-sm font-medium leading-none cursor-pointer">
-                                            {item.label}
-                                          </FormLabel>
-                                        </FormItem>
-                                      )
-                                    }}
-                                  />
-                                ))}
-                              </div>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="estimatedValue"
-                          render={({ field }) => (
-                            <FormItem className="space-y-3">
-                              <FormLabel>Approximate total asset value</FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                  <SelectTrigger className="h-12 bg-background/50">
-                                    <SelectValue placeholder="Select value range" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="less_1k">Less than $1,000</SelectItem>
-                                  <SelectItem value="1k_10k">$1,000 to $10,000</SelectItem>
-                                  <SelectItem value="10k_50k">$10,000 to $50,000</SelectItem>
-                                  <SelectItem value="50k_100k">$50,000 to $100,000</SelectItem>
-                                  <SelectItem value="more_100k">Over $100,000</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                    )}
-
-                    {/* Case Type 3: Hardware Wallet */}
-                    {watchRecoveryType === 'hardware_issue' && (
-                      <div className="space-y-8 border-t border-white/5 pt-10 animate-in fade-in slide-in-from-top-4">
-                        <h4 className="text-lg font-bold text-secondary">Forensic Details: Hardware Wallet Investigation</h4>
-                        
-                        <FormField
-                          control={form.control}
-                          name="hardwareDevice"
-                          render={({ field }) => (
-                            <FormItem className="space-y-3">
-                              <FormLabel>Select your hardware device</FormLabel>
-                              <FormControl>
-                                <RadioGroup
-                                  onValueChange={field.onChange}
-                                  defaultValue={field.value}
-                                  className="grid grid-cols-2 sm:grid-cols-4 gap-3"
-                                >
-                                  {['Ledger', 'Trezor', 'KeepKey', 'Other'].map((device) => (
-                                    <div key={device}>
-                                      <RadioGroupItem value={device} id={`device-${device}`} className="peer sr-only" />
-                                      <Label
-                                        htmlFor={`device-${device}`}
-                                        className="flex items-center justify-center h-12 rounded-xl border border-white/10 bg-background/50 hover:bg-white/5 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 peer-data-[state=checked]:text-primary cursor-pointer transition-all text-sm font-semibold text-center"
-                                      >
-                                        {device}
-                                      </Label>
-                                    </div>
-                                  ))}
-                                </RadioGroup>
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="hardwareIssue"
-                          render={({ field }) => (
-                            <FormItem className="space-y-3">
-                              <FormLabel>What is the primary issue?</FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                  <SelectTrigger className="h-12 bg-background/50">
-                                    <SelectValue placeholder="Select technical issue" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  {[
-                                    "Forgotten PIN",
-                                    "Damaged device",
-                                    "Corrupted firmware",
-                                    "Missing recovery phrase",
-                                    "Unknown"
-                                  ].map(issue => (
-                                    <SelectItem key={issue} value={issue.toLowerCase().replace(/\s+/g, '_')}>
-                                      {issue}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="estimatedValue"
-                          render={({ field }) => (
-                            <FormItem className="space-y-3">
-                              <FormLabel>Approximate total asset value</FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                  <SelectTrigger className="h-12 bg-background/50">
-                                    <SelectValue placeholder="Select value range" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="less_1k">Less than $1,000</SelectItem>
-                                  <SelectItem value="1k_10k">$1,000 to $10,000</SelectItem>
-                                  <SelectItem value="10k_50k">$10,000 to $50,000</SelectItem>
-                                  <SelectItem value="50k_100k">$50,000 to $100,000</SelectItem>
-                                  <SelectItem value="more_100k">Over $100,000</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                    )}
-
-                    {/* Case Type 4: Fake Trading Scam */}
+                    {/* Case Type: Fake Trading Scam */}
                     {watchRecoveryType === 'fake_trading' && (
                       <div className="space-y-8 border-t border-white/5 pt-10 animate-in fade-in slide-in-from-top-4">
                         <h4 className="text-lg font-bold text-secondary flex items-center gap-2">
                           <Activity className="w-5 h-5" />
-                          Forensic Details: Fake Trading Scam Investigation
+                          Forensic Details: Fake Trading Platform Investigation
                         </h4>
                         
-                        <FormField
-                          control={form.control}
-                          name="exchangeName"
-                          render={({ field }) => (
-                            <FormItem className="space-y-3">
-                              <FormLabel>Identify the trading platform or app</FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                  <SelectTrigger className="h-12 bg-background/50">
-                                    <SelectValue placeholder="Select platform" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  {exchangeOptions.map(opt => (
-                                    <SelectItem key={opt} value={opt}>{opt}</SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="exchangeProblem"
-                          render={({ field }) => (
-                            <FormItem className="space-y-3">
-                              <FormLabel>Nature of the investment issue</FormLabel>
-                              <FormControl>
-                                <RadioGroup
-                                  onValueChange={field.onChange}
-                                  defaultValue={field.value}
-                                  className="grid grid-cols-1 sm:grid-cols-2 gap-3"
-                                >
-                                  {[
-                                    "Unable to withdraw",
-                                    "Account frozen",
-                                    "Fake profit display",
-                                    "Requested more fees",
-                                    "Support uncontactable"
-                                  ].map((problem) => (
-                                    <div key={problem}>
-                                      <RadioGroupItem value={problem} id={`problem-${problem}`} className="peer sr-only" />
-                                      <Label
-                                        htmlFor={`problem-${problem}`}
-                                        className="flex items-center h-12 px-4 rounded-xl border border-white/10 bg-background/50 hover:bg-white/5 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 peer-data-[state=checked]:text-primary cursor-pointer transition-all text-sm font-semibold"
-                                      >
-                                        {problem}
-                                      </Label>
-                                    </div>
-                                  ))}
-                                </RadioGroup>
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="contactedExchange"
-                          render={({ field }) => (
-                            <FormItem className="space-y-3">
-                              <FormLabel>Have you already attempted to withdraw funds?</FormLabel>
-                              <FormControl>
-                                <RadioGroup
-                                  onValueChange={field.onChange}
-                                  defaultValue={field.value}
-                                  className="flex gap-6"
-                                >
-                                  {['Yes', 'No'].map((val) => (
-                                    <div key={val} className="flex items-center space-x-3">
-                                      <RadioGroupItem value={val.toLowerCase()} id={`contacted-${val}`} />
-                                      <Label htmlFor={`contacted-${val}`} className="cursor-pointer font-medium">{val}</Label>
-                                    </div>
-                                  ))}
-                                </RadioGroup>
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="estimatedValue"
-                          render={({ field }) => (
-                            <FormItem className="space-y-3">
-                              <FormLabel>Approximate total investment value</FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                  <SelectTrigger className="h-12 bg-background/50">
-                                    <SelectValue placeholder="Select value range" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="less_1k">Less than $1,000</SelectItem>
-                                  <SelectItem value="1k_10k">$1,000 to $10,000</SelectItem>
-                                  <SelectItem value="10k_50k">$10,000 to $50,000</SelectItem>
-                                  <SelectItem value="50k_100k">$50,000 to $100,000</SelectItem>
-                                  <SelectItem value="more_100k">Over $100,000</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                    )}
-
-                    {/* Case Type 5: Scam / Stolen Funds */}
-                    {watchRecoveryType === 'stolen_crypto' && (
-                      <div className="space-y-8 border-t border-white/5 pt-10 animate-in fade-in slide-in-from-top-4">
-                        <h4 className="text-lg font-bold text-destructive flex items-center gap-2">
-                          <ShieldAlert className="w-5 h-5" />
-                          Forensic Details: Scam Investigation & Asset Tracing
-                        </h4>
-
-                        <FormField
-                          control={form.control}
-                          name="scamType"
-                          render={({ field }) => (
-                            <FormItem className="space-y-3">
-                              <FormLabel>What type of scam best describes your situation?</FormLabel>
-                              <FormControl>
-                                <RadioGroup
-                                  onValueChange={field.onChange}
-                                  defaultValue={field.value}
-                                  className="grid grid-cols-1 sm:grid-cols-2 gap-3"
-                                >
-                                  {scamOptions.map((scam) => (
-                                    <div key={scam}>
-                                      <RadioGroupItem value={scam} id={`scam-${scam}`} className="peer sr-only" />
-                                      <Label
-                                        htmlFor={`scam-${scam}`}
-                                        className="flex items-center h-12 px-4 rounded-xl border border-white/10 bg-background/50 hover:bg-white/5 peer-data-[state=checked]:border-destructive peer-data-[state=checked]:bg-destructive/5 peer-data-[state=checked]:text-destructive cursor-pointer transition-all text-sm font-semibold"
-                                      >
-                                        {scam}
-                                      </Label>
-                                    </div>
-                                  ))}
-                                </RadioGroup>
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-
                         <div className="grid sm:grid-cols-2 gap-6">
                           <FormField
                             control={form.control}
-                            name="amountLost"
+                            name="exchangeName"
                             render={({ field }) => (
                               <FormItem className="space-y-2">
-                                <FormLabel className="flex items-center gap-2">
-                                  <AlertTriangle className="w-4 h-4 text-destructive" />
-                                  Amount Lost
-                                </FormLabel>
+                                <FormLabel>Platform Name</FormLabel>
                                 <FormControl>
-                                  <Input placeholder="e.g. 2.5" className="h-12 bg-background/50" {...field} />
+                                  <Input placeholder="e.g. ApexCrypto" className="h-12 bg-background/50" {...field} />
                                 </FormControl>
                               </FormItem>
                             )}
                           />
                           <FormField
                             control={form.control}
-                            name="cryptoCurrency"
-                            render={({ field }) => (
-                              <FormItem className="space-y-2">
-                                <FormLabel>Cryptocurrency (BTC, ETH, etc.)</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="e.g. BTC" className="h-12 bg-background/50" {...field} />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-
-                        <div className="grid sm:grid-cols-2 gap-6">
-                          <FormField
-                            control={form.control}
-                            name="incidentDate"
-                            render={({ field }) => (
-                              <FormItem className="space-y-2">
-                                <FormLabel className="flex items-center gap-2">
-                                  <CalendarIcon className="w-4 h-4 text-primary" />
-                                  Date of Incident
-                                </FormLabel>
-                                <FormControl>
-                                  <Input type="date" className="h-12 bg-background/50" {...field} />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name="scamWalletAddress"
-                            render={({ field }) => (
-                              <FormItem className="space-y-2">
-                                <FormLabel className="flex items-center gap-2">
-                                  <WalletIcon className="w-4 h-4 text-primary" />
-                                  Scammer Wallet Address
-                                </FormLabel>
-                                <FormControl>
-                                  <Input placeholder="0x... or 1..." className="h-12 bg-background/50" {...field} />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-
-                        <FormField
-                          control={form.control}
-                          name="transactionHash"
-                          render={({ field }) => (
-                            <FormItem className="space-y-2">
-                              <FormLabel className="flex items-center gap-2">
-                                <Hash className="w-4 h-4 text-secondary" />
-                                Transaction Hash (TXID)
-                              </FormLabel>
-                              <FormControl>
-                                <Input placeholder="Full transaction hash" className="h-12 bg-background/50" {...field} />
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-
-                        <div className="grid sm:grid-cols-2 gap-6">
-                          <FormField
-                            control={form.control}
-                            name="scammerWebsite"
+                            name="platformUrl"
                             render={({ field }) => (
                               <FormItem className="space-y-2">
                                 <FormLabel className="flex items-center gap-2">
                                   <Link2 className="w-4 h-4 text-primary" />
-                                  Scammer Website/App
+                                  Platform Website URL
                                 </FormLabel>
                                 <FormControl>
                                   <Input placeholder="https://..." className="h-12 bg-background/50" {...field} />
@@ -931,73 +423,51 @@ export function RecoveryForm() {
                               </FormItem>
                             )}
                           />
-                          <FormField
-                            control={form.control}
-                            name="scammerContact"
-                            render={({ field }) => (
-                              <FormItem className="space-y-2">
-                                <FormLabel className="flex items-center gap-2">
-                                  <MessageCircle className="w-4 h-4 text-primary" />
-                                  Scammer Contact (Telegram/WA)
-                                </FormLabel>
-                                <FormControl>
-                                  <Input placeholder="@username or phone" className="h-12 bg-background/50" {...field} />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
                         </div>
-                      </div>
-                    )}
 
-                    {/* Case Type 6: Wrong Address Transfer */}
-                    {watchRecoveryType === 'wrong_address' && (
-                      <div className="space-y-8 border-t border-white/5 pt-10 animate-in fade-in slide-in-from-top-4">
-                        <h4 className="text-lg font-bold text-secondary flex items-center gap-2">
-                          <ArrowRightLeft className="w-5 h-5" />
-                          Forensic Details: Wrong Address Recovery
-                        </h4>
-
-                        <FormField
-                          control={form.control}
-                          name="cryptoCurrency"
-                          render={({ field }) => (
-                            <FormItem className="space-y-2">
-                              <FormLabel>Which cryptocurrency was sent?</FormLabel>
-                              <FormControl>
-                                <Input placeholder="e.g. USDT (ERC20)" className="h-12 bg-background/50" {...field} />
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-
-                        <div className="grid sm:grid-cols-2 gap-6">
+                        <div className="grid sm:grid-cols-2 gap-8">
                           <FormField
                             control={form.control}
-                            name="sendingWallet"
+                            name="withdrawalBlocked"
                             render={({ field }) => (
-                              <FormItem className="space-y-2">
-                                <FormLabel className="flex items-center gap-2">
-                                  <WalletIcon className="w-4 h-4 text-primary" />
-                                  Sending Wallet Address
-                                </FormLabel>
+                              <FormItem className="space-y-3">
+                                <FormLabel>Withdrawal Blocked?</FormLabel>
                                 <FormControl>
-                                  <Input placeholder="0x..." className="h-12 bg-background/50" {...field} />
+                                  <RadioGroup
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                    className="flex gap-6"
+                                  >
+                                    {['Yes', 'No'].map((val) => (
+                                      <div key={val} className="flex items-center space-x-3">
+                                        <RadioGroupItem value={val.toLowerCase()} id={`withdrawal-${val}`} />
+                                        <Label htmlFor={`withdrawal-${val}`} className="cursor-pointer font-medium">{val}</Label>
+                                      </div>
+                                    ))}
+                                  </RadioGroup>
                                 </FormControl>
                               </FormItem>
                             )}
                           />
                           <FormField
                             control={form.control}
-                            name="destinationWallet"
+                            name="feesRequested"
                             render={({ field }) => (
-                              <FormItem className="space-y-2">
-                                <FormLabel className="flex items-center gap-2">
-                                  <WalletIcon className="w-4 h-4 text-primary" />
-                                  Destination Wallet Address
-                                </FormLabel>
+                              <FormItem className="space-y-3">
+                                <FormLabel>Additional Fees Requested?</FormLabel>
                                 <FormControl>
-                                  <Input placeholder="0x..." className="h-12 bg-background/50" {...field} />
+                                  <RadioGroup
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                    className="flex gap-6"
+                                  >
+                                    {['Yes', 'No'].map((val) => (
+                                      <div key={val} className="flex items-center space-x-3">
+                                        <RadioGroupItem value={val.toLowerCase()} id={`fees-${val}`} />
+                                        <Label htmlFor={`fees-${val}`} className="cursor-pointer font-medium">{val}</Label>
+                                      </div>
+                                    ))}
+                                  </RadioGroup>
                                 </FormControl>
                               </FormItem>
                             )}
@@ -1006,160 +476,39 @@ export function RecoveryForm() {
 
                         <FormField
                           control={form.control}
-                          name="transactionHash"
+                          name="totalDeposited"
                           render={({ field }) => (
                             <FormItem className="space-y-2">
                               <FormLabel className="flex items-center gap-2">
-                                <Hash className="w-4 h-4 text-secondary" />
-                                Transaction Hash (TXID)
+                                <AlertTriangle className="w-4 h-4 text-primary" />
+                                Total Deposited Amount ($)
                               </FormLabel>
                               <FormControl>
-                                <Input placeholder="Full transaction hash" className="h-12 bg-background/50" {...field} />
+                                <Input placeholder="e.g. 15000" className="h-12 bg-background/50" {...field} />
                               </FormControl>
                             </FormItem>
                           )}
                         />
 
-                        <FormField
-                          control={form.control}
-                          name="destinationType"
-                          render={({ field }) => (
-                            <FormItem className="space-y-3">
-                              <FormLabel>Is the destination address an exchange or a self-custody wallet?</FormLabel>
-                              <FormControl>
-                                <RadioGroup
-                                  onValueChange={field.onChange}
-                                  defaultValue={field.value}
-                                  className="flex flex-col sm:flex-row gap-6"
-                                >
-                                  {[
-                                    { id: 'exchange', label: 'Exchange' },
-                                    { id: 'self_custody', label: 'Self-custody wallet' },
-                                    { id: 'unknown', label: 'Unknown' }
-                                  ].map((opt) => (
-                                    <div key={opt.id} className="flex items-center space-x-3">
-                                      <RadioGroupItem value={opt.id} id={`dest-${opt.id}`} />
-                                      <Label htmlFor={`dest-${opt.id}`} className="cursor-pointer font-medium">{opt.label}</Label>
-                                    </div>
-                                  ))}
-                                </RadioGroup>
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
+                        <div className="p-4 rounded-xl border border-dashed border-white/20 bg-background/30 flex flex-col items-center justify-center gap-4 py-8">
+                          <Upload className="w-8 h-8 text-muted-foreground" />
+                          <div className="text-center">
+                            <p className="text-sm font-bold">Account Screenshot Upload</p>
+                            <p className="text-xs text-muted-foreground mt-1">Upload dashboard showing balance/error (Max 5MB)</p>
+                          </div>
+                          <Button variant="outline" size="sm" type="button" className="text-xs h-8">Select File</Button>
+                        </div>
                       </div>
                     )}
 
-                    {/* Case Type 7: Estate Recovery */}
-                    {watchRecoveryType === 'inheritance' && (
-                      <div className="space-y-8 border-t border-white/5 pt-10 animate-in fade-in slide-in-from-top-4">
-                        <h4 className="text-lg font-bold text-secondary flex items-center gap-2">
-                          <Users className="w-5 h-5" />
-                          Forensic Details: Estate Recovery & Digital Inheritance
-                        </h4>
-
-                        <FormField
-                          control={form.control}
-                          name="relationship"
-                          render={({ field }) => (
-                            <FormItem className="space-y-3">
-                              <FormLabel>What is your relationship to the asset holder?</FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                  <SelectTrigger className="h-12 bg-background/50">
-                                    <SelectValue placeholder="Select relationship type" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  {relationshipOptions.map(opt => (
-                                    <SelectItem key={opt} value={opt.toLowerCase()}>{opt}</SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="estateDetails"
-                          render={() => (
-                            <FormItem>
-                              <div className="mb-4">
-                                <FormLabel>Do you currently possess:</FormLabel>
-                              </div>
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {estateChecklist.map((item) => (
-                                  <FormField
-                                    key={item.id}
-                                    control={form.control}
-                                    name="estateDetails"
-                                    render={({ field }) => {
-                                      return (
-                                        <FormItem
-                                          key={item.id}
-                                          className="flex flex-row items-start space-x-3 space-y-0"
-                                        >
-                                          <FormControl>
-                                            <Checkbox
-                                              checked={field.value?.includes(item.id)}
-                                              onCheckedChange={(checked) => {
-                                                return checked
-                                                  ? field.onChange([...(field.value || []), item.id])
-                                                  : field.onChange(
-                                                      field.value?.filter(
-                                                        (value) => value !== item.id
-                                                      )
-                                                    )
-                                              }}
-                                            />
-                                          </FormControl>
-                                          <FormLabel className="text-sm font-medium leading-none cursor-pointer">
-                                            {item.label}
-                                          </FormLabel>
-                                        </FormItem>
-                                      )
-                                    }}
-                                  />
-                                ))}
-                              </div>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="estimatedValue"
-                          render={({ field }) => (
-                            <FormItem className="space-y-3">
-                              <FormLabel>Approximate total portfolio value</FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                  <SelectTrigger className="h-12 bg-background/50">
-                                    <SelectValue placeholder="Select value range" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="less_10k">Less than $10,000</SelectItem>
-                                  <SelectItem value="10k_100k">$10,000 to $100,000</SelectItem>
-                                  <SelectItem value="100k_500k">$100,000 to $500,000</SelectItem>
-                                  <SelectItem value="500k_1m">$500,000 to $1M</SelectItem>
-                                  <SelectItem value="more_1m">Over $1M (Premium Estate Case)</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                    )}
-
+                    {/* Standard Contact Info Section */}
                     <div className="grid gap-8 border-t border-white/5 pt-10">
                       {qualificationStatus === 'low_threshold' && (
                         <Alert variant="default" className="bg-muted/30 border-muted/50 text-muted-foreground animate-in fade-in">
                           <Info className="h-4 w-4" />
                           <AlertTitle className="font-bold text-foreground">Technical Notice</AlertTitle>
                           <AlertDescription className="text-sm leading-relaxed">
-                            Due to the complexity of forensic recovery work, we typically prioritize cases above a certain asset threshold. You may still submit, but manual forensic review times may be extended.
+                            Due to the complexity of forensic recovery work, we typically prioritize cases above a certain asset threshold. You may still submit, but review times may be extended.
                           </AlertDescription>
                         </Alert>
                       )}
@@ -1169,7 +518,7 @@ export function RecoveryForm() {
                           <CheckCircle2 className="h-4 w-4" />
                           <AlertTitle className="font-bold">Priority Status Verified</AlertTitle>
                           <AlertDescription className="text-sm leading-relaxed">
-                            Your case qualifies for priority forensic review. Our senior investigators will prioritize this technical assessment upon submission.
+                            Your case qualifies for priority forensic review. Our senior investigators will prioritize this technical assessment.
                           </AlertDescription>
                         </Alert>
                       )}
@@ -1269,13 +618,13 @@ export function RecoveryForm() {
                             </div>
                             <FormControl>
                               <Textarea 
-                                placeholder="Describe the loss event. Include relevant dates, wallet software/hardware used, and any specific error messages..." 
+                                placeholder="Describe the loss event. Include relevant dates, platform communication, and any specific error messages..." 
                                 className="min-h-[160px] resize-none bg-background/50 text-base leading-relaxed"
                                 {...field} 
                               />
                             </FormControl>
                             <FormDescription>
-                              Detailed technical descriptions help our specialists determine recovery feasibility faster.
+                              Detailed descriptions help our specialists determine recovery feasibility faster.
                             </FormDescription>
                             <FormMessage />
                           </FormItem>
@@ -1302,7 +651,7 @@ export function RecoveryForm() {
                       </Button>
                       <div className="space-y-2">
                         <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground text-center font-bold">
-                          Confidential assessment. No obligation. Recovery feasibility determined before any recovery work begins.
+                          Confidential assessment. No obligation.
                         </p>
                         <p className="text-[10px] text-muted-foreground/60 text-center italic">
                           All submissions are encrypted using 256-bit bank-grade protocols.
