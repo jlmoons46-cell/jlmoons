@@ -50,13 +50,19 @@ import {
   ArrowRightLeft,
   Users,
   Info,
-  CheckCircle2
+  CheckCircle2,
+  User,
+  Globe,
+  Phone
 } from 'lucide-react'
 import { inquireRecoveryDetails } from '@/ai/flows/ai-recovery-inquiry-assistant'
 import { useToast } from '@/hooks/use-toast'
 
 const formSchema = z.object({
+  fullName: z.string().min(2, "Full name is required"),
   email: z.string().email("Invalid email address"),
+  phone: z.string().min(5, "Valid phone number is required"),
+  country: z.string().min(1, "Please enter your country"),
   recoveryType: z.string().min(1, "Please select what best describes your situation"),
   walletName: z.string().optional(),
   accessDetails: z.array(z.string()).default([]),
@@ -156,7 +162,10 @@ export function RecoveryForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      fullName: "",
       email: "",
+      phone: "",
+      country: "",
       recoveryType: "",
       walletName: "",
       accessDetails: [],
@@ -220,7 +229,9 @@ export function RecoveryForm() {
     setIsAiLoading(true)
     try {
       const result = await inquireRecoveryDetails({
+        fullName: values.fullName,
         email: values.email,
+        phone: values.phone,
         recoveryType: values.recoveryType,
         estimatedValue: values.estimatedValue,
         message: values.message
@@ -1163,19 +1174,79 @@ export function RecoveryForm() {
                         </Alert>
                       )}
 
-                      <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-lg font-bold">Step 2: Secure Contact Email</FormLabel>
-                            <FormControl>
-                              <Input placeholder="name@domain.com" className="h-14 bg-background/50" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                      <div className="space-y-8">
+                        <div>
+                          <h4 className="text-xl font-bold flex items-center gap-2 mb-6">
+                            Step 2: Contact Information
+                          </h4>
+                          <div className="grid sm:grid-cols-2 gap-6">
+                            <FormField
+                              control={form.control}
+                              name="fullName"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="flex items-center gap-2">
+                                    <User className="w-4 h-4 text-primary" />
+                                    Full Name
+                                  </FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="John Doe" className="h-12 bg-background/50" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name="email"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="flex items-center gap-2">
+                                    <MessageSquare className="w-4 h-4 text-primary" />
+                                    Secure Contact Email
+                                  </FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="name@domain.com" className="h-12 bg-background/50" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name="country"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="flex items-center gap-2">
+                                    <Globe className="w-4 h-4 text-primary" />
+                                    Country
+                                  </FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="United Kingdom" className="h-12 bg-background/50" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name="phone"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="flex items-center gap-2">
+                                    <Phone className="w-4 h-4 text-primary" />
+                                    Phone Number
+                                  </FormLabel>
+                                  <FormControl>
+                                    <Input placeholder="+44 7... (Secure)" className="h-12 bg-background/50" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                        </div>
+                      </div>
 
                       <FormField
                         control={form.control}
