@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -27,6 +27,11 @@ import {
 } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
 import { 
+  Alert,
+  AlertTitle,
+  AlertDescription
+} from '@/components/ui/alert'
+import { 
   Send, 
   MessageSquare, 
   Loader2, 
@@ -43,7 +48,9 @@ import {
   Wallet as WalletIcon,
   AlertTriangle,
   ArrowRightLeft,
-  Users
+  Users,
+  Info,
+  CheckCircle2
 } from 'lucide-react'
 import { inquireRecoveryDetails } from '@/ai/flows/ai-recovery-inquiry-assistant'
 import { useToast } from '@/hooks/use-toast'
@@ -179,6 +186,25 @@ export function RecoveryForm() {
   })
 
   const watchRecoveryType = form.watch("recoveryType")
+  const watchEstimatedValue = form.watch("estimatedValue")
+  const watchAmountLost = form.watch("amountLost")
+
+  const qualificationStatus = useMemo(() => {
+    // Check for high value thresholds
+    const highValueTags = ['50k_100k', 'more_100k', '100k_500k', '500k_1m', 'more_1m'];
+    const amountLostValue = parseFloat(watchAmountLost || "0");
+
+    if (highValueTags.includes(watchEstimatedValue || "") || amountLostValue >= 50000) {
+      return 'priority';
+    }
+
+    // Check for low value thresholds
+    if (watchEstimatedValue === 'less_1k') {
+      return 'low_threshold';
+    }
+
+    return 'standard';
+  }, [watchEstimatedValue, watchAmountLost]);
 
   async function handleGetAiSuggestions() {
     const values = form.getValues()
@@ -1117,6 +1143,26 @@ export function RecoveryForm() {
                     )}
 
                     <div className="grid gap-8 border-t border-white/5 pt-10">
+                      {qualificationStatus === 'low_threshold' && (
+                        <Alert variant="default" className="bg-muted/30 border-muted/50 text-muted-foreground animate-in fade-in">
+                          <Info className="h-4 w-4" />
+                          <AlertTitle className="font-bold text-foreground">Technical Notice</AlertTitle>
+                          <AlertDescription className="text-sm leading-relaxed">
+                            Due to the complexity of forensic recovery work, we typically prioritize cases above a certain asset threshold. You may still submit, but manual forensic review times may be extended.
+                          </AlertDescription>
+                        </Alert>
+                      )}
+
+                      {qualificationStatus === 'priority' && (
+                        <Alert variant="default" className="bg-primary/5 border-primary/20 text-primary animate-in fade-in">
+                          <CheckCircle2 className="h-4 w-4" />
+                          <AlertTitle className="font-bold">Priority Status Verified</AlertTitle>
+                          <AlertDescription className="text-sm leading-relaxed">
+                            Your case qualifies for priority forensic review. Our senior investigators will prioritize this technical assessment upon submission.
+                          </AlertDescription>
+                        </Alert>
+                      )}
+
                       <FormField
                         control={form.control}
                         name="email"
