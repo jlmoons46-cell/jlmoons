@@ -1,9 +1,37 @@
+"use client"
+
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { ShieldCheck, ArrowRight, Users, CheckCircle, Clock, DollarSign, Shield } from 'lucide-react'
+import { ShieldCheck, ArrowRight, Users, CheckCircle, Clock, DollarSign, Shield, Loader2 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { supabase } from '@/lib/supabase'
 
 export function Hero() {
+  const [heroImage, setHeroImage] = useState<string>("https://picsum.photos/seed/jlmoons-hero/1200/800")
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    async function loadSettings() {
+      try {
+        const { data, error } = await supabase
+          .from('app_settings')
+          .select('value')
+          .eq('key', 'hero_image_url')
+          .single()
+        
+        if (data?.value) {
+          setHeroImage(data.value)
+        }
+      } catch (err) {
+        console.error('Failed to load hero settings', err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    loadSettings()
+  }, [])
+
   return (
     <section className="relative overflow-hidden pt-20 pb-24 lg:pt-32 lg:pb-40 bg-gradient-to-br from-background via-background to-primary/5">
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[800px] h-[800px] bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
@@ -91,13 +119,20 @@ export function Hero() {
 
           <div className="relative hidden lg:block">
             <div className="relative z-10 w-full aspect-square bg-gradient-to-br from-primary/20 to-secondary/20 rounded-3xl overflow-hidden border border-white/10 backdrop-blur-sm group hover:scale-[1.02] transition-transform duration-500">
-               <Image 
-                src="https://picsum.photos/seed/jlmoons-hero/1200/800" 
-                alt="Digital Forensics" 
-                fill 
-                className="object-cover opacity-50 mix-blend-overlay group-hover:scale-110 transition-transform duration-700" 
-                data-ai-hint="digital connection"
-              />
+               {isLoading ? (
+                 <div className="absolute inset-0 flex items-center justify-center bg-card/50">
+                   <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                 </div>
+               ) : (
+                 <Image 
+                  src={heroImage} 
+                  alt="Digital Forensics" 
+                  fill 
+                  className="object-cover opacity-50 mix-blend-overlay group-hover:scale-110 transition-transform duration-700" 
+                  data-ai-hint="digital connection"
+                  unoptimized
+                />
+               )}
               <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
               <div className="absolute bottom-8 left-8 right-8 p-6 bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl">
                 <div className="text-primary font-bold mb-1 italic">Forensic Intelligence</div>

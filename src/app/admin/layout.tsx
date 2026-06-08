@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useEffect, useState } from 'react'
@@ -73,7 +72,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <FileText className="w-4 h-4" />
             Investigations
           </Link>
-          <Link href="#" className="flex items-center gap-3 px-4 py-3 rounded-xl transition-colors text-sm font-bold uppercase tracking-wider text-muted-foreground hover:bg-white/5">
+          <Link href="/admin/config" className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors text-sm font-bold uppercase tracking-wider ${pathname === '/admin/config' ? 'bg-primary/10 text-primary border border-primary/20' : 'text-muted-foreground hover:bg-white/5'}`}>
             <Settings className="w-4 h-4" />
             Config
           </Link>

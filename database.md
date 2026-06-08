@@ -32,41 +32,31 @@ Stores the technical intake data submitted by users for forensic assessment.
 | `loanTransactionDetails` | text | (Optional) TXIDs or payment markers |
 | `loanEvidenceItems` | text[] | (Optional) Types of evidence held |
 
+### `app_settings`
+Stores dynamic application configuration settings managed via the Admin Portal.
+
+| Column | Type | Description |
+| :--- | :--- | :--- |
+| `key` | text | Unique configuration key (Primary Key) |
+| `value` | text | Configuration value |
+| `updated_at` | timestamptz | Last updated timestamp |
+
 ## Security Protocols (RLS)
 
-Row Level Security (RLS) must be enabled on the `recovery_requests` table to ensure forensic confidentiality.
+### 1. `recovery_requests`
+- **Anonymous Submissions**: `Enable insert for anonymous users` (INSERT ONLY).
+- **Administrative Access**: `Enable all for admin role` (SELECT/UPDATE/DELETE for *@jlmoons.com emails).
 
-### 1. Anonymous Submissions
-**Policy:** `Enable insert for anonymous users`
-- **Definition:** Allows the public to submit recovery requests via the website form.
-- **SQL:**
-  ```sql
-  CREATE POLICY "Allow anonymous insert" 
-  ON recovery_requests 
-  FOR INSERT 
-  WITH CHECK (true);
-  ```
+### 2. `app_settings`
+- **Public Read Access**: `Enable read for all users`
+  - **SQL**: `CREATE POLICY "Allow public read" ON app_settings FOR SELECT USING (true);`
+- **Administrative Write Access**: `Enable all for admin role`
+  - **SQL**: `CREATE POLICY "Allow admin manage" ON app_settings FOR ALL TO authenticated USING (auth.jwt() ->> 'email' LIKE '%@jlmoons.com');`
 
-### 2. Administrative Access
-**Policy:** `Enable all for admin role`
-- **Definition:** Restricts read, update, and delete access to authenticated investigators.
-- **Role Verification:** Access is controlled by checking the authenticated user's email or a custom claim.
-- **SQL (Email-based example):**
-  ```sql
-  CREATE POLICY "Allow admin full access" 
-  ON recovery_requests 
-  FOR ALL 
-  TO authenticated 
-  USING (auth.jwt() ->> 'email' LIKE '%@jlmoons.com');
-  ```
-
-## Admin Role Initialization
-
-To grant an investigator access to the **Forensic Intelligence Dashboard**:
-
-1. Create a user account in **Supabase Auth**.
-2. Ensure the email used ends in `@jlmoons.com` (as per the RLS policy above).
-3. The investigator can then initialize a session at `/admin/login`.
-
----
-*Confidentiality Note: All technical data stored in this database is considered sensitive forensic evidence.*
+## Initial Configuration
+To enable dynamic hero images, run this SQL:
+```sql
+INSERT INTO app_settings (key, value) 
+VALUES ('hero_image_url', 'https://picsum.photos/seed/jlmoons-hero/1200/800')
+ON CONFLICT (key) DO NOTHING;
+```
