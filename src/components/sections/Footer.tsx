@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Send, Mail, Phone, Clock, MapPin } from 'lucide-react'
+import { Mail, Phone, Clock, MapPin } from 'lucide-react'
 
 export function Footer() {
   return (
@@ -22,22 +22,18 @@ export function Footer() {
             <h4 className="font-bold mb-6 uppercase text-xs tracking-[0.2em] text-primary">Quick Links</h4>
             <ul className="space-y-4 text-sm text-muted-foreground">
               <li><Link href="#services" className="hover:text-primary transition-colors">Services</Link></li>
-              <li><Link href="#how-it-works" className="hover:text-primary transition-colors">How It Works</Link></li>
+              <li><Link href="#recovery-types" className="hover:text-primary transition-colors">Recovery Types</Link></li>
+              <li><Link href="#how-it-works" className="hover:text-primary transition-colors">Methodology</Link></li>
               <li><Link href="#blog" className="hover:text-primary transition-colors">Resource Center</Link></li>
-              <li><Link href="#recovery-form" className="hover:text-primary transition-colors">Submit Case</Link></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-bold mb-6 uppercase text-xs tracking-[0.2em] text-primary">Contact</h4>
+            <h4 className="font-bold mb-6 uppercase text-xs tracking-[0.2em] text-primary">Contact Us</h4>
             <ul className="space-y-4 text-sm text-muted-foreground">
               <li className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-primary" />
                 support@jlmoons.com
-              </li>
-              <li className="flex items-center gap-3">
-                <Send className="w-4 h-4 text-primary" />
-                t.me/jlmoons
               </li>
               <li className="flex items-center gap-3">
                 <Clock className="w-4 h-4 text-primary" />
