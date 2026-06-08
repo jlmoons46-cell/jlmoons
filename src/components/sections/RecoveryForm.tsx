@@ -37,6 +37,8 @@ const formSchema = z.object({
   accessDetails: z.array(z.string()).default([]),
   missingWords: z.string().optional(),
   seedDetails: z.array(z.string()).default([]),
+  hardwareDevice: z.string().optional(),
+  hardwareIssue: z.string().optional(),
   estimatedValue: z.string().optional(),
   message: z.string().min(20, "Message must be at least 20 characters"),
 })
@@ -83,6 +85,8 @@ export function RecoveryForm() {
       accessDetails: [],
       missingWords: "",
       seedDetails: [],
+      hardwareDevice: "",
+      hardwareIssue: "",
       estimatedValue: "",
       message: "",
     },
@@ -437,6 +441,96 @@ export function RecoveryForm() {
                                   />
                                 ))}
                               </div>
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="estimatedValue"
+                          render={({ field }) => (
+                            <FormItem className="space-y-3">
+                              <FormLabel>Approximate total asset value</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger className="h-12 bg-background/50">
+                                    <SelectValue placeholder="Select value range" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="less_1k">Less than $1,000</SelectItem>
+                                  <SelectItem value="1k_10k">$1,000 to $10,000</SelectItem>
+                                  <SelectItem value="10k_50k">$10,000 to $50,000</SelectItem>
+                                  <SelectItem value="50k_100k">$50,000 to $100,000</SelectItem>
+                                  <SelectItem value="more_100k">Over $100,000</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    )}
+
+                    {/* Dynamic Case Details for Hardware Wallet */}
+                    {watchRecoveryType === 'hardware_issue' && (
+                      <div className="space-y-8 border-t border-white/5 pt-10 animate-in fade-in slide-in-from-top-4">
+                        <h4 className="text-lg font-bold text-secondary">Forensic Details: Hardware Wallet Investigation</h4>
+                        
+                        <FormField
+                          control={form.control}
+                          name="hardwareDevice"
+                          render={({ field }) => (
+                            <FormItem className="space-y-3">
+                              <FormLabel>Select your hardware device</FormLabel>
+                              <FormControl>
+                                <RadioGroup
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                  className="grid grid-cols-2 sm:grid-cols-4 gap-3"
+                                >
+                                  {['Ledger', 'Trezor', 'KeepKey', 'Other'].map((device) => (
+                                    <div key={device}>
+                                      <RadioGroupItem value={device} id={`device-${device}`} className="peer sr-only" />
+                                      <Label
+                                        htmlFor={`device-${device}`}
+                                        className="flex items-center justify-center h-12 rounded-xl border border-white/10 bg-background/50 hover:bg-white/5 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 peer-data-[state=checked]:text-primary cursor-pointer transition-all text-sm font-semibold text-center"
+                                      >
+                                        {device}
+                                      </Label>
+                                    </div>
+                                  ))}
+                                </RadioGroup>
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="hardwareIssue"
+                          render={({ field }) => (
+                            <FormItem className="space-y-3">
+                              <FormLabel>What is the primary issue?</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger className="h-12 bg-background/50">
+                                    <SelectValue placeholder="Select technical issue" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {[
+                                    "Forgotten PIN",
+                                    "Damaged device",
+                                    "Corrupted firmware",
+                                    "Missing recovery phrase",
+                                    "Unknown"
+                                  ].map(issue => (
+                                    <SelectItem key={issue} value={issue.toLowerCase().replace(/\s+/g, '_')}>
+                                      {issue}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
                             </FormItem>
                           )}
                         />
