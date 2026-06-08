@@ -22,7 +22,7 @@ export function Navbar() {
           <Link href="#services" className="text-muted-foreground hover:text-primary transition-colors">Services</Link>
           <Link href="#recovery-types" className="text-muted-foreground hover:text-primary transition-colors">Recovery Types</Link>
           <Link href="#how-it-works" className="text-muted-foreground hover:text-primary transition-colors">Methodology</Link>
-          <Link href="#blog" className="text-muted-foreground hover:text-primary transition-colors">Resources</Link>
+          <Link href="#blog" className="text-muted-foreground hover:text-primary transition-colors">Resource Center</Link>
         </nav>
 
         {/* Premium CTA Anchor */}

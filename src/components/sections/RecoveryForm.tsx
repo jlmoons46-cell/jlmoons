@@ -40,7 +40,7 @@ import {
   ShieldCheck, 
   ClipboardCheck, 
   Binary, 
-  Building2, 
+  Activity, 
   ShieldAlert,
   Calendar as CalendarIcon,
   Hash,
@@ -97,7 +97,7 @@ const recoveryOptions = [
   { id: 'lost_password', label: 'Lost Wallet Password' },
   { id: 'lost_seed', label: 'Lost Seed Phrase' },
   { id: 'hardware_issue', label: 'Hardware Wallet Issue' },
-  { id: 'exchange_access', label: 'Exchange Account Access' },
+  { id: 'fake_trading', label: 'Fake Trading Scam' },
   { id: 'stolen_crypto', label: 'Stolen Crypto / Scam' },
   { id: 'wrong_address', label: 'Wrong Address Transaction' },
   { id: 'inheritance', label: 'Inheritance / Estate Case' },
@@ -684,12 +684,12 @@ export function RecoveryForm() {
                       </div>
                     )}
 
-                    {/* Case Type 4: Exchange Access */}
-                    {watchRecoveryType === 'exchange_access' && (
+                    {/* Case Type 4: Fake Trading Scam */}
+                    {watchRecoveryType === 'fake_trading' && (
                       <div className="space-y-8 border-t border-white/5 pt-10 animate-in fade-in slide-in-from-top-4">
                         <h4 className="text-lg font-bold text-secondary flex items-center gap-2">
-                          <Building2 className="w-5 h-5" />
-                          Forensic Details: Exchange Account Restoration
+                          <Activity className="w-5 h-5" />
+                          Forensic Details: Fake Trading Scam Investigation
                         </h4>
                         
                         <FormField
@@ -697,11 +697,11 @@ export function RecoveryForm() {
                           name="exchangeName"
                           render={({ field }) => (
                             <FormItem className="space-y-3">
-                              <FormLabel>Identify the exchange platform</FormLabel>
+                              <FormLabel>Identify the trading platform or app</FormLabel>
                               <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
                                   <SelectTrigger className="h-12 bg-background/50">
-                                    <SelectValue placeholder="Select exchange" />
+                                    <SelectValue placeholder="Select platform" />
                                   </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
@@ -719,7 +719,7 @@ export function RecoveryForm() {
                           name="exchangeProblem"
                           render={({ field }) => (
                             <FormItem className="space-y-3">
-                              <FormLabel>Nature of the account issue</FormLabel>
+                              <FormLabel>Nature of the investment issue</FormLabel>
                               <FormControl>
                                 <RadioGroup
                                   onValueChange={field.onChange}
@@ -727,11 +727,11 @@ export function RecoveryForm() {
                                   className="grid grid-cols-1 sm:grid-cols-2 gap-3"
                                 >
                                   {[
-                                    "Locked account",
-                                    "2FA issue",
-                                    "KYC issue",
+                                    "Unable to withdraw",
                                     "Account frozen",
-                                    "Access lost"
+                                    "Fake profit display",
+                                    "Requested more fees",
+                                    "Support uncontactable"
                                   ].map((problem) => (
                                     <div key={problem}>
                                       <RadioGroupItem value={problem} id={`problem-${problem}`} className="peer sr-only" />
@@ -754,7 +754,7 @@ export function RecoveryForm() {
                           name="contactedExchange"
                           render={({ field }) => (
                             <FormItem className="space-y-3">
-                              <FormLabel>Have you already contacted their technical support?</FormLabel>
+                              <FormLabel>Have you already attempted to withdraw funds?</FormLabel>
                               <FormControl>
                                 <RadioGroup
                                   onValueChange={field.onChange}
@@ -778,7 +778,7 @@ export function RecoveryForm() {
                           name="estimatedValue"
                           render={({ field }) => (
                             <FormItem className="space-y-3">
-                              <FormLabel>Approximate total asset value</FormLabel>
+                              <FormLabel>Approximate total investment value</FormLabel>
                               <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
                                   <SelectTrigger className="h-12 bg-background/50">
