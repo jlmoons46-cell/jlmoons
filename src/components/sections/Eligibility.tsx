@@ -13,7 +13,7 @@ const cases = [
 
 export function Eligibility() {
   return (
-    <section className="py-12 bg-muted/20 border-b border-white/5">
+    <section id="recovery-types" className="py-12 bg-muted/20 border-b border-white/5 scroll-mt-24">
       <div className="container mx-auto px-4">
         <div className="max-w-5xl mx-auto bg-card/50 backdrop-blur-sm border border-white/10 rounded-3xl p-8 lg:p-12 gold-glow relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none" />
