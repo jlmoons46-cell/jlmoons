@@ -228,10 +228,15 @@ export function RecoveryForm() {
                       </div>
                     )}
 
-                    <Button type="submit" size="lg" className="w-full h-14 text-lg font-bold" disabled={isSubmitting}>
-                      {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <Send className="w-5 h-5 mr-2" />}
-                      Request a Case Review
-                    </Button>
+                    <div className="space-y-4">
+                      <Button type="submit" size="lg" className="w-full h-14 text-lg font-bold" disabled={isSubmitting}>
+                        {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <Send className="w-5 h-5 mr-2" />}
+                        Request a Case Review
+                      </Button>
+                      <p className="text-[10px] uppercase tracking-widest text-muted-foreground text-center font-bold">
+                        Receive an expert evaluation before deciding on next steps.
+                      </p>
+                    </div>
                   </form>
                 </Form>
               </div>

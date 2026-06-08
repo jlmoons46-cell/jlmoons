@@ -26,13 +26,18 @@ export function Hero() {
             </p>
 
             <div className="space-y-6">
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="h-14 px-8 text-lg font-semibold gold-glow" asChild>
-                  <Link href="#recovery-form">Speak With a Recovery Specialist</Link>
-                </Button>
-                <Button variant="outline" size="lg" className="h-14 px-8 text-lg font-semibold border-white/10 hover:bg-white/5" asChild>
-                  <Link href="#how-it-works">How It Works</Link>
-                </Button>
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Button size="lg" className="h-14 px-8 text-lg font-semibold gold-glow" asChild>
+                    <Link href="#recovery-form">Speak With a Recovery Specialist</Link>
+                  </Button>
+                  <Button variant="outline" size="lg" className="h-14 px-8 text-lg font-semibold border-white/10 hover:bg-white/5" asChild>
+                    <Link href="#how-it-works">How It Works</Link>
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground font-medium pl-1 italic">
+                  ✓ Confidential assessment. No obligation. Recovery feasibility determined before any recovery work begins.
+                </p>
               </div>
 
               {/* Trust Bar */}
