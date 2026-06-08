@@ -270,11 +270,11 @@ export function RecoveryForm() {
               <div className="space-y-6">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-wider">
                   <ShieldCheck className="w-4 h-4" />
-                  Forensic Intake Portal
+                  Comprehensive Solutions
                 </div>
-                <h3 className="text-4xl font-bold leading-tight">Begin Technical Assessment</h3>
+                <h3 className="text-4xl font-bold leading-tight">Precision Technical Assessment</h3>
                 <p className="text-muted-foreground text-lg leading-relaxed">
-                  Every recovery begins with a technical intake. This data is essential for our specialists to build an accurate forensic roadmap.
+                  Every restoration begins with a comprehensive technical intake. This data is essential for our specialists to build an accurate forensic roadmap.
                 </p>
               </div>
 

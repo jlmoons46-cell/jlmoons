@@ -84,8 +84,8 @@ export function Steps() {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center max-w-3xl mx-auto">
-          <h2 className="text-xs font-bold tracking-[0.2em] text-secondary uppercase mb-4">Forensic Standards</h2>
-          <h3 className="text-4xl lg:text-5xl font-bold mb-6">Our Recovery Methodology</h3>
+          <h2 className="text-xs font-bold tracking-[0.2em] text-secondary uppercase mb-4">Comprehensive Solutions</h2>
+          <h3 className="text-4xl lg:text-5xl font-bold mb-6">Precision Restoration Methodology</h3>
           <p className="text-muted-foreground text-lg mb-8">
             Every recovery follows a specialized forensic workflow designed for your specific situation.
           </p>
