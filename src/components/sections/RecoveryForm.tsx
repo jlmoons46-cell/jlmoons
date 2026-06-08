@@ -35,6 +35,8 @@ const formSchema = z.object({
   recoveryType: z.string().min(1, "Please select what best describes your situation"),
   walletName: z.string().optional(),
   accessDetails: z.array(z.string()).default([]),
+  missingWords: z.string().optional(),
+  seedDetails: z.array(z.string()).default([]),
   estimatedValue: z.string().optional(),
   message: z.string().min(20, "Message must be at least 20 characters"),
 })
@@ -59,6 +61,13 @@ const accessChecklist = [
   { id: 'original_device', label: 'Original device used' },
 ]
 
+const seedChecklist = [
+  { id: 'partial_phrase', label: 'Partial phrase fragments' },
+  { id: 'wallet_address', label: 'Known wallet address' },
+  { id: 'tx_history', label: 'Transaction history' },
+  { id: 'backup_notes', label: 'Original backup notes' },
+]
+
 export function RecoveryForm() {
   const { toast } = useToast()
   const [isAiLoading, setIsAiLoading] = useState(false)
@@ -72,6 +81,8 @@ export function RecoveryForm() {
       recoveryType: "",
       walletName: "",
       accessDetails: [],
+      missingWords: "",
+      seedDetails: [],
       estimatedValue: "",
       message: "",
     },
@@ -295,7 +306,131 @@ export function RecoveryForm() {
                                           </FormControl>
                                           <FormLabel className="text-sm font-medium leading-none cursor-pointer">
                                             {item.label}
-                                          </FormLabel>
+                                          </Label>
+                                        </FormItem>
+                                      )
+                                    }}
+                                  />
+                                ))}
+                              </div>
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="estimatedValue"
+                          render={({ field }) => (
+                            <FormItem className="space-y-3">
+                              <FormLabel>Approximate total asset value</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger className="h-12 bg-background/50">
+                                    <SelectValue placeholder="Select value range" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="less_1k">Less than $1,000</SelectItem>
+                                  <SelectItem value="1k_10k">$1,000 to $10,000</SelectItem>
+                                  <SelectItem value="10k_50k">$10,000 to $50,000</SelectItem>
+                                  <SelectItem value="50k_100k">$50,000 to $100,000</SelectItem>
+                                  <SelectItem value="more_100k">Over $100,000</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    )}
+
+                    {/* Dynamic Case Details for Lost Seed Phrase */}
+                    {watchRecoveryType === 'lost_seed' && (
+                      <div className="space-y-8 border-t border-white/5 pt-10 animate-in fade-in slide-in-from-top-4">
+                        <h4 className="text-lg font-bold text-secondary">Forensic Details: Seed Phrase Reconstruction</h4>
+                        
+                        <FormField
+                          control={form.control}
+                          name="walletName"
+                          render={({ field }) => (
+                            <FormItem className="space-y-3">
+                              <FormLabel>Original wallet software</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger className="h-12 bg-background/50">
+                                    <SelectValue placeholder="Select wallet software" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {walletOptions.map(opt => (
+                                    <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="missingWords"
+                          render={({ field }) => (
+                            <FormItem className="space-y-3">
+                              <FormLabel>How many words are missing or incorrect?</FormLabel>
+                              <FormControl>
+                                <RadioGroup
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                  className="flex flex-col sm:flex-row gap-6"
+                                >
+                                  {['1', '2', '3+'].map((val) => (
+                                    <div key={val} className="flex items-center space-x-3">
+                                      <RadioGroupItem value={val} id={`words-${val}`} />
+                                      <Label htmlFor={`words-${val}`} className="cursor-pointer font-medium">{val} {val === '1' ? 'Word' : 'Words'}</Label>
+                                    </div>
+                                  ))}
+                                </RadioGroup>
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="seedDetails"
+                          render={() => (
+                            <FormItem>
+                              <div className="mb-4">
+                                <FormLabel>Evidence available:</FormLabel>
+                              </div>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {seedChecklist.map((item) => (
+                                  <FormField
+                                    key={item.id}
+                                    control={form.control}
+                                    name="seedDetails"
+                                    render={({ field }) => {
+                                      return (
+                                        <FormItem
+                                          key={item.id}
+                                          className="flex flex-row items-start space-x-3 space-y-0"
+                                        >
+                                          <FormControl>
+                                            <Checkbox
+                                              checked={field.value?.includes(item.id)}
+                                              onCheckedChange={(checked) => {
+                                                return checked
+                                                  ? field.onChange([...(field.value || []), item.id])
+                                                  : field.onChange(
+                                                      field.value?.filter(
+                                                        (value) => value !== item.id
+                                                      )
+                                                    )
+                                              }}
+                                            />
+                                          </FormControl>
+                                          <Label className="text-sm font-medium leading-none cursor-pointer">
+                                            {item.label}
+                                          </Label>
                                         </FormItem>
                                       )
                                     }}
