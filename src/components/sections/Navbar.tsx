@@ -19,7 +19,6 @@ export function Navbar() {
           <Link href="#services" className="hover:text-primary transition-colors">Services</Link>
           <Link href="#how-it-works" className="hover:text-primary transition-colors">How It Works</Link>
           <Link href="#blog" className="hover:text-primary transition-colors">Resource Center</Link>
-          <Link href="#contact" className="hover:text-primary transition-colors">Contact Us</Link>
         </nav>
 
         <div className="flex items-center gap-3">
