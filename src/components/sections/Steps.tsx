@@ -91,7 +91,7 @@ export function Steps() {
           </p>
 
           {/* Case Type Switcher */}
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="flex flex-wrap justify-center gap-3 mb-12">
             {(Object.keys(methodologies) as MethodologyType[]).map((type) => (
               <Button
                 key={type}
@@ -109,7 +109,7 @@ export function Steps() {
         </div>
 
         {/* Timeline - Desktop */}
-        <div className="hidden lg:block relative min-h-[700px] mt-12">
+        <div className="hidden lg:block relative min-h-[850px] mt-12">
           {/* Main Horizontal Line */}
           <div className="absolute top-1/2 left-0 w-[85%] h-[2px] bg-white/10 -translate-y-1/2" />
           
@@ -148,15 +148,15 @@ export function Steps() {
 
             {/* Final Step 5 - Destination Circle */}
             <div className="relative flex flex-col items-center justify-center">
-              <div className="relative z-20 w-[220px] h-[220px] rounded-full bg-secondary text-secondary-foreground p-7 flex flex-col items-center justify-center text-center shadow-[0_0_50px_-10px_rgba(34,211,238,0.5)] transform hover:scale-105 transition-transform duration-500 animate-in zoom-in-95">
+              <div className="relative z-20 w-[240px] h-[240px] rounded-full bg-secondary text-secondary-foreground p-7 flex flex-col items-center justify-center text-center shadow-[0_0_60px_-10px_rgba(34,211,238,0.5)] transform hover:scale-105 transition-transform duration-500 animate-in zoom-in-95">
                 <div className="w-10 h-10 bg-secondary-foreground/10 rounded-full flex items-center justify-center mb-3">
                   <CheckCircle2 className="w-5 h-5" />
                 </div>
                 <h4 className="text-lg font-bold mb-2 leading-tight">{currentMethodology.finalLabel}</h4>
                 <p className="text-[10px] font-medium opacity-90 mb-5 leading-relaxed">
-                  Receive your assessment and results securely.
+                  Receive your case assessment and recommended results securely.
                 </p>
-                <Button variant="outline" size="sm" className="h-8 bg-transparent border-secondary-foreground/20 hover:bg-secondary-foreground/10 text-secondary-foreground font-bold text-[9px] uppercase tracking-wider" asChild>
+                <Button variant="outline" size="sm" className="h-9 bg-transparent border-secondary-foreground/20 hover:bg-secondary-foreground/10 text-secondary-foreground font-bold text-[9px] uppercase tracking-wider" asChild>
                   <Link href="#recovery-form">Start Now <ArrowRight className="ml-2 w-3 h-3" /></Link>
                 </Button>
               </div>
