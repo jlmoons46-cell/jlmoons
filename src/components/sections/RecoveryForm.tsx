@@ -18,13 +18,6 @@ import {
 } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Checkbox } from '@/components/ui/checkbox'
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
 import { 
   Alert,
@@ -41,14 +34,9 @@ import {
   ClipboardCheck, 
   Binary, 
   Activity, 
-  ShieldAlert,
-  Calendar as CalendarIcon,
-  Hash,
   Link2,
   Wallet as WalletIcon,
   AlertTriangle,
-  ArrowRightLeft,
-  Users,
   Info,
   CheckCircle2,
   User,
@@ -56,9 +44,10 @@ import {
   Phone,
   Upload,
   Landmark,
-  Shield,
   Heart,
-  TrendingUp
+  TrendingUp,
+  Key,
+  Database
 } from 'lucide-react'
 import { inquireRecoveryDetails } from '@/ai/flows/ai-recovery-inquiry-assistant'
 import { useToast } from '@/hooks/use-toast'
@@ -69,12 +58,11 @@ const formSchema = z.object({
   phone: z.string().min(5, "Valid phone number is required"),
   country: z.string().min(1, "Please enter your country"),
   recoveryType: z.string().min(1, "Please select what best describes your situation"),
-  walletName: z.string().optional(),
-  accessDetails: z.array(z.string()).default([]),
-  missingWords: z.string().optional(),
-  seedDetails: z.array(z.string()).default([]),
-  hardwareDevice: z.string().optional(),
-  hardwareIssue: z.string().optional(),
+  // Wallet Recovery fields
+  walletType: z.string().optional(),
+  walletIssueType: z.string().optional(),
+  availableMaterials: z.array(z.string()).default([]),
+  estimatedAssetValue: z.string().optional(),
   // Fake Trading fields
   exchangeName: z.string().optional(),
   platformUrl: z.string().optional(),
@@ -102,39 +90,28 @@ const formSchema = z.object({
   investWalletAddress: z.string().optional(),
   investLastTransferDate: z.string().optional(),
   investStillCommunicating: z.string().optional(),
-  // Scam specific fields
-  scamType: z.string().optional(),
-  amountLost: z.string().optional(),
-  cryptoCurrency: z.string().optional(),
-  incidentDate: z.string().optional(),
-  scamWalletAddress: z.string().optional(),
-  transactionHash: z.string().optional(),
-  scammerWebsite: z.string().optional(),
-  scammerContact: z.string().optional(),
-  // Wrong Address specific fields
-  sendingWallet: z.string().optional(),
-  destinationWallet: z.string().optional(),
-  destinationType: z.string().optional(),
-  // Estate specific fields
-  relationship: z.string().optional(),
-  estateDetails: z.array(z.string()).default([]),
+  // General message
   message: z.string().min(20, "Message must be at least 20 characters"),
 })
 
 const recoveryOptions = [
-  { id: 'lost_password', label: 'Lost Wallet Password' },
-  { id: 'lost_seed', label: 'Lost Seed Phrase' },
-  { id: 'hardware_issue', label: 'Hardware Wallet Issue' },
+  { id: 'wallet_recovery', label: 'Wallet Recovery' },
   { id: 'fake_trading', label: 'Fake Trading Scam' },
   { id: 'bad_broker', label: 'Bad Broker Recovery' },
   { id: 'romance_scam', label: 'Romance Scam Recovery' },
   { id: 'investment_scam', label: 'Investment Scam Recovery' },
-  { id: 'wrong_address', label: 'Wrong Address Transaction' },
-  { id: 'inheritance', label: 'Inheritance / Estate Case' },
   { id: 'other', label: 'Other Technical Issue' },
 ]
 
-const walletOptions = ["Electrum", "Exodus", "Atomic", "Trust Wallet", "MetaMask", "Other"]
+const walletTypes = ["MetaMask", "Trust Wallet", "Exodus", "Ledger", "Trezor", "Other"]
+const walletIssueTypes = ["Lost Password", "Corrupted Wallet", "Lost Access", "Missing Seed Phrase", "Damaged Device"]
+const materialOptions = [
+  { id: 'seed', label: 'Seed Phrase' },
+  { id: 'partial_seed', label: 'Partial Seed Phrase' },
+  { id: 'wallet_file', label: 'Wallet File' },
+  { id: 'backup', label: 'Backup' },
+  { id: 'device', label: 'Device' },
+]
 
 export function RecoveryForm() {
   const { toast } = useToast()
@@ -150,12 +127,10 @@ export function RecoveryForm() {
       phone: "",
       country: "",
       recoveryType: "",
-      walletName: "",
-      accessDetails: [],
-      missingWords: "",
-      seedDetails: [],
-      hardwareDevice: "",
-      hardwareIssue: "",
+      walletType: "",
+      walletIssueType: "",
+      availableMaterials: [],
+      estimatedAssetValue: "",
       exchangeName: "",
       platformUrl: "",
       withdrawalBlocked: "",
@@ -179,25 +154,12 @@ export function RecoveryForm() {
       investWalletAddress: "",
       investLastTransferDate: "",
       investStillCommunicating: "",
-      scamType: "",
-      amountLost: "",
-      cryptoCurrency: "",
-      incidentDate: "",
-      scamWalletAddress: "",
-      transactionHash: "",
-      scammerWebsite: "",
-      scammerContact: "",
-      sendingWallet: "",
-      destinationWallet: "",
-      destinationType: "",
-      relationship: "",
-      estateDetails: [],
       message: "",
     },
   })
 
   const watchRecoveryType = form.watch("recoveryType")
-  const watchEstimatedValue = form.watch("totalDeposited") || form.watch("brokerDeposited") || form.watch("amountLost") || form.watch("romanceLoss") || form.watch("investAmount") || "0"
+  const watchEstimatedValue = form.watch("totalDeposited") || form.watch("brokerDeposited") || form.watch("estimatedAssetValue") || form.watch("romanceLoss") || form.watch("investAmount") || "0"
 
   const qualificationStatus = useMemo(() => {
     const value = parseFloat(watchEstimatedValue) || 0;
@@ -360,28 +322,132 @@ export function RecoveryForm() {
                       )}
                     />
 
-                    {/* Case Type: Lost Password */}
-                    {watchRecoveryType === 'lost_password' && (
+                    {/* Case Type: Wallet Recovery */}
+                    {watchRecoveryType === 'wallet_recovery' && (
                       <div className="space-y-8 border-t border-white/5 pt-10 animate-in fade-in slide-in-from-top-4">
-                        <h4 className="text-lg font-bold text-secondary">Forensic Details: Password Recovery</h4>
+                        <h4 className="text-lg font-bold text-secondary flex items-center gap-2">
+                          <WalletIcon className="w-5 h-5" />
+                          Forensic Details: Wallet Recovery Intake
+                        </h4>
+
                         <FormField
                           control={form.control}
-                          name="walletName"
+                          name="walletType"
                           render={({ field }) => (
-                            <FormItem className="space-y-3">
-                              <FormLabel>What wallet software are you using?</FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                  <SelectTrigger className="h-12 bg-background/50">
-                                    <SelectValue placeholder="Select wallet software" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  {walletOptions.map(opt => (
-                                    <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                            <FormItem className="space-y-4">
+                              <FormLabel>Wallet Type</FormLabel>
+                              <FormControl>
+                                <RadioGroup
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                  className="grid grid-cols-2 sm:grid-cols-3 gap-3"
+                                >
+                                  {walletTypes.map((type) => (
+                                    <div key={type}>
+                                      <RadioGroupItem value={type.toLowerCase()} id={`wallet-${type}`} className="peer sr-only" />
+                                      <Label 
+                                        htmlFor={`wallet-${type}`}
+                                        className="flex items-center justify-center h-10 rounded-lg border border-white/10 bg-background/50 hover:bg-white/5 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 peer-data-[state=checked]:text-primary cursor-pointer transition-all text-xs font-semibold"
+                                      >
+                                        {type}
+                                      </Label>
+                                    </div>
                                   ))}
-                                </SelectContent>
-                              </Select>
+                                </RadioGroup>
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="walletIssueType"
+                          render={({ field }) => (
+                            <FormItem className="space-y-4">
+                              <FormLabel>Issue Type</FormLabel>
+                              <FormControl>
+                                <RadioGroup
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                  className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+                                >
+                                  {walletIssueTypes.map((type) => (
+                                    <div key={type}>
+                                      <RadioGroupItem value={type.toLowerCase()} id={`issue-${type}`} className="peer sr-only" />
+                                      <Label 
+                                        htmlFor={`issue-${type}`}
+                                        className="flex items-center justify-center h-10 rounded-lg border border-white/10 bg-background/50 hover:bg-white/5 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 peer-data-[state=checked]:text-primary cursor-pointer transition-all text-xs font-semibold"
+                                      >
+                                        {type}
+                                      </Label>
+                                    </div>
+                                  ))}
+                                </RadioGroup>
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="availableMaterials"
+                          render={() => (
+                            <FormItem className="space-y-4">
+                              <FormLabel className="flex items-center gap-2">
+                                <Database className="w-4 h-4 text-primary" />
+                                Do You Still Have?
+                              </FormLabel>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {materialOptions.map((item) => (
+                                  <FormField
+                                    key={item.id}
+                                    control={form.control}
+                                    name="availableMaterials"
+                                    render={({ field }) => {
+                                      return (
+                                        <FormItem
+                                          key={item.id}
+                                          className="flex flex-row items-start space-x-3 space-y-0"
+                                        >
+                                          <FormControl>
+                                            <Checkbox
+                                              checked={field.value?.includes(item.id)}
+                                              onCheckedChange={(checked) => {
+                                                return checked
+                                                  ? field.onChange([...field.value, item.id])
+                                                  : field.onChange(
+                                                      field.value?.filter(
+                                                        (value) => value !== item.id
+                                                      )
+                                                    )
+                                              }}
+                                            />
+                                          </FormControl>
+                                          <FormLabel className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                            {item.label}
+                                          </FormLabel>
+                                        </FormItem>
+                                      )
+                                    }}
+                                  />
+                                ))}
+                              </div>
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="estimatedAssetValue"
+                          render={({ field }) => (
+                            <FormItem className="space-y-2">
+                              <FormLabel className="flex items-center gap-2">
+                                <AlertTriangle className="w-4 h-4 text-primary" />
+                                Estimated Asset Value ($)
+                              </FormLabel>
+                              <FormControl>
+                                <Input placeholder="e.g. 15000" className="h-12 bg-background/50" {...field} />
+                              </FormControl>
                             </FormItem>
                           )}
                         />
@@ -783,18 +849,19 @@ export function RecoveryForm() {
                             render={({ field }) => (
                               <FormItem className="space-y-2">
                                 <FormLabel>Cryptocurrency Used</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                  <FormControl>
-                                    <SelectTrigger className="h-12 bg-background/50">
-                                      <SelectValue placeholder="Select cryptocurrency" />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    {['BTC', 'ETH', 'USDT', 'SOL', 'Other'].map(opt => (
-                                      <SelectItem key={opt} value={opt}>{opt}</SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                  {['BTC', 'ETH', 'USDT', 'SOL', 'Other'].map(opt => (
+                                    <div key={opt}>
+                                      <RadioGroupItem value={opt} id={`crypto-${opt}`} className="peer sr-only" />
+                                      <Label 
+                                        htmlFor={`crypto-${opt}`}
+                                        className="flex items-center justify-center h-10 rounded-lg border border-white/10 bg-background/50 hover:bg-white/5 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 peer-data-[state=checked]:text-primary cursor-pointer transition-all text-xs font-semibold"
+                                      >
+                                        {opt}
+                                      </Label>
+                                    </div>
+                                  ))}
+                                </div>
                               </FormItem>
                             )}
                           />
