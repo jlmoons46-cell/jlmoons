@@ -4,26 +4,26 @@
 
 @layer base {
   :root {
-    --background: 215 63% 7%;
-    --foreground: 210 40% 98%;
-    --card: 214 49% 15%;
-    --card-foreground: 210 40% 98%;
-    --popover: 215 63% 7%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 189 85% 53%;
-    --primary-foreground: 215 63% 7%;
-    --secondary: 199 95% 74%;
-    --secondary-foreground: 215 63% 7%;
-    --muted: 215 52% 11%;
-    --muted-foreground: 212 21% 76%;
-    --accent: 189 85% 53%;
-    --accent-foreground: 215 63% 7%;
+    --background: 0 0% 2%;
+    --foreground: 38 42% 96%;
+    --card: 210 11% 7%;
+    --card-foreground: 38 42% 96%;
+    --popover: 0 0% 2%;
+    --popover-foreground: 38 42% 96%;
+    --primary: 42 61% 60%;
+    --primary-foreground: 0 0% 2%;
+    --secondary: 41 87% 69%;
+    --secondary-foreground: 0 0% 2%;
+    --muted: 210 11% 10%;
+    --muted-foreground: 43 11% 75%;
+    --accent: 42 61% 60%;
+    --accent-foreground: 0 0% 2%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 211 37% 22%;
-    --input: 211 37% 22%;
-    --ring: 189 85% 53%;
-    --radius: 0.75rem;
+    --destructive-foreground: 38 42% 96%;
+    --border: 210 11% 15%;
+    --input: 210 11% 15%;
+    --ring: 42 61% 60%;
+    --radius: 0.5rem;
   }
 }
 
@@ -40,15 +40,15 @@
 }
 
 .glass-nav {
-  @apply sticky top-0 z-50 backdrop-blur-md bg-background/80 border-b border-white/5;
+  @apply sticky top-0 z-50 backdrop-blur-md bg-background/90 border-b border-white/5;
 }
 
 .gold-glow {
-  box-shadow: 0 0 20px -5px hsl(var(--primary) / 0.3);
+  box-shadow: 0 0 25px -5px hsl(var(--primary) / 0.4);
 }
 
 .teal-glow {
-  box-shadow: 0 0 20px -5px hsl(var(--accent) / 0.3);
+  box-shadow: 0 0 25px -5px hsl(var(--secondary) / 0.3);
 }
 
 .animate-pulse-subtle {
