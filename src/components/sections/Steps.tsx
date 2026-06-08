@@ -84,14 +84,14 @@ export function Steps() {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center max-w-3xl mx-auto">
-          <h2 className="text-sm font-bold tracking-[0.2em] text-secondary uppercase mb-4">Forensic Standards</h2>
+          <h2 className="text-xs font-bold tracking-[0.2em] text-secondary uppercase mb-4">Forensic Standards</h2>
           <h3 className="text-4xl lg:text-5xl font-bold mb-6">Our Recovery Methodology</h3>
-          <p className="text-muted-foreground text-lg mb-10">
+          <p className="text-muted-foreground text-lg mb-12">
             Every recovery follows a specialized forensic workflow designed for your specific situation.
           </p>
 
-          {/* Case Type Switcher */}
-          <div className="flex flex-wrap justify-center gap-3 mb-20">
+          {/* Case Type Switcher - Moved higher with significant margin below */}
+          <div className="flex flex-wrap justify-center gap-3 mb-24 lg:mb-32">
             {(Object.keys(methodologies) as MethodologyType[]).map((type) => (
               <Button
                 key={type}
@@ -110,7 +110,7 @@ export function Steps() {
 
         {/* Timeline - Desktop */}
         <div className="hidden lg:block relative min-h-[950px] mt-12">
-          {/* Main Horizontal Line */}
+          {/* Main Horizontal Line - The Visual Anchor */}
           <div className="absolute top-1/2 left-0 w-[85%] h-[2px] bg-white/10 -translate-y-1/2" />
           
           <div className="grid grid-cols-5 h-full relative">
@@ -118,23 +118,23 @@ export function Steps() {
               const isTop = index % 2 === 0
               return (
                 <div key={`${activeType}-${step.id}`} className="relative flex flex-col items-center">
-                  {/* Connecting Vertical Line */}
+                  {/* Connecting Vertical Line - Thin and authoritative */}
                   <div className={cn(
                     "absolute left-1/2 -translate-x-1/2 w-[1px] bg-white/15 h-32 transition-all duration-500",
                     isTop ? "bottom-1/2" : "top-1/2"
                   )} />
                   
-                  {/* Step Node Icon */}
+                  {/* Step Node Icon - Clean and focused */}
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
                     <div className="w-16 h-16 rounded-full bg-[#07111F] border border-white/15 flex items-center justify-center teal-glow group transition-transform hover:scale-110">
                       <step.icon className="w-6 h-6 text-secondary" />
                     </div>
                   </div>
 
-                  {/* Step Content Card - Compact & Balanced */}
+                  {/* Step Content Card - Compact and Enterprise-grade */}
                   <div className={cn(
                     "absolute left-1/2 -translate-x-1/2 w-[220px] p-5 rounded-xl bg-card border border-white/5 shadow-2xl animate-in fade-in slide-in-from-bottom-2 duration-700",
-                    isTop ? "bottom-[calc(50%+140px)]" : "top-[calc(50%+140px)]"
+                    isTop ? "bottom-[calc(50%+160px)]" : "top-[calc(50%+160px)]"
                   )}>
                     <div className="text-[9px] font-bold uppercase tracking-[0.2em] text-secondary mb-2">Step 0{step.id}</div>
                     <h4 className="text-sm font-bold mb-1.5 text-foreground leading-tight">{step.title}</h4>
@@ -146,7 +146,7 @@ export function Steps() {
               )
             })}
 
-            {/* Final Step 5 - Destination Circle (Smaller Version) */}
+            {/* Final Step 5 - Destination Circle (Reduced Size for better balance) */}
             <div className="relative flex flex-col items-center justify-center">
               <div className="relative z-20 w-[180px] h-[180px] rounded-full bg-secondary text-secondary-foreground p-5 flex flex-col items-center justify-center text-center shadow-[0_0_60px_-10px_rgba(34,211,238,0.5)] transform hover:scale-105 transition-transform duration-500 animate-in zoom-in-95">
                 <div className="w-8 h-8 bg-secondary-foreground/10 rounded-full flex items-center justify-center mb-2">
@@ -183,7 +183,7 @@ export function Steps() {
             </div>
           ))}
 
-          {/* Mobile Final Node (Slightly Smaller) */}
+          {/* Mobile Final Node */}
           <div className="relative pl-16 animate-in fade-in slide-in-from-left-4">
             <div className="absolute left-0 w-12 h-12 rounded-full bg-secondary flex items-center justify-center z-10">
               <CheckCircle2 className="w-5 h-5 text-secondary-foreground" />
