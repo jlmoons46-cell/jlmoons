@@ -52,30 +52,34 @@ export function Hero() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-8 border-t border-white/5">
-              <div className="space-y-1">
-                <div className="text-2xl font-bold text-primary flex items-center gap-1">
-                  <DollarSign className="w-5 h-5" /> 8M+
+            {/* Credibility Strip */}
+            <div className="pt-8 border-t border-white/5 space-y-4">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Trusted By Asset Holders Worldwide</p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+                <div className="space-y-1">
+                  <div className="text-2xl font-bold text-primary flex items-center gap-1">
+                    <DollarSign className="w-5 h-5" /> 8M+
+                  </div>
+                  <div className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold leading-tight">Investigated</div>
                 </div>
-                <div className="text-xs text-muted-foreground uppercase tracking-widest">Recovered</div>
-              </div>
-              <div className="space-y-1">
-                <div className="text-2xl font-bold text-primary flex items-center gap-1">
-                  <Users className="w-5 h-5" /> 3,800+
+                <div className="space-y-1">
+                  <div className="text-2xl font-bold text-primary flex items-center gap-1">
+                    <Users className="w-5 h-5" /> 3,800+
+                  </div>
+                  <div className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold leading-tight">Cases Reviewed</div>
                 </div>
-                <div className="text-xs text-muted-foreground uppercase tracking-widest">Cases</div>
-              </div>
-              <div className="space-y-1">
-                <div className="text-2xl font-bold text-primary flex items-center gap-1">
-                  <CheckCircle className="w-5 h-5" /> 94%
+                <div className="space-y-1">
+                  <div className="text-2xl font-bold text-primary flex items-center gap-1">
+                    <CheckCircle className="w-5 h-5" /> 94%
+                  </div>
+                  <div className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold leading-tight">Client Satisfaction</div>
                 </div>
-                <div className="text-xs text-muted-foreground uppercase tracking-widest">Success</div>
-              </div>
-              <div className="space-y-1">
-                <div className="text-2xl font-bold text-primary flex items-center gap-1">
-                  <Clock className="w-5 h-5" /> 72hr
+                <div className="space-y-1">
+                  <div className="text-2xl font-bold text-primary flex items-center gap-1">
+                    <Clock className="w-5 h-5" /> 72-Hour
+                  </div>
+                  <div className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold leading-tight">Initial Assessment</div>
                 </div>
-                <div className="text-xs text-muted-foreground uppercase tracking-widest">Avg Response</div>
               </div>
             </div>
           </div>
