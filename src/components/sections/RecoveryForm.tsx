@@ -26,7 +26,7 @@ import {
   SelectValue 
 } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
-import { Send, MessageSquare, Loader2, Sparkles, MessageCircle, ShieldCheck, ClipboardCheck, Binary } from 'lucide-react'
+import { Send, MessageSquare, Loader2, Sparkles, MessageCircle, ShieldCheck, ClipboardCheck, Binary, Building2 } from 'lucide-react'
 import { inquireRecoveryDetails } from '@/ai/flows/ai-recovery-inquiry-assistant'
 import { useToast } from '@/hooks/use-toast'
 
@@ -39,6 +39,9 @@ const formSchema = z.object({
   seedDetails: z.array(z.string()).default([]),
   hardwareDevice: z.string().optional(),
   hardwareIssue: z.string().optional(),
+  exchangeName: z.string().optional(),
+  exchangeProblem: z.string().optional(),
+  contactedExchange: z.string().optional(),
   estimatedValue: z.string().optional(),
   message: z.string().min(20, "Message must be at least 20 characters"),
 })
@@ -55,6 +58,19 @@ const recoveryOptions = [
 ]
 
 const walletOptions = ["Electrum", "Exodus", "Atomic", "Trust Wallet", "MetaMask", "Other"]
+
+const exchangeOptions = [
+  "Binance", 
+  "Coinbase", 
+  "Kraken", 
+  "KuCoin", 
+  "OKX", 
+  "Bybit", 
+  "Gate.io", 
+  "Bitfinex", 
+  "Gemini", 
+  "Other"
+]
 
 const accessChecklist = [
   { id: 'wallet_file', label: 'Wallet file (.dat, .json, etc.)' },
@@ -87,6 +103,9 @@ export function RecoveryForm() {
       seedDetails: [],
       hardwareDevice: "",
       hardwareIssue: "",
+      exchangeName: "",
+      exchangeProblem: "",
+      contactedExchange: "",
       estimatedValue: "",
       message: "",
     },
@@ -531,6 +550,121 @@ export function RecoveryForm() {
                                   ))}
                                 </SelectContent>
                               </Select>
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="estimatedValue"
+                          render={({ field }) => (
+                            <FormItem className="space-y-3">
+                              <FormLabel>Approximate total asset value</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger className="h-12 bg-background/50">
+                                    <SelectValue placeholder="Select value range" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="less_1k">Less than $1,000</SelectItem>
+                                  <SelectItem value="1k_10k">$1,000 to $10,000</SelectItem>
+                                  <SelectItem value="10k_50k">$10,000 to $50,000</SelectItem>
+                                  <SelectItem value="50k_100k">$50,000 to $100,000</SelectItem>
+                                  <SelectItem value="more_100k">Over $100,000</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    )}
+
+                    {/* Dynamic Case Details for Exchange Access */}
+                    {watchRecoveryType === 'exchange_access' && (
+                      <div className="space-y-8 border-t border-white/5 pt-10 animate-in fade-in slide-in-from-top-4">
+                        <h4 className="text-lg font-bold text-secondary flex items-center gap-2">
+                          <Building2 className="w-5 h-5" />
+                          Forensic Details: Exchange Account Restoration
+                        </h4>
+                        
+                        <FormField
+                          control={form.control}
+                          name="exchangeName"
+                          render={({ field }) => (
+                            <FormItem className="space-y-3">
+                              <FormLabel>Identify the exchange platform</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger className="h-12 bg-background/50">
+                                    <SelectValue placeholder="Select exchange" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {exchangeOptions.map(opt => (
+                                    <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="exchangeProblem"
+                          render={({ field }) => (
+                            <FormItem className="space-y-3">
+                              <FormLabel>Nature of the account issue</FormLabel>
+                              <FormControl>
+                                <RadioGroup
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                  className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+                                >
+                                  {[
+                                    "Locked account",
+                                    "2FA issue",
+                                    "KYC issue",
+                                    "Account frozen",
+                                    "Access lost"
+                                  ].map((problem) => (
+                                    <div key={problem}>
+                                      <RadioGroupItem value={problem} id={`problem-${problem}`} className="peer sr-only" />
+                                      <Label
+                                        htmlFor={`problem-${problem}`}
+                                        className="flex items-center h-12 px-4 rounded-xl border border-white/10 bg-background/50 hover:bg-white/5 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 peer-data-[state=checked]:text-primary cursor-pointer transition-all text-sm font-semibold"
+                                      >
+                                        {problem}
+                                      </Label>
+                                    </div>
+                                  ))}
+                                </RadioGroup>
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="contactedExchange"
+                          render={({ field }) => (
+                            <FormItem className="space-y-3">
+                              <FormLabel>Have you already contacted their technical support?</FormLabel>
+                              <FormControl>
+                                <RadioGroup
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                  className="flex gap-6"
+                                >
+                                  {['Yes', 'No'].map((val) => (
+                                    <div key={val} className="flex items-center space-x-3">
+                                      <RadioGroupItem value={val.toLowerCase()} id={`contacted-${val}`} />
+                                      <Label htmlFor={`contacted-${val}`} className="cursor-pointer font-medium">{val}</Label>
+                                    </div>
+                                  ))}
+                                </RadioGroup>
+                              </FormControl>
                             </FormItem>
                           )}
                         />
