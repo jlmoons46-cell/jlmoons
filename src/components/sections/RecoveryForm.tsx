@@ -56,7 +56,8 @@ import {
   Phone,
   Upload,
   Landmark,
-  Shield
+  Shield,
+  Heart
 } from 'lucide-react'
 import { inquireRecoveryDetails } from '@/ai/flows/ai-recovery-inquiry-assistant'
 import { useToast } from '@/hooks/use-toast'
@@ -86,6 +87,12 @@ const formSchema = z.object({
   brokerDeposited: z.string().optional(),
   brokerLoginAccess: z.string().optional(),
   brokerWithdrawalRequested: z.string().optional(),
+  // Romance Scam fields
+  metWhere: z.string().optional(),
+  askedToInvest: z.string().optional(),
+  romancePlatform: z.string().optional(),
+  romanceLoss: z.string().optional(),
+  romanceWallet: z.string().optional(),
   // Scam specific fields
   scamType: z.string().optional(),
   amountLost: z.string().optional(),
@@ -111,6 +118,7 @@ const recoveryOptions = [
   { id: 'hardware_issue', label: 'Hardware Wallet Issue' },
   { id: 'fake_trading', label: 'Fake Trading Scam' },
   { id: 'bad_broker', label: 'Bad Broker Recovery' },
+  { id: 'romance_scam', label: 'Romance Scam Recovery' },
   { id: 'stolen_crypto', label: 'Stolen Crypto / Scam' },
   { id: 'wrong_address', label: 'Wrong Address Transaction' },
   { id: 'inheritance', label: 'Inheritance / Estate Case' },
@@ -150,6 +158,11 @@ export function RecoveryForm() {
       brokerDeposited: "",
       brokerLoginAccess: "",
       brokerWithdrawalRequested: "",
+      metWhere: "",
+      askedToInvest: "",
+      romancePlatform: "",
+      romanceLoss: "",
+      romanceWallet: "",
       scamType: "",
       amountLost: "",
       cryptoCurrency: "",
@@ -168,7 +181,7 @@ export function RecoveryForm() {
   })
 
   const watchRecoveryType = form.watch("recoveryType")
-  const watchEstimatedValue = form.watch("totalDeposited") || form.watch("brokerDeposited") || form.watch("amountLost") || "0"
+  const watchEstimatedValue = form.watch("totalDeposited") || form.watch("brokerDeposited") || form.watch("amountLost") || form.watch("romanceLoss") || "0"
 
   const qualificationStatus = useMemo(() => {
     const value = parseFloat(watchEstimatedValue) || 0;
@@ -588,6 +601,112 @@ export function RecoveryForm() {
                             )}
                           />
                         </div>
+                      </div>
+                    )}
+
+                    {/* Case Type: Romance Scam Recovery */}
+                    {watchRecoveryType === 'romance_scam' && (
+                      <div className="space-y-8 border-t border-white/5 pt-10 animate-in fade-in slide-in-from-top-4">
+                        <h4 className="text-lg font-bold text-secondary flex items-center gap-2">
+                          <Heart className="w-5 h-5" />
+                          Forensic Details: Romance Scam Investigation
+                        </h4>
+                        
+                        <FormField
+                          control={form.control}
+                          name="metWhere"
+                          render={({ field }) => (
+                            <FormItem className="space-y-4">
+                              <FormLabel>Where Did You Meet?</FormLabel>
+                              <FormControl>
+                                <RadioGroup
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                  className="grid grid-cols-2 sm:grid-cols-3 gap-3"
+                                >
+                                  {['Facebook', 'Instagram', 'WhatsApp', 'Telegram', 'Dating App', 'Other'].map((platform) => (
+                                    <div key={platform}>
+                                      <RadioGroupItem value={platform.toLowerCase()} id={`meet-${platform}`} className="peer sr-only" />
+                                      <Label 
+                                        htmlFor={`meet-${platform}`}
+                                        className="flex items-center justify-center h-10 rounded-lg border border-white/10 bg-background/50 hover:bg-white/5 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 peer-data-[state=checked]:text-primary cursor-pointer transition-all text-xs font-semibold"
+                                      >
+                                        {platform}
+                                      </Label>
+                                    </div>
+                                  ))}
+                                </RadioGroup>
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="askedToInvest"
+                          render={({ field }) => (
+                            <FormItem className="space-y-3">
+                              <FormLabel>Did They Ask You To Invest?</FormLabel>
+                              <FormControl>
+                                <RadioGroup
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                  className="flex gap-6"
+                                >
+                                  {['Yes', 'No'].map((val) => (
+                                    <div key={val} className="flex items-center space-x-3">
+                                      <RadioGroupItem value={val.toLowerCase()} id={`invest-${val}`} />
+                                      <Label htmlFor={`invest-${val}`} className="cursor-pointer font-medium">{val}</Label>
+                                    </div>
+                                  ))}
+                                </RadioGroup>
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+
+                        <div className="grid sm:grid-cols-2 gap-6">
+                          <FormField
+                            control={form.control}
+                            name="romancePlatform"
+                            render={({ field }) => (
+                              <FormItem className="space-y-2">
+                                <FormLabel>Platform Used (e.g. MetaTrader)</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="e.g. Trading App Name" className="h-12 bg-background/50" {...field} />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="romanceLoss"
+                            render={({ field }) => (
+                              <FormItem className="space-y-2">
+                                <FormLabel>Estimated Loss ($)</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="e.g. 10000" className="h-12 bg-background/50" {...field} />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+
+                        <FormField
+                          control={form.control}
+                          name="romanceWallet"
+                          render={({ field }) => (
+                            <FormItem className="space-y-2">
+                              <FormLabel className="flex items-center gap-2">
+                                <WalletIcon className="w-4 h-4 text-primary" />
+                                Scammer Wallet Address (If Known)
+                              </FormLabel>
+                              <FormControl>
+                                <Input placeholder="0x... or bc1..." className="h-12 bg-background/50 font-mono text-xs" {...field} />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
                       </div>
                     )}
 
