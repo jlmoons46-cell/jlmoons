@@ -75,7 +75,7 @@ export function Steps() {
   const currentMethodology = methodologies[activeType]
 
   return (
-    <section id="how-it-works" className="py-24 bg-[#07111F] relative overflow-hidden border-y border-white/5">
+    <section id="how-it-works" className="py-20 bg-[#07111F] relative overflow-hidden border-y border-white/5">
       {/* Decorative Glows */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
         <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-[120px]" />
@@ -86,12 +86,12 @@ export function Steps() {
         <div className="text-center max-w-3xl mx-auto">
           <h2 className="text-xs font-bold tracking-[0.2em] text-secondary uppercase mb-4">Forensic Standards</h2>
           <h3 className="text-4xl lg:text-5xl font-bold mb-6">Our Recovery Methodology</h3>
-          <p className="text-muted-foreground text-lg mb-10">
+          <p className="text-muted-foreground text-lg mb-8">
             Every recovery follows a specialized forensic workflow designed for your specific situation.
           </p>
 
           {/* Case Type Switcher */}
-          <div className="flex flex-wrap justify-center gap-3 mb-20">
+          <div className="flex flex-wrap justify-center gap-3 mb-12">
             {(Object.keys(methodologies) as MethodologyType[]).map((type) => (
               <Button
                 key={type}
@@ -109,36 +109,36 @@ export function Steps() {
         </div>
 
         {/* Timeline - Desktop */}
-        <div className="hidden lg:block relative min-h-[700px]">
+        <div className="hidden lg:block relative min-h-[480px]">
           {/* Main Horizontal Line - Reserving area for cards above and below */}
-          <div className="absolute top-[150px] left-0 w-[85%] h-[2px] bg-white/10" />
+          <div className="absolute top-[140px] left-0 w-[85%] h-[1px] bg-white/10" />
           
-          <div className="grid grid-cols-5 relative pt-[150px]">
+          <div className="grid grid-cols-5 relative pt-[140px]">
             {currentMethodology.steps.map((step, index) => {
               const isTop = index % 2 === 0
               return (
                 <div key={`${activeType}-${step.id}`} className="relative flex flex-col items-center">
                   {/* Connecting Vertical Line */}
                   <div className={cn(
-                    "absolute left-1/2 -translate-x-1/2 w-[1px] bg-white/15 h-20 transition-all duration-500",
+                    "absolute left-1/2 -translate-x-1/2 w-[1px] bg-white/15 h-16 transition-all duration-500",
                     isTop ? "bottom-full" : "top-0"
                   )} />
                   
                   {/* Step Node Icon */}
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
-                    <div className="w-14 h-14 rounded-full bg-[#07111F] border border-white/15 flex items-center justify-center teal-glow group transition-transform hover:scale-110">
-                      <step.icon className="w-5 h-5 text-secondary" />
+                    <div className="w-12 h-12 rounded-full bg-[#07111F] border border-white/15 flex items-center justify-center teal-glow group transition-transform hover:scale-110 shadow-lg">
+                      <step.icon className="w-4 h-4 text-secondary" />
                     </div>
                   </div>
 
                   {/* Step Content Card - Floating above or below the node */}
                   <div className={cn(
-                    "absolute left-1/2 -translate-x-1/2 w-[220px] p-5 rounded-xl bg-card border border-white/5 shadow-2xl animate-in fade-in slide-in-from-bottom-2 duration-700",
-                    isTop ? "bottom-[calc(100%+60px)]" : "top-[60px]"
+                    "absolute left-1/2 -translate-x-1/2 w-[210px] p-4 rounded-xl bg-card/60 backdrop-blur-md border border-white/5 shadow-2xl animate-in fade-in slide-in-from-bottom-2 duration-700",
+                    isTop ? "bottom-[calc(100%+45px)]" : "top-[45px]"
                   )}>
-                    <div className="text-[9px] font-bold uppercase tracking-[0.2em] text-secondary mb-2">Step 0{step.id}</div>
-                    <h4 className="text-sm font-bold mb-1.5 text-foreground leading-tight">{step.title}</h4>
-                    <p className="text-muted-foreground text-[11px] leading-relaxed">
+                    <div className="text-[8px] font-bold uppercase tracking-[0.2em] text-secondary mb-1.5">Step 0{step.id}</div>
+                    <h4 className="text-sm font-bold mb-1 text-foreground leading-tight">{step.title}</h4>
+                    <p className="text-muted-foreground text-[10px] leading-relaxed">
                       {step.description}
                     </p>
                   </div>
@@ -148,16 +148,16 @@ export function Steps() {
 
             {/* Final Step 5 - Destination Circle */}
             <div className="relative flex flex-col items-center justify-center -translate-y-1/2">
-              <div className="relative z-20 w-[180px] h-[180px] rounded-full bg-secondary text-secondary-foreground p-5 flex flex-col items-center justify-center text-center shadow-[0_0_60px_-10px_rgba(34,211,238,0.5)] transform hover:scale-105 transition-transform duration-500 animate-in zoom-in-95">
-                <div className="w-8 h-8 bg-secondary-foreground/10 rounded-full flex items-center justify-center mb-2">
-                  <CheckCircle2 className="w-4 h-4" />
+              <div className="relative z-20 w-[170px] h-[170px] rounded-full bg-secondary text-secondary-foreground p-5 flex flex-col items-center justify-center text-center shadow-[0_0_50px_-10px_rgba(34,211,238,0.4)] transform hover:scale-105 transition-transform duration-500 animate-in zoom-in-95">
+                <div className="w-7 h-7 bg-secondary-foreground/10 rounded-full flex items-center justify-center mb-2">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
                 </div>
-                <h4 className="text-sm font-bold mb-1 leading-tight uppercase tracking-tight">{currentMethodology.finalLabel}</h4>
-                <p className="text-[9px] font-medium opacity-90 mb-3 leading-tight">
+                <h4 className="text-xs font-bold mb-1 leading-tight uppercase tracking-tight">{currentMethodology.finalLabel}</h4>
+                <p className="text-[9px] font-medium opacity-90 mb-3 leading-tight max-w-[120px]">
                   Secure assessment & delivery.
                 </p>
-                <Button variant="outline" size="sm" className="h-7 px-3 bg-transparent border-secondary-foreground/20 hover:bg-secondary-foreground/10 text-secondary-foreground font-bold text-[8px] uppercase tracking-wider" asChild>
-                  <Link href="#recovery-form">Start Now <ArrowRight className="ml-1 w-2.5 h-2.5" /></Link>
+                <Button variant="outline" size="sm" className="h-6 px-3 bg-transparent border-secondary-foreground/20 hover:bg-secondary-foreground/10 text-secondary-foreground font-bold text-[7px] uppercase tracking-wider" asChild>
+                  <Link href="#recovery-form">Start Now <ArrowRight className="ml-1 w-2 h-2" /></Link>
                 </Button>
               </div>
             </div>
@@ -165,15 +165,15 @@ export function Steps() {
         </div>
 
         {/* Timeline - Mobile */}
-        <div className="lg:hidden space-y-10 relative mt-10">
+        <div className="lg:hidden space-y-8 relative mt-8">
           <div className="absolute top-0 left-6 w-[2px] h-full bg-white/10" />
           
           {currentMethodology.steps.map((step) => (
             <div key={`${activeType}-mobile-${step.id}`} className="relative pl-16 flex items-start gap-4 animate-in fade-in slide-in-from-left-4">
-              <div className="absolute left-0 w-12 h-12 rounded-full border border-white/15 bg-[#07111F] flex items-center justify-center z-10">
+              <div className="absolute left-0 w-12 h-12 rounded-full border border-white/15 bg-[#07111F] flex items-center justify-center z-10 shadow-lg">
                 <step.icon className="w-5 h-5 text-secondary" />
               </div>
-              <div className="p-5 rounded-xl bg-card border border-white/5 w-full">
+              <div className="p-4 rounded-xl bg-card border border-white/5 w-full backdrop-blur-md">
                 <div className="text-[9px] font-bold uppercase tracking-widest text-secondary mb-1">Step 0{step.id}</div>
                 <h4 className="text-base font-bold mb-1">{step.title}</h4>
                 <p className="text-muted-foreground text-xs leading-relaxed max-w-md">
