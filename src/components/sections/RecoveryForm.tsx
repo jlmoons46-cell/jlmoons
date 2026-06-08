@@ -54,7 +54,9 @@ import {
   User,
   Globe,
   Phone,
-  Upload
+  Upload,
+  Landmark,
+  Shield
 } from 'lucide-react'
 import { inquireRecoveryDetails } from '@/ai/flows/ai-recovery-inquiry-assistant'
 import { useToast } from '@/hooks/use-toast'
@@ -77,6 +79,13 @@ const formSchema = z.object({
   withdrawalBlocked: z.string().optional(),
   feesRequested: z.string().optional(),
   totalDeposited: z.string().optional(),
+  // Bad Broker fields
+  brokerName: z.string().optional(),
+  brokerCountry: z.string().optional(),
+  brokerWebsite: z.string().optional(),
+  brokerDeposited: z.string().optional(),
+  brokerLoginAccess: z.string().optional(),
+  brokerWithdrawalRequested: z.string().optional(),
   // Scam specific fields
   scamType: z.string().optional(),
   amountLost: z.string().optional(),
@@ -101,56 +110,14 @@ const recoveryOptions = [
   { id: 'lost_seed', label: 'Lost Seed Phrase' },
   { id: 'hardware_issue', label: 'Hardware Wallet Issue' },
   { id: 'fake_trading', label: 'Fake Trading Scam' },
+  { id: 'bad_broker', label: 'Bad Broker Recovery' },
   { id: 'stolen_crypto', label: 'Stolen Crypto / Scam' },
   { id: 'wrong_address', label: 'Wrong Address Transaction' },
   { id: 'inheritance', label: 'Inheritance / Estate Case' },
   { id: 'other', label: 'Other Technical Issue' },
 ]
 
-const scamOptions = [
-  "Investment Scam",
-  "Pig Butchering",
-  "Fake Exchange",
-  "Romance Scam",
-  "Impersonation Scam",
-  "Wallet Drainer",
-  "Phishing Attack",
-  "Other"
-]
-
 const walletOptions = ["Electrum", "Exodus", "Atomic", "Trust Wallet", "MetaMask", "Other"]
-
-const exchangeOptions = [
-  "Binance (Clone)", 
-  "MetaTrader 4/5 (Unregulated)", 
-  "Fake Exchange", 
-  "Telegram Trading Bot", 
-  "WhatsApp Investment Group",
-  "Other"
-]
-
-const accessChecklist = [
-  { id: 'wallet_file', label: 'Wallet file (.dat, .json, etc.)' },
-  { id: 'recovery_phrase', label: 'Recovery / Seed phrase' },
-  { id: 'password_variations', label: 'Old password variations' },
-  { id: 'original_device', label: 'Original device used' },
-]
-
-const seedChecklist = [
-  { id: 'partial_phrase', label: 'Partial phrase fragments' },
-  { id: 'wallet_address', label: 'Known wallet address' },
-  { id: 'tx_history', label: 'Transaction history' },
-  { id: 'backup_notes', label: 'Original backup notes' },
-]
-
-const estateChecklist = [
-  { id: 'death_cert', label: 'Death certificate' },
-  { id: 'device_access', label: 'Device access' },
-  { id: 'wallet_info', label: 'Wallet information' },
-  { id: 'legal_auth', label: 'Legal authorization' },
-]
-
-const relationshipOptions = ["Spouse", "Child", "Executor", "Attorney", "Other"]
 
 export function RecoveryForm() {
   const { toast } = useToast()
@@ -177,6 +144,12 @@ export function RecoveryForm() {
       withdrawalBlocked: "",
       feesRequested: "",
       totalDeposited: "",
+      brokerName: "",
+      brokerCountry: "",
+      brokerWebsite: "",
+      brokerDeposited: "",
+      brokerLoginAccess: "",
+      brokerWithdrawalRequested: "",
       scamType: "",
       amountLost: "",
       cryptoCurrency: "",
@@ -195,15 +168,14 @@ export function RecoveryForm() {
   })
 
   const watchRecoveryType = form.watch("recoveryType")
-  const watchEstimatedValue = form.watch("totalDeposited") || "0"
-  const watchAmountLost = form.watch("amountLost") || "0"
+  const watchEstimatedValue = form.watch("totalDeposited") || form.watch("brokerDeposited") || form.watch("amountLost") || "0"
 
   const qualificationStatus = useMemo(() => {
-    const value = parseFloat(watchEstimatedValue) || parseFloat(watchAmountLost) || 0;
+    const value = parseFloat(watchEstimatedValue) || 0;
     if (value >= 50000) return 'priority';
     if (value < 1000 && value > 0) return 'low_threshold';
     return 'standard';
-  }, [watchEstimatedValue, watchAmountLost]);
+  }, [watchEstimatedValue]);
 
   async function handleGetAiSuggestions() {
     const values = form.getValues()
@@ -223,7 +195,7 @@ export function RecoveryForm() {
         email: values.email,
         phone: values.phone,
         recoveryType: values.recoveryType,
-        estimatedValue: values.totalDeposited || values.amountLost || "0",
+        estimatedValue: watchEstimatedValue,
         message: values.message
       })
       setAiSuggestions(result.suggestions)
@@ -497,6 +469,124 @@ export function RecoveryForm() {
                             <p className="text-xs text-muted-foreground mt-1">Upload dashboard showing balance/error (Max 5MB)</p>
                           </div>
                           <Button variant="outline" size="sm" type="button" className="text-xs h-8">Select File</Button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Case Type: Bad Broker Recovery */}
+                    {watchRecoveryType === 'bad_broker' && (
+                      <div className="space-y-8 border-t border-white/5 pt-10 animate-in fade-in slide-in-from-top-4">
+                        <h4 className="text-lg font-bold text-secondary flex items-center gap-2">
+                          <Landmark className="w-5 h-5" />
+                          Forensic Details: Bad Broker Investigation
+                        </h4>
+                        
+                        <div className="grid sm:grid-cols-2 gap-6">
+                          <FormField
+                            control={form.control}
+                            name="brokerName"
+                            render={({ field }) => (
+                              <FormItem className="space-y-2">
+                                <FormLabel>Broker Name</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="e.g. Global Trade FX" className="h-12 bg-background/50" {...field} />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="brokerCountry"
+                            render={({ field }) => (
+                              <FormItem className="space-y-2">
+                                <FormLabel>Country of Operation</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="e.g. Cyprus, St. Vincent" className="h-12 bg-background/50" {...field} />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+
+                        <FormField
+                          control={form.control}
+                          name="brokerWebsite"
+                          render={({ field }) => (
+                            <FormItem className="space-y-2">
+                              <FormLabel className="flex items-center gap-2">
+                                <Link2 className="w-4 h-4 text-primary" />
+                                Broker Website
+                              </FormLabel>
+                              <FormControl>
+                                <Input placeholder="https://..." className="h-12 bg-background/50" {...field} />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="brokerDeposited"
+                          render={({ field }) => (
+                            <FormItem className="space-y-2">
+                              <FormLabel className="flex items-center gap-2">
+                                <AlertTriangle className="w-4 h-4 text-primary" />
+                                Total Amount Deposited ($)
+                              </FormLabel>
+                              <FormControl>
+                                <Input placeholder="e.g. 25000" className="h-12 bg-background/50" {...field} />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+
+                        <div className="grid sm:grid-cols-2 gap-8">
+                          <FormField
+                            control={form.control}
+                            name="brokerLoginAccess"
+                            render={({ field }) => (
+                              <FormItem className="space-y-3">
+                                <FormLabel>Can You Still Log In?</FormLabel>
+                                <FormControl>
+                                  <RadioGroup
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                    className="flex gap-6"
+                                  >
+                                    {['Yes', 'No'].map((val) => (
+                                      <div key={val} className="flex items-center space-x-3">
+                                        <RadioGroupItem value={val.toLowerCase()} id={`login-${val}`} />
+                                        <Label htmlFor={`login-${val}`} className="cursor-pointer font-medium">{val}</Label>
+                                      </div>
+                                    ))}
+                                  </RadioGroup>
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="brokerWithdrawalRequested"
+                            render={({ field }) => (
+                              <FormItem className="space-y-3">
+                                <FormLabel>Have You Requested Withdrawal?</FormLabel>
+                                <FormControl>
+                                  <RadioGroup
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                    className="flex gap-6"
+                                  >
+                                    {['Yes', 'No'].map((val) => (
+                                      <div key={val} className="flex items-center space-x-3">
+                                        <RadioGroupItem value={val.toLowerCase()} id={`withdraw-req-${val}`} />
+                                        <Label htmlFor={`withdraw-req-${val}`} className="cursor-pointer font-medium">{val}</Label>
+                                      </div>
+                                    ))}
+                                  </RadioGroup>
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
                         </div>
                       </div>
                     )}
