@@ -1,25 +1,25 @@
-import { ClipboardCheck, Search, ShieldCheck, Zap } from 'lucide-react'
+import { MessageSquare, Search, Cpu, ShieldCheck } from 'lucide-react'
 
 const steps = [
   {
-    icon: ClipboardCheck,
-    title: "Submit Request",
-    description: "Fill out our secure inquiry form with your case details and estimated asset value.",
+    icon: MessageSquare,
+    title: "Private Consultation",
+    description: "Discuss your situation with a recovery specialist.",
   },
   {
     icon: Search,
-    title: "Free Assessment",
-    description: "Our forensic team reviews your case for technical feasibility and provides a quote.",
+    title: "Technical Verification",
+    description: "We assess evidence, wallet data, and recovery pathways.",
+  },
+  {
+    icon: Cpu,
+    title: "Specialist Recovery",
+    description: "Our team applies advanced forensic and blockchain recovery techniques.",
   },
   {
     icon: ShieldCheck,
-    title: "Recovery Process",
-    description: "Using secure off-grid environments, we perform the technical restoration of your assets.",
-  },
-  {
-    icon: Zap,
-    title: "Asset Restored",
-    description: "Assets are safely returned to your control via your preferred secure method.",
+    title: "Secure Resolution",
+    description: "Access is restored and next-step security recommendations are provided.",
   },
 ]
 
