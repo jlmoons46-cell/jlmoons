@@ -26,7 +26,7 @@ Stores the technical intake data submitted by users for forensic assessment.
 | `platformUrl` | text | (Optional) URL of the fraudulent platform |
 | `totalDeposited` | text | (Optional) Amount deposited in scams |
 | `brokerName` | text | (Optional) Name of fraudulent broker |
-| `metWhere` | text | (Optional) Source of contact (social media/dating) |
+| `platformUrl` | text | (Optional) URL of the fraudulent platform |
 | `investWalletAddress` | text | (Optional) Destination wallet address of stolen funds |
 | `loanLenderName` | text | (Optional) Fraudulent loan company name |
 | `loanTransactionDetails` | text | (Optional) TXIDs or payment markers |
@@ -41,11 +41,22 @@ Stores dynamic application configuration settings managed via the Admin Portal.
 | `value` | text | Configuration value |
 | `updated_at` | timestamptz | Last updated timestamp |
 
+## Supabase Storage
+
+### `assets` Bucket
+Used for direct image uploads (e.g., Hero images, evidence screenshots).
+
+1.  **Creation**: Create a bucket named `assets` in the Supabase Storage dashboard.
+2.  **Access**: Set the bucket to **Public**.
+3.  **Folder Structure**:
+    *   `hero/`: Stores visual identity assets for the landing page.
+    *   `evidence/`: (Future) Stores technical screenshots from users.
+
 ## Security Protocols (RLS)
 
 ### 1. `recovery_requests`
 - **Anonymous Submissions**: `Enable insert for anonymous users` (INSERT ONLY).
-- **Administrative Access**: `Enable all for admin role` (SELECT/UPDATE/DELETE for *@jlmoons.com emails).
+- **Administrative Access**: `Enable all for admin role` (SELECT/UPDATE/DELETE for authenticated investigators).
 
 ### 2. `app_settings`
 - **Public Read Access**: `Enable read for all users`
