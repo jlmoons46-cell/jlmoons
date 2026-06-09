@@ -57,7 +57,7 @@ export default function AdminDashboard() {
     } catch (err: any) {
       toast({
         title: "Sync Failed",
-        description: err.message || "Could not retrieve forensic data.",
+        description: err instanceof Error ? err.message : "Could not retrieve forensic data.",
         variant: "destructive"
       })
     } finally {

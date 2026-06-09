@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Plus, Trash2, Edit2, Loader2, RefreshCcw, Save, X, BookOpen, ImageIcon, Upload, FileText } from 'lucide-react'
+import { Plus, Trash2, Edit2, Loader2, RefreshCcw, Save, X, BookOpen, Image as ImageIcon, Upload, FileText } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import Image from 'next/image'
 
@@ -34,13 +34,19 @@ export default function ArticlesPage() {
 
   const fetchArticles = async () => {
     setIsLoading(true)
-    const { data, error } = await supabase
-      .from('articles')
-      .select('*')
-      .order('created_at', { ascending: false })
-    
-    if (data) setArticles(data)
-    setIsLoading(false)
+    try {
+      const { data, error } = await supabase
+        .from('articles')
+        .select('*')
+        .order('created_at', { ascending: false })
+      
+      if (error) throw error
+      if (data) setArticles(data)
+    } catch (err: any) {
+      console.error('Fetch articles error:', err)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -59,7 +65,8 @@ export default function ArticlesPage() {
         .upsert({
           ...isEditing,
           slug,
-          content: isEditing.content || ''
+          content: isEditing.content || '',
+          is_published: isEditing.is_published ?? true
         })
 
       if (error) throw error
@@ -68,7 +75,11 @@ export default function ArticlesPage() {
       setIsEditing(null)
       fetchArticles()
     } catch (err: any) {
-      toast({ title: "Save Failed", description: err.message, variant: "destructive" })
+      toast({ 
+        title: "Save Failed", 
+        description: err instanceof Error ? err.message : "An unexpected error occurred", 
+        variant: "destructive" 
+      })
     } finally {
       setIsSaving(false)
     }
@@ -77,12 +88,18 @@ export default function ArticlesPage() {
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to remove this article?')) return
 
-    const { error } = await supabase.from('articles').delete().eq('id', id)
-    if (error) {
-      toast({ title: "Delete Failed", description: error.message, variant: "destructive" })
-    } else {
+    try {
+      const { error } = await supabase.from('articles').delete().eq('id', id)
+      if (error) throw error
+      
       toast({ title: "Article Removed" })
       fetchArticles()
+    } catch (err: any) {
+      toast({ 
+        title: "Delete Failed", 
+        description: err instanceof Error ? err.message : "An unexpected error occurred", 
+        variant: "destructive" 
+      })
     }
   }
 
@@ -106,7 +123,11 @@ export default function ArticlesPage() {
       
       toast({ title: "Image Uploaded" })
     } catch (err: any) {
-      toast({ title: "Upload Failed", description: err.message, variant: "destructive" })
+      toast({ 
+        title: "Upload Failed", 
+        description: err instanceof Error ? err.message : "An unexpected error occurred", 
+        variant: "destructive" 
+      })
     } finally {
       setIsUploading(false)
     }
@@ -245,7 +266,7 @@ export default function ArticlesPage() {
             {articles.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={3} className="h-48 text-center text-muted-foreground italic">
-                  No intelligence reports currently indexed.
+                  {isLoading ? <Loader2 className="w-8 h-8 animate-spin mx-auto opacity-20" /> : "No intelligence reports currently indexed."}
                 </TableCell>
               </TableRow>
             ) : (
