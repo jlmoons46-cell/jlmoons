@@ -59,7 +59,7 @@ export default function ArticlesPage() {
         .upsert({
           ...isEditing,
           slug,
-          content: isEditing.content || '' // Ensure we don't save nulls
+          content: isEditing.content || ''
         })
 
       if (error) throw error
@@ -254,7 +254,13 @@ export default function ArticlesPage() {
                   <TableCell className="p-6">
                     <div className="flex items-center gap-4">
                       <div className="w-16 h-10 relative rounded-lg overflow-hidden border border-white/10 shrink-0">
-                        {article.image_url && <Image src={article.image_url} alt={article.title} fill className="object-cover" unoptimized />}
+                        {article.image_url ? (
+                          <Image src={article.image_url} alt={article.title} fill className="object-cover" unoptimized />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-muted/20">
+                            <FileText className="w-4 h-4 opacity-20" />
+                          </div>
+                        )}
                       </div>
                       <div className="flex flex-col">
                         <span className="font-bold text-foreground">{article.title}</span>
