@@ -265,11 +265,15 @@ export function RecoveryForm() {
     setIsSubmitting(true)
     
     try {
-      // Confirm Supabase integration by inserting the technical intake data
+      // Filter out undefined/empty values to prevent PostgREST column mismatch errors
+      const cleanValues = Object.fromEntries(
+        Object.entries(values).filter(([_, v]) => v !== undefined && v !== "")
+      )
+
       const { error } = await supabase
         .from('recovery_requests')
         .insert([{
-          ...values,
+          ...cleanValues,
           submitted_at: new Date().toISOString(),
           qualification_status: qualificationStatus
         }])
@@ -286,7 +290,7 @@ export function RecoveryForm() {
       console.error('Supabase integration error:', error)
       toast({
         title: "Submission Error",
-        description: "We encountered a technical issue saving your assessment. Please try again or contact our forensics team directly.",
+        description: "We encountered a technical issue saving your assessment. Ensure you have run the latest database SQL in the Supabase editor.",
         variant: "destructive",
       })
     } finally {
@@ -802,7 +806,7 @@ export function RecoveryForm() {
                                   onValueChange={field.onChange}
                                   defaultValue={field.value}
                                   className="flex gap-6"
-                                >
+                                  >
                                   {['Yes', 'No'].map((val) => (
                                     <div key={val} className="flex items-center space-x-3">
                                       <RadioGroupItem value={val.toLowerCase()} id={`invest-${val}`} />
