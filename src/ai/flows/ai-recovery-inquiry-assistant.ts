@@ -12,7 +12,7 @@ import { z } from 'genkit';
 
 const AIRecoveryInquiryInputSchema = z.object({
   fullName: z.string().optional().describe('The full name of the user submitting the request.'),
-  email: z.string().email().optional().describe('The email address of the user.'),
+  email: z.string().optional().describe('The email address of the user.'),
   phone: z.string().optional().describe('The phone number of the user.'),
   recoveryType: z.string().optional().describe('The type of recovery requested (e.g., Wallet Recovery, Hacked Account Recovery).'),
   estimatedValue: z.string().optional().describe('The estimated value of the lost assets.'),
@@ -33,18 +33,21 @@ const inquiryPrompt = ai.definePrompt({
   name: 'recoveryInquiryPrompt',
   input: { schema: AIRecoveryInquiryInputSchema },
   output: { schema: AIRecoveryInquiryOutputSchema },
-  prompt: `You are an AI assistant designed to help users provide comprehensive and accurate information for a crypto and digital asset recovery request. Your goal is to review the provided information, identify any gaps, and then formulate helpful, encouraging questions and suggestions for the user to improve their request. This ensures recovery specialists have all necessary details for an efficient assessment.
+  prompt: `You are an expert AI forensic assistant designed to help users provide high-quality information for digital asset recovery assessments.
 
-Review the user's current recovery request details below:
+Your goal is to review the current (potentially partial) information provided by the user and suggest specific technical details or clarifying questions that would help a recovery specialist better understand their case.
 
-Full Name: {{{fullName}}}
-Email: {{{email}}}
-Phone: {{{phone}}}
-Recovery Type: {{{recoveryType}}}
-Estimated Value: {{{estimatedValue}}}
-Message: {{{message}}}
+Current Case Intake:
+{{#if fullName}}Name: {{{fullName}}}{{/if}}
+{{#if email}}Email: {{{email}}}{{/if}}
+{{#if phone}}Phone: {{{phone}}}{{/if}}
+{{#if recoveryType}}Case Type: {{{recoveryType}}}{{/if}}
+{{#if estimatedValue}}Estimated Value: {{{estimatedValue}}}{{/if}}
 
-Based on this information, what further details would be beneficial, or what clarifying questions do you have for the user to help them provide the best possible information for their recovery case? Please respond directly with your questions and suggestions, structured clearly for the user.`,
+User's Narrative:
+"{{{message}}}"
+
+Based on the above, provide 3-5 specific, technical suggestions or questions for the user. Focus on technical artifacts (e.g., transaction IDs, wallet versions, specific error messages, hardware types). Be encouraging and professional.`,
 });
 
 const aiRecoveryInquiryAssistantFlow = ai.defineFlow(
@@ -54,7 +57,15 @@ const aiRecoveryInquiryAssistantFlow = ai.defineFlow(
     outputSchema: AIRecoveryInquiryOutputSchema,
   },
   async (input) => {
-    const { output } = await inquiryPrompt(input);
-    return output!;
+    try {
+      const { output } = await inquiryPrompt(input);
+      if (!output) {
+        throw new Error('AI failed to generate suggestions');
+      }
+      return output;
+    } catch (error) {
+      console.error('Genkit flow error:', error);
+      throw error;
+    }
   },
 );
