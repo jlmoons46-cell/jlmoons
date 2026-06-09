@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
-import { Shield, LayoutDashboard, LogOut, FileText, Settings, Loader2, BookOpen } from 'lucide-react'
+import { Shield, LayoutDashboard, LogOut, FileText, Settings, Loader2, BookOpen, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -72,6 +72,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link href="/admin/articles" className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors text-sm font-bold uppercase tracking-wider ${pathname?.startsWith('/admin/articles') ? 'bg-primary/10 text-primary border border-primary/20' : 'text-muted-foreground hover:bg-white/5'}`}>
             <BookOpen className="w-4 h-4" />
             Resource Center
+          </Link>
+          <Link href="/admin/testimonials" className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors text-sm font-bold uppercase tracking-wider ${pathname?.startsWith('/admin/testimonials') ? 'bg-primary/10 text-primary border border-primary/20' : 'text-muted-foreground hover:bg-white/5'}`}>
+            <Star className="w-4 h-4" />
+            Success Stories
           </Link>
           <Link href="/admin/config" className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors text-sm font-bold uppercase tracking-wider ${pathname === '/admin/config' ? 'bg-primary/10 text-primary border border-primary/20' : 'text-muted-foreground hover:bg-white/5'}`}>
             <Settings className="w-4 h-4" />
