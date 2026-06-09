@@ -6,6 +6,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
+import { ArrowRight, MessageSquare } from 'lucide-react'
 
 const faqs = [
   {
@@ -39,7 +42,7 @@ export function FAQ() {
             </p>
           </div>
           
-          <Accordion type="single" collapsible className="w-full space-y-4">
+          <Accordion type="single" collapsible className="w-full space-y-4 mb-16">
             {faqs.map((faq, i) => (
               <AccordionItem key={i} value={`item-${i}`} className="bg-card border border-white/5 rounded-xl px-6 overflow-hidden">
                 <AccordionTrigger className="text-left font-bold hover:no-underline hover:text-primary transition-colors py-6">
@@ -51,6 +54,22 @@ export function FAQ() {
               </AccordionItem>
             ))}
           </Accordion>
+
+          <div className="bg-card border border-white/5 rounded-3xl p-8 text-center space-y-6 gold-glow">
+            <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mx-auto mb-4">
+              <MessageSquare className="w-8 h-8" />
+            </div>
+            <h4 className="text-2xl font-bold">Still have technical questions?</h4>
+            <p className="text-muted-foreground max-w-md mx-auto">
+              Our forensic analysts are available for confidential consultations to discuss the specifics of your cryptographic loss.
+            </p>
+            <Button size="lg" className="h-14 px-10 font-bold uppercase tracking-widest gold-glow group" asChild>
+              <Link href="#recovery-form">
+                Speak to a Specialist
+                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
     </section>

@@ -16,7 +16,8 @@ import {
   Lock,
   Cpu,
   Scale,
-  Database
+  Database,
+  ArrowRight
 } from 'lucide-react'
 import {
   Dialog,
@@ -26,6 +27,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
 const services = [
   {
@@ -168,6 +170,19 @@ export function Services() {
               </button>
             </div>
           ))}
+        </div>
+
+        <div className="mt-20 text-center">
+          <div className="p-8 rounded-3xl bg-muted/20 border border-white/5 inline-block max-w-2xl">
+            <h4 className="text-xl font-bold mb-4">Don't see your specific scenario?</h4>
+            <p className="text-muted-foreground mb-8 text-sm">Our specialists handle custom technical investigations across all blockchain ecosystems and cryptographic structures.</p>
+            <Button size="lg" className="h-14 px-10 font-bold uppercase tracking-widest gold-glow group" asChild>
+              <Link href="#recovery-form">
+                Request Custom Assessment
+                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </div>
         </div>
 
         <Dialog open={!!selectedService} onOpenChange={() => setSelectedService(null)}>

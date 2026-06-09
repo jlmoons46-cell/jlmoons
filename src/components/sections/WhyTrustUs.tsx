@@ -1,4 +1,6 @@
-import { CheckCircle2, ShieldCheck, Binary, Lock, Scale, Shield } from 'lucide-react'
+import { CheckCircle2, ShieldCheck, Binary, Lock, Scale, Shield, ArrowRight } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
 const cases = [
   "Lost Wallet Passwords",
@@ -34,7 +36,7 @@ export function WhyTrustUs() {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto mb-16">
           {/* Left Column: Common Cases */}
           <div className="p-8 lg:p-12 rounded-3xl bg-card border border-white/5 hover:border-primary/20 transition-all group">
             <div className="flex items-center gap-4 mb-8">
@@ -72,7 +74,16 @@ export function WhyTrustUs() {
           </div>
         </div>
 
-        <div className="mt-16 pt-8 border-t border-white/5">
+        <div className="text-center mb-16">
+          <Button size="lg" className="h-16 px-10 text-lg font-bold uppercase tracking-widest rounded-2xl gold-glow group" asChild>
+            <Link href="#recovery-form">
+              Secure Your Assets Now
+              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </Button>
+        </div>
+
+        <div className="pt-8 border-t border-white/5">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div className="space-y-2">
               <div className="flex items-center justify-center gap-2 text-primary">

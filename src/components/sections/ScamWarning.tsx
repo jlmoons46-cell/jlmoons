@@ -1,4 +1,6 @@
-import { ShieldAlert, CheckCircle, AlertTriangle } from 'lucide-react'
+import { ShieldAlert, CheckCircle, AlertTriangle, ArrowRight } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
 const signs = [
   "Conduct technical assessments before making claims",
@@ -28,6 +30,14 @@ export function ScamWarning() {
                 <p className="text-muted-foreground leading-relaxed">
                   The digital asset recovery space is unfortunately filled with fraudulent actors. We prioritize transparency and education to help you distinguish expert forensic services from deceptive practices.
                 </p>
+                <div className="pt-4">
+                  <Button variant="outline" className="h-14 px-8 border-destructive/20 hover:bg-destructive/10 text-foreground font-bold uppercase tracking-widest group" asChild>
+                    <Link href="#recovery-form">
+                      Get Secure Assessment
+                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                  </Button>
+                </div>
               </div>
               
               <div className="lg:col-span-7">

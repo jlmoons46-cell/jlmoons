@@ -1,4 +1,6 @@
-import { CheckCircle } from 'lucide-react'
+import { CheckCircle, ArrowRight } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
 const cases = [
   "Lost Wallet Passwords",
@@ -19,14 +21,20 @@ export function Eligibility() {
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none" />
           
           <div className="grid lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-5 space-y-4 text-center lg:text-left">
-              <div>
+            <div className="lg:col-span-5 space-y-8 text-center lg:text-left">
+              <div className="space-y-4">
                 <h2 className="text-secondary font-bold text-xs tracking-[0.2em] uppercase mb-4">Verification Criteria</h2>
                 <h3 className="text-3xl lg:text-4xl font-bold leading-tight">Can you actually help my situation?</h3>
+                <p className="text-muted-foreground text-lg leading-relaxed">
+                  Most visitors are wondering if their specific loss is recoverable. We specialize in complex technical cases where access has been compromised or lost.
+                </p>
               </div>
-              <p className="text-muted-foreground text-lg leading-relaxed">
-                Most visitors are wondering if their specific loss is recoverable. We specialize in complex technical cases where access has been compromised or lost.
-              </p>
+              <Button className="w-full lg:w-fit h-14 px-8 font-bold uppercase tracking-widest gold-glow bg-primary hover:bg-primary/90 group" asChild>
+                <Link href="#recovery-form">
+                  Verify My Case
+                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </Button>
             </div>
             
             <div className="lg:col-span-7">
