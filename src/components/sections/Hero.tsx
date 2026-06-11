@@ -1,270 +1,182 @@
+
 "use client"
 
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { ShieldCheck, ArrowRight, Shield, Binary, Activity, Radar, Lock } from 'lucide-react'
+import { ShieldCheck, ArrowRight, Shield, Binary, Activity, Radar, Lock, Wallet, Search, TrendingUp, Landmark, Heart, FileText, Zap } from 'lucide-react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
+
+const caseTypes = [
+  { icon: Wallet, label: "Wallet Recovery", id: "wallet" },
+  { icon: Search, label: "Scam Investigation", id: "scam" },
+  { icon: Landmark, label: "Bad Broker", id: "broker" },
+  { icon: TrendingUp, label: "Investment Fraud", id: "fraud" },
+  { icon: Heart, label: "Romance Scams", id: "romance" },
+  { icon: Zap, label: "Asset Reclamation", id: "reclaim" },
+]
 
 export function Hero() {
   const [phase, setPhase] = useState(0)
 
   useEffect(() => {
-    // 5-phase forensic narrative cycle
     const timer = setInterval(() => {
       setPhase((p) => (p + 1) % 5)
-    }, 4500)
+    }, 4000)
     return () => clearInterval(timer)
   }, [])
 
-  const forensicLabels = [
-    "Analyzing...",
-    "Cross-chain bridge detected",
-    "Entity identified",
-    "Recovery route established",
-    "Asset secured"
-  ]
-
   return (
-    <section className="relative overflow-hidden pt-24 pb-24 lg:pt-40 lg:pb-52 bg-background">
-      {/* Background Ambient Glows */}
-      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[900px] h-[900px] bg-primary/10 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-secondary/10 rounded-full blur-[120px] pointer-events-none" />
-
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-20 items-center">
-          <div className="space-y-10">
-            <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-bold tracking-[0.2em] uppercase">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                Global Forensic Intelligence
-              </div>
-              
-              <h1 className="text-6xl lg:text-[7rem] font-extrabold leading-[0.85] tracking-tighter uppercase text-foreground">
-                Crypto Asset <br />
-                <span className="text-primary italic">Recovery</span>
-                <span className="block text-2xl lg:text-4xl mt-6 tracking-normal text-muted-foreground font-headline font-medium normal-case">
-                  & Blockchain Intelligence
-                </span>
-              </h1>
-            </div>
-            
-            <div className="space-y-6">
-              <h2 className="text-3xl lg:text-4xl font-bold flex items-center gap-4 text-foreground">
-                Track. Trace. <span className="text-primary">Recover.</span>
-              </h2>
-              <p className="text-lg lg:text-xl text-muted-foreground max-w-xl leading-relaxed">
-                We don't just find lost assets. We map the entire investigation. Our intelligence engine identifies attribution, follows cross-chain obfuscation, and secures restoration pathways.
-              </p>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-5">
-              <Button size="lg" className="h-16 px-10 text-lg font-bold uppercase tracking-widest rounded-2xl gold-glow bg-primary hover:bg-primary/90 transition-all active:scale-95 group" asChild>
-                <Link href="#recovery-form" className="flex items-center gap-3">
-                  Start Investigation
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
-              <Button variant="outline" size="lg" className="h-16 px-10 text-lg font-bold uppercase tracking-widest rounded-2xl border-white/10 hover:bg-white/5 transition-all active:scale-95" asChild>
-                <Link href="#how-it-works">View Case Studies</Link>
-              </Button>
-            </div>
-
-            {/* Credibility Legend - Simplified and Clarified */}
-            <div className="pt-10 border-t border-white/5 grid grid-cols-1 sm:grid-cols-3 gap-8">
-              {[
-                { label: 'Cases Reviewed', value: '3,800+', icon: Binary },
-                { label: 'Assets Investigated', value: '$8.2M+', icon: Activity },
-                { label: 'Qualification Accuracy', value: '94%', icon: ShieldCheck },
-              ].map((stat, i) => (
-                <div key={i} className="space-y-1.5">
-                  <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-1.5">
-                    <stat.icon className="w-3 h-3 text-primary" />
-                    {stat.label}
-                  </div>
-                  <div className="text-3xl font-black text-foreground">{stat.value}</div>
-                </div>
-              ))}
-            </div>
+    <section className="relative overflow-hidden pt-32 pb-20 bg-background flex flex-col items-center">
+      {/* Institutional Background Atmosphere */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] bg-primary/5 rounded-full blur-[160px] pointer-events-none" />
+      
+      <div className="container mx-auto px-4 relative z-10 flex flex-col items-center text-center">
+        {/* Section 1: The Institutional Statement */}
+        <div className="space-y-8 max-w-5xl mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-bold tracking-[0.4em] uppercase mx-auto">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            Global Digital Asset Forensics
           </div>
+          
+          <h1 className="text-6xl md:text-8xl lg:text-[9rem] font-black leading-[0.85] tracking-tighter uppercase text-foreground">
+            Investigate.<br />
+            <span className="text-primary italic">Trace.</span><br />
+            Restore.
+          </h1>
+          
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto font-medium leading-relaxed">
+            JLMOONS is an independent intelligence firm providing technical attribution and forensic restoration for complex cryptographic losses.
+          </p>
 
-          {/* Cinematic Forensic Matrix Visual */}
-          <div className="relative group perspective-[2000px]">
-            <div className="relative z-10 w-full aspect-square rounded-[2rem] bg-gradient-to-br from-[#0A111A] to-black border border-white/10 shadow-[0_0_100px_-20px_rgba(0,255,178,0.15)] overflow-hidden transform rotate-x-6 rotate-y--12 hover:rotate-x-0 hover:rotate-y-0 transition-transform duration-1000 ease-out flex items-center justify-center p-12">
-              
-              {/* Obsidian Surface Reflection */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.03] to-transparent pointer-events-none" />
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,255,178,0.05)_0%,transparent_70%)] pointer-events-none" />
+          <div className="flex flex-col sm:flex-row justify-center gap-6 pt-4">
+            <Button size="lg" className="h-16 px-12 text-lg font-bold uppercase tracking-widest rounded-2xl gold-glow bg-primary hover:bg-primary/90 transition-all group" asChild>
+              <Link href="#recovery-form">
+                Start Recovery
+                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </div>
+        </div>
 
-              {/* Layer 2: Holographic Grid */}
-              <div className="absolute inset-0 opacity-10 pointer-events-none">
-                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <pattern id="matrix-grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="hsl(var(--primary))" strokeWidth="0.5" />
-                    </pattern>
-                  </defs>
-                  <rect width="100%" height="100%" fill="url(#matrix-grid)" />
-                </svg>
-              </div>
-
-              {/* Layer 3: Blockchain Network Animation */}
-              <div className="relative w-full h-full z-10">
-                <svg viewBox="0 0 400 400" className="w-full h-full drop-shadow-[0_0_15px_rgba(0,255,178,0.2)]">
-                  {/* Investigated Paths */}
-                  <g className="transition-opacity duration-500">
-                    {/* Path A */}
-                    <path 
-                      id="path1"
-                      d="M 50 200 L 150 100 L 250 200" 
-                      fill="none" 
-                      stroke="hsl(var(--foreground))" 
-                      strokeWidth="2" 
-                      strokeDasharray="500" 
-                      strokeDashoffset="500" 
-                      className={cn("transition-all duration-1000", phase >= 1 && "animate-draw opacity-30")}
-                    />
-                    {/* Pulse for Path A */}
-                    {phase >= 1 && (
-                      <circle r="2" fill="hsl(var(--foreground))">
-                        <animateMotion dur="2.5s" repeatCount="indefinite" path="M 50 200 L 150 100 L 250 200" />
-                      </circle>
-                    )}
-
-                    {/* Path B */}
-                    <path 
-                      id="path2"
-                      d="M 50 200 L 150 300 L 250 200" 
-                      fill="none" 
-                      stroke="hsl(var(--foreground))" 
-                      strokeWidth="2" 
-                      strokeDasharray="500" 
-                      strokeDashoffset="500" 
-                      className={cn("transition-all duration-1000 delay-300", phase >= 1 && "animate-draw opacity-30")}
-                    />
-                    {/* Pulse for Path B */}
-                    {phase >= 1 && (
-                      <circle r="2" fill="hsl(var(--foreground))">
-                        <animateMotion dur="2.8s" repeatCount="indefinite" path="M 50 200 L 150 300 L 250 200" />
-                      </circle>
-                    )}
-                    
-                    {/* Recovery Pathway (Final Phase) */}
-                    <path 
-                      id="pathRecovery"
-                      d="M 250 200 L 350 200" 
-                      fill="none" 
-                      stroke="hsl(var(--primary))" 
-                      strokeWidth="4" 
-                      strokeDasharray="500" 
-                      strokeDashoffset="500" 
-                      className={cn("transition-all duration-1000", phase >= 3 ? "animate-draw opacity-100" : "opacity-0")}
-                    />
-                    {/* High-speed Pulse for Recovery Pathway */}
-                    {phase >= 4 && (
-                      <circle r="3" fill="hsl(var(--primary))">
-                        <animateMotion dur="1.2s" repeatCount="indefinite" path="M 250 200 L 350 200" />
-                      </circle>
-                    )}
-                  </g>
-
-                  {/* Investigative Nodes */}
-                  <g>
-                    {/* Source Wallet */}
-                    <circle cx="50" cy="200" r="10" className="fill-card stroke-foreground/40 stroke-2" />
-                    <text x="50" y="235" textAnchor="middle" className="text-[10px] font-bold fill-foreground/60 tracking-widest uppercase">Intake</text>
-                    
-                    {/* Intermediate Forensic Nodes */}
-                    <circle cx="150" cy="100" r="8" className={cn("fill-card stroke-foreground/20 stroke-2 transition-all duration-700", phase >= 1 ? "opacity-100 scale-100" : "opacity-0 scale-50")} />
-                    <circle cx="150" cy="300" r="8" className={cn("fill-card stroke-foreground/20 stroke-2 transition-all duration-700 delay-300", phase >= 1 ? "opacity-100 scale-100" : "opacity-0 scale-50")} />
-
-                    {/* Identified Entity (Suspicious Node - Amber) */}
-                    <g className={cn("transition-all duration-500", phase >= 2 ? "opacity-100" : "opacity-0")}>
-                      <circle 
-                        cx="250" cy="200" r="15" 
-                        className={cn("fill-card stroke-2 transition-all duration-700 shadow-[0_0_20px_rgba(255,184,77,0.3)]", phase >= 2 ? "stroke-secondary" : "stroke-foreground/20")} 
-                      />
-                      {/* Node Discovery / Scanning Rings */}
-                      {phase === 2 && (
-                        <>
-                          <circle cx="250" cy="200" r="15" fill="none" stroke="hsl(var(--secondary))" strokeWidth="1" className="animate-scan-ring" />
-                          <circle cx="250" cy="200" r="15" fill="none" stroke="hsl(var(--secondary))" strokeWidth="1" className="animate-scan-ring" style={{ animationDelay: '0.6s' }} />
-                        </>
-                      )}
-                      <text x="250" y="235" textAnchor="middle" className={cn("text-[9px] font-bold tracking-widest uppercase transition-colors", phase >= 2 ? "fill-secondary" : "fill-foreground/60")}>
-                        {phase >= 2 ? "Mixer Identified" : "Scanning..."}
-                      </text>
-                    </g>
-
-                    {/* Final Recovery Endpoint (Shield - Recovery Green) */}
-                    <g className={cn("transition-all duration-1000 transform", phase >= 3 ? "opacity-100 translate-y-0" : "opacity-20 translate-y-4")}>
-                      <circle 
-                        cx="350" cy="200" r="20" 
-                        className={cn("transition-colors duration-1000", phase >= 4 ? "fill-primary/20 stroke-primary stroke-2 shadow-[0_0_30px_rgba(0,255,178,0.4)]" : "fill-foreground/5 stroke-foreground/10 stroke-1")} 
-                      />
-                      <foreignObject x="335" y="185" width="30" height="30">
-                        <Shield className={cn("w-full h-full transition-all duration-1000", phase >= 4 ? "text-primary animate-pulse" : "text-foreground/20")} />
-                      </foreignObject>
-                      <text x="350" y="245" textAnchor="middle" className={cn("text-[11px] font-black tracking-widest uppercase italic transition-colors duration-1000", phase >= 4 ? "fill-primary" : "fill-foreground/20")}>
-                        {phase >= 4 ? "Asset Secured" : "Awaiting Lock"}
-                      </text>
-                    </g>
-                  </g>
-                </svg>
-
-                {/* Layer 4: Floating Data UI */}
-                <div className="absolute top-4 left-4 right-4 flex justify-between items-start pointer-events-none">
-                  <div className="p-3 bg-black/60 border border-white/10 backdrop-blur-md rounded-xl space-y-1 animate-float-panel">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
-                      <div className="text-[8px] font-black uppercase tracking-[0.2em] text-foreground">Intake Analysis</div>
-                    </div>
-                    <div className="text-[10px] font-mono text-muted-foreground">Tracing: 0x71...f9aE</div>
-                  </div>
-                  
-                  <div className={cn("p-3 bg-primary/10 border border-primary/20 backdrop-blur-md rounded-xl transition-all duration-500 animate-float-panel", phase >= 2 ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2")} style={{ animationDelay: '1s' }}>
-                    <div className="text-[9px] font-bold text-primary uppercase tracking-[0.2em]">Risk Score: 92%</div>
-                  </div>
-                </div>
-
-                {/* Bottom Status Legend */}
-                <div className="absolute bottom-4 left-4 right-4 p-4 bg-black/80 border border-white/5 backdrop-blur-2xl rounded-2xl flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className={cn("w-3 h-3 rounded-full transition-all duration-500", 
-                      phase === 0 && "bg-foreground animate-pulse",
-                      phase === 1 && "bg-foreground",
-                      phase === 2 && "bg-secondary shadow-[0_0_100px_rgba(255,184,77,0.5)]",
-                      phase === 3 && "bg-primary animate-pulse",
-                      phase >= 4 && "bg-primary shadow-[0_0_15px_rgba(0,255,178,0.5)]"
-                    )} />
-                    <div className="text-[10px] font-bold uppercase tracking-widest text-foreground animate-in fade-in slide-in-from-left-2 duration-500" key={phase}>
-                      {forensicLabels[phase]}
-                    </div>
-                  </div>
-                  <div className="text-[9px] font-mono text-foreground/30 uppercase tracking-tighter">INTEL-OPS V3.0</div>
-                </div>
-              </div>
+        {/* Section 2: Full-Width Intelligence Canvas */}
+        <div className="w-full max-w-7xl mx-auto mb-20 relative group">
+          <div className="absolute -top-10 left-1/2 -translate-x-1/2 text-[10px] font-bold tracking-[0.3em] uppercase text-primary/40 flex items-center gap-2">
+            <Radar className="w-3 h-3 animate-pulse" />
+            Live Forensic Case Map
+          </div>
+          
+          <div className="relative aspect-[21/9] w-full rounded-[3rem] bg-card/30 border border-white/5 shadow-2xl overflow-hidden backdrop-blur-3xl flex items-center justify-center p-4 lg:p-12">
+            {/* Glass Surface Grid */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+              <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <pattern id="canvas-grid" width="60" height="60" patternUnits="userSpaceOnUse">
+                    <path d="M 60 0 L 0 0 0 60" fill="none" stroke="currentColor" strokeWidth="1" />
+                  </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#canvas-grid)" />
+              </svg>
             </div>
 
-            {/* Contextual Hardware Indicators */}
-            <div className="absolute -top-10 -right-10 p-5 bg-[#0A111A] border border-white/10 rounded-3xl shadow-2xl animate-bounce delay-700 hidden xl:block">
-              <Lock className="w-8 h-8 text-primary" />
-            </div>
-            <div className="absolute -bottom-12 -left-12 p-6 bg-[#0A111A] border border-white/10 rounded-[2.5rem] shadow-2xl animate-pulse hidden xl:block">
-              <Shield className="w-10 h-10 text-secondary" />
+            {/* Tracing Animation SVG */}
+            <svg viewBox="0 0 1000 400" className="w-full h-full drop-shadow-[0_0_30px_rgba(0,255,178,0.1)]">
+               {/* Paths */}
+               <path d="M 100 200 C 250 50, 450 350, 600 200" fill="none" stroke="white" strokeWidth="1" strokeDasharray="10 10" className="opacity-10" />
+               <path d="M 100 200 C 250 350, 450 50, 600 200" fill="none" stroke="white" strokeWidth="1" strokeDasharray="10 10" className="opacity-10" />
+               
+               {/* Animated Investigation Path */}
+               <path 
+                d="M 100 200 L 300 150 L 500 250 L 700 200 L 900 200" 
+                fill="none" 
+                stroke="hsl(var(--primary))" 
+                strokeWidth="2" 
+                strokeDasharray="1000" 
+                strokeDashoffset={phase === 0 ? "1000" : phase === 1 ? "800" : phase === 2 ? "500" : phase === 3 ? "200" : "0"} 
+                className="transition-all duration-1000 ease-in-out"
+               />
+
+               {/* Nodes */}
+               <circle cx="100" cy="200" r="8" className="fill-background stroke-primary stroke-2" />
+               <text x="100" y="235" textAnchor="middle" className="text-[10px] font-bold fill-muted-foreground uppercase tracking-widest">Intake</text>
+
+               <g className={cn("transition-opacity duration-500", phase >= 1 ? "opacity-100" : "opacity-0")}>
+                 <circle cx="300" cy="150" r="6" className="fill-background stroke-white/20" />
+                 <text x="300" y="130" textAnchor="middle" className="text-[9px] fill-muted-foreground uppercase tracking-tighter">Attribution</text>
+               </g>
+
+               <g className={cn("transition-opacity duration-500", phase >= 2 ? "opacity-100" : "opacity-0")}>
+                 <circle cx="500" cy="250" r="10" className="fill-background stroke-secondary stroke-2 shadow-lg shadow-secondary/50" />
+                 <text x="500" y="285" textAnchor="middle" className="text-[9px] font-bold fill-secondary uppercase tracking-widest">Mixer Identified</text>
+                 {phase === 2 && <circle cx="500" cy="250" r="10" fill="none" stroke="hsl(var(--secondary))" className="animate-scan-ring" />}
+               </g>
+
+               <g className={cn("transition-opacity duration-500", phase >= 3 ? "opacity-100" : "opacity-0")}>
+                 <circle cx="700" cy="200" r="6" className="fill-background stroke-white/20" />
+                 <text x="700" y="180" textAnchor="middle" className="text-[9px] fill-muted-foreground uppercase tracking-tighter">Routing</text>
+               </g>
+
+               <g className={cn("transition-opacity duration-500", phase >= 4 ? "opacity-100" : "opacity-0")}>
+                 <circle cx="900" cy="200" r="14" className="fill-primary/20 stroke-primary stroke-2" />
+                 <foreignObject x="888" y="188" width="24" height="24">
+                   <Shield className="w-full h-full text-primary" />
+                 </foreignObject>
+                 <text x="900" y="240" textAnchor="middle" className="text-[11px] font-black fill-primary uppercase tracking-widest">Secured</text>
+               </g>
+            </svg>
+
+            {/* Canvas Status Tags */}
+            <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end">
+               <div className="space-y-2">
+                 <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                    <span className="text-[9px] font-black text-foreground uppercase tracking-[0.2em]">Forensic Scan Active</span>
+                 </div>
+                 <div className="text-[10px] font-mono text-muted-foreground opacity-60">ID-TRACER_V4.0 // BLOCK_HEIGHT: 872,341</div>
+               </div>
+               <div className="px-4 py-2 bg-black/40 border border-white/10 rounded-xl backdrop-blur-md">
+                 <span className="text-[9px] font-bold text-secondary uppercase tracking-widest">Risk Factor: High</span>
+               </div>
             </div>
           </div>
         </div>
 
-        {/* Forensic Intelligence Standards Section */}
-        <div className="mt-28 pt-12 border-t border-white/5 flex flex-col items-center gap-6">
-          <p className="text-muted-foreground text-[10px] uppercase tracking-[0.4em] font-black">Digital Asset Intelligence Platform</p>
-          <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-4 opacity-30 text-center">
-             <div className="font-headline font-bold text-sm tracking-[0.2em] uppercase">Advanced Blockchain Forensics</div>
-             <div className="w-1.5 h-1.5 rounded-full bg-primary/40 hidden md:block" />
-             <div className="font-headline font-bold text-sm tracking-[0.2em] uppercase">Cryptographic Audit Standards</div>
-             <div className="w-1.5 h-1.5 rounded-full bg-primary/40 hidden md:block" />
-             <div className="font-headline font-bold text-sm tracking-[0.2em] uppercase">Global Restoration Protocols</div>
+        {/* Section 3: Forensic Metrics */}
+        <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-12 mb-28">
+           {[
+             { label: 'Cases Reviewed', value: '3,800+', desc: 'Forensic Intake Global' },
+             { label: 'Assets Investigated', value: '$8.2M+', desc: 'Cryptographic Volume' },
+             { label: 'Qualification Accuracy', value: '94%', desc: 'Technical Success Ratio' },
+           ].map((stat, i) => (
+             <div key={i} className="space-y-3 relative">
+               {i !== 0 && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[1px] h-10 bg-white/5 hidden md:block" />}
+               <div className="text-4xl md:text-5xl font-black text-foreground">{stat.value}</div>
+               <div className="space-y-1">
+                 <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">{stat.label}</div>
+                 <div className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest opacity-60">{stat.desc}</div>
+               </div>
+             </div>
+           ))}
+        </div>
+
+        {/* Section 4: Operational Triage (Case Entry Points) */}
+        <div className="w-full max-w-6xl">
+          <div className="text-[11px] font-black uppercase tracking-[0.4em] text-muted-foreground mb-8">Operational Triage</div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {caseTypes.map((type) => (
+              <Link 
+                key={type.id} 
+                href="#recovery-form"
+                className="group p-6 rounded-2xl bg-card/50 border border-white/5 hover:border-primary/40 transition-all duration-300 flex flex-col items-center gap-4 hover:-translate-y-1"
+              >
+                <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                  <type.icon className="w-5 h-5" />
+                </div>
+                <span className="text-[9px] font-bold uppercase tracking-widest text-center leading-tight">
+                  {type.label}
+                </span>
+              </Link>
+            ))}
           </div>
         </div>
       </div>
