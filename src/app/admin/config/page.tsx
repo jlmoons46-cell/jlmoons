@@ -7,12 +7,12 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Image as ImageIcon, Save, Loader2, RefreshCcw, Upload, X, Shield, Globe, Lock } from 'lucide-react'
+import { Image as ImageIcon, Save, Loader2, RefreshCcw, Upload, X, Shield, Globe, Lock, Moon } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
 
-type SettingKey = 'hero_image_url' | 'trust_image_1_url' | 'trust_image_2_url' | 'trust_image_3_url'
+type SettingKey = 'hero_image_url' | 'trust_image_1_url' | 'trust_image_2_url' | 'trust_image_3_url' | 'brand_logo_url'
 
 export default function AppConfigPage() {
   const [settings, setSettings] = useState<Record<string, string>>({
@@ -20,6 +20,7 @@ export default function AppConfigPage() {
     trust_image_1_url: '',
     trust_image_2_url: '',
     trust_image_3_url: '',
+    brand_logo_url: '',
   })
   const [isLoading, setIsLoading] = useState(false)
   const [isSaving, setIsSaving] = useState<Record<string, boolean>>({})
@@ -64,7 +65,7 @@ export default function AppConfigPage() {
           updated_at: new Date().toISOString()
         })
 
-      if (error) throw error
+      if (error) throw new Error(error.message)
 
       toast({
         title: "Setting Saved",
@@ -95,11 +96,9 @@ export default function AppConfigPage() {
     try {
       const fileExt = file.name.split('.').pop()
       const fileName = `${key}-${Math.random().toString(36).substring(2)}.${fileExt}`
-      
-      // We use the filename directly in the root of the 'assets' bucket
       const filePath = fileName 
 
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('assets')
         .upload(filePath, file, {
           cacheControl: '3600',
@@ -107,10 +106,7 @@ export default function AppConfigPage() {
           contentType: file.type
         })
 
-      if (uploadError) {
-        console.error('Storage Upload Error:', uploadError)
-        throw new Error(uploadError.message || 'Upload failed. Ensure "assets" bucket exists and is public.')
-      }
+      if (uploadError) throw new Error(uploadError.message)
 
       const { data: { publicUrl } } = supabase.storage
         .from('assets')
@@ -126,7 +122,7 @@ export default function AppConfigPage() {
     } catch (error: any) {
       toast({
         title: "Upload Failed",
-        description: error.message || "Ensure the 'assets' bucket exists in Supabase Storage and is set to Public.",
+        description: error.message,
         variant: "destructive",
       })
     } finally {
@@ -148,8 +144,67 @@ export default function AppConfigPage() {
       </div>
 
       <div className="grid gap-12">
-        {/* Hero Section */}
+        {/* Brand Identity Section */}
         <Card className="bg-card border-white/5 gold-glow overflow-hidden">
+          <CardHeader className="bg-white/5 border-b border-white/5">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                <Moon className="w-5 h-5" />
+              </div>
+              <CardTitle className="text-xl font-bold uppercase tracking-tight">Brand Identity</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent className="p-8">
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Brand Logo Icon</Label>
+                  <div className="flex gap-2">
+                    <Input 
+                      value={settings.brand_logo_url || ''} 
+                      onChange={(e) => setSettings(prev => ({ ...prev, brand_logo_url: e.target.value }))}
+                      placeholder="https://..." 
+                      className="bg-background/50 h-10 text-xs"
+                    />
+                    <Button size="icon" className="h-10 w-10 shrink-0" onClick={() => handleSave('brand_logo_url', settings.brand_logo_url)} disabled={isSaving.brand_logo_url}>
+                      {isSaving.brand_logo_url ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                    </Button>
+                  </div>
+                </div>
+                <div className="relative border-2 border-dashed rounded-2xl border-white/10 hover:border-white/20 bg-background/30 transition-all flex flex-col items-center justify-center p-6 gap-3 text-center cursor-pointer group overflow-hidden">
+                  <input 
+                    type="file" 
+                    className="absolute inset-0 opacity-0 cursor-pointer" 
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]
+                      if (file) uploadImage('brand_logo_url', file)
+                    }}
+                  />
+                  {isUploading.brand_logo_url ? (
+                    <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                  ) : (
+                    <>
+                      <Upload className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
+                      <p className="text-[10px] font-bold uppercase tracking-widest">Upload Logo</p>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="flex justify-center">
+                <div className="relative w-24 h-24 rounded-2xl overflow-hidden border border-white/10 bg-background/50 flex items-center justify-center">
+                  {settings.brand_logo_url ? (
+                    <Image src={settings.brand_logo_url} alt="Logo Preview" fill className="object-contain p-2" unoptimized />
+                  ) : (
+                    <Moon className="w-8 h-8 opacity-10" />
+                  )}
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Hero Section */}
+        <Card className="bg-card border-white/5 overflow-hidden">
           <CardHeader className="bg-white/5 border-b border-white/5">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
@@ -165,9 +220,9 @@ export default function AppConfigPage() {
               value={settings.hero_image_url}
               isSaving={isSaving.hero_image_url}
               isUploading={isUploading.hero_image_url}
-              onChange={(v) => setSettings(prev => ({ ...prev, hero_image_url: v }))}
+              onChange={(v: string) => setSettings(prev => ({ ...prev, hero_image_url: v }))}
               onSave={() => handleSave('hero_image_url', settings.hero_image_url)}
-              onUpload={(f) => uploadImage('hero_image_url', f)}
+              onUpload={(f: File) => uploadImage('hero_image_url', f)}
             />
           </CardContent>
         </Card>
@@ -186,9 +241,9 @@ export default function AppConfigPage() {
               value={settings.trust_image_1_url}
               isSaving={isSaving.trust_image_1_url}
               isUploading={isUploading.trust_image_1_url}
-              onChange={(v) => setSettings(prev => ({ ...prev, trust_image_1_url: v }))}
+              onChange={(v: string) => setSettings(prev => ({ ...prev, trust_image_1_url: v }))}
               onSave={() => handleSave('trust_image_1_url', settings.trust_image_1_url)}
-              onUpload={(f) => uploadImage('trust_image_1_url', f)}
+              onUpload={(f: File) => uploadImage('trust_image_1_url', f)}
             />
             <SettingCard 
               id="trust_image_2_url"
@@ -197,9 +252,9 @@ export default function AppConfigPage() {
               value={settings.trust_image_2_url}
               isSaving={isSaving.trust_image_2_url}
               isUploading={isUploading.trust_image_2_url}
-              onChange={(v) => setSettings(prev => ({ ...prev, trust_image_2_url: v }))}
+              onChange={(v: string) => setSettings(prev => ({ ...prev, trust_image_2_url: v }))}
               onSave={() => handleSave('trust_image_2_url', settings.trust_image_2_url)}
-              onUpload={(f) => uploadImage('trust_image_2_url', f)}
+              onUpload={(f: File) => uploadImage('trust_image_2_url', f)}
             />
             <SettingCard 
               id="trust_image_3_url"
@@ -208,9 +263,9 @@ export default function AppConfigPage() {
               value={settings.trust_image_3_url}
               isSaving={isSaving.trust_image_3_url}
               isUploading={isUploading.trust_image_3_url}
-              onChange={(v) => setSettings(prev => ({ ...prev, trust_image_3_url: v }))}
+              onChange={(v: string) => setSettings(prev => ({ ...prev, trust_image_3_url: v }))}
               onSave={() => handleSave('trust_image_3_url', settings.trust_image_3_url)}
-              onUpload={(f) => uploadImage('trust_image_3_url', f)}
+              onUpload={(f: File) => uploadImage('trust_image_3_url', f)}
             />
           </div>
         </div>
@@ -258,7 +313,7 @@ function SettingCard({ id, label, icon, value, isSaving, isUploading, onChange, 
           )}
         </div>
         <Input 
-          value={value} 
+          value={value || ''} 
           onChange={(e) => onChange(e.target.value)} 
           placeholder="Source URL" 
           className="h-8 text-[10px] bg-background/30"
@@ -288,7 +343,7 @@ function ImageConfigItem({ id, label, value, isSaving, isUploading, onChange, on
           <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{label}</Label>
           <div className="flex gap-2">
             <Input 
-              value={value} 
+              value={value || ''} 
               onChange={(e) => onChange(e.target.value)}
               placeholder="https://..." 
               className="bg-background/50 h-10 text-xs"

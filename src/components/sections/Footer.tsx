@@ -1,19 +1,49 @@
+
+"use client"
+
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Mail, Phone, Clock, MapPin } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
 
 export function Footer() {
+  const [logoUrl, setLogoUrl] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function loadLogo() {
+      const { data } = await supabase
+        .from('app_settings')
+        .select('value')
+        .eq('key', 'brand_logo_url')
+        .single()
+      
+      if (data?.value) {
+        setLogoUrl(data.value)
+      }
+    }
+    loadLogo()
+  }, [])
+
   return (
     <footer className="bg-background pt-24 pb-12 border-t border-white/5">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           <div className="space-y-6">
-            <Link href="/" className="flex flex-col group">
-              <span className="font-headline text-2xl font-extrabold tracking-tighter text-foreground uppercase">
-                JLMOONS
-              </span>
-              <span className="text-[10px] text-primary font-bold uppercase tracking-[0.2em] -mt-1">
-                Digital Asset Recovery & Forensics
-              </span>
+            <Link href="/" className="flex items-center gap-3 group">
+              {logoUrl && (
+                <div className="relative w-8 h-8 overflow-hidden grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all">
+                  <Image src={logoUrl} alt="JLMOONS Icon" fill className="object-contain" unoptimized />
+                </div>
+              )}
+              <div className="flex flex-col">
+                <span className="font-headline text-2xl font-extrabold tracking-tighter text-foreground uppercase">
+                  JLMOONS
+                </span>
+                <span className="text-[10px] text-primary font-bold uppercase tracking-[0.2em] -mt-1">
+                  Digital Asset Recovery & Forensics
+                </span>
+              </div>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
               JLMOONS is a digital asset recovery and blockchain forensics firm specializing in wallet recovery, asset tracing, scam investigations, and technical recovery services.
