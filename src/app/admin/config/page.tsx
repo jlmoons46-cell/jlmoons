@@ -6,13 +6,24 @@ import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Image as ImageIcon, Save, Loader2, RefreshCcw, Upload, X, Shield, Globe, Lock, Moon } from 'lucide-react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Image as ImageIcon, Save, Loader2, RefreshCcw, Upload, X, Shield, Globe, Lock, Moon, FileText } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
 
-type SettingKey = 'hero_image_url' | 'trust_image_1_url' | 'trust_image_2_url' | 'trust_image_3_url' | 'brand_logo_url'
+type SettingKey = 
+  | 'hero_image_url' 
+  | 'trust_image_1_url' 
+  | 'trust_image_2_url' 
+  | 'trust_image_3_url' 
+  | 'brand_logo_url'
+  | 'legal_privacy_policy'
+  | 'legal_terms_of_engagement'
+  | 'legal_security_audit'
+  | 'legal_case_confidentiality'
 
 export default function AppConfigPage() {
   const [settings, setSettings] = useState<Record<string, string>>({
@@ -21,6 +32,10 @@ export default function AppConfigPage() {
     trust_image_2_url: '',
     trust_image_3_url: '',
     brand_logo_url: '',
+    legal_privacy_policy: '',
+    legal_terms_of_engagement: '',
+    legal_security_audit: '',
+    legal_case_confidentiality: '',
   })
   const [isLoading, setIsLoading] = useState(false)
   const [isSaving, setIsSaving] = useState<Record<string, boolean>>({})
@@ -53,15 +68,13 @@ export default function AppConfigPage() {
   }, [])
 
   const handleSave = async (key: SettingKey, value: string) => {
-    if (!value) return
-
     setIsSaving(prev => ({ ...prev, [key]: true }))
     try {
       const { error } = await supabase
         .from('app_settings')
         .upsert({ 
           key, 
-          value,
+          value: value || '',
           updated_at: new Date().toISOString()
         })
 
@@ -134,143 +147,220 @@ export default function AppConfigPage() {
     <div className="p-8 max-w-6xl space-y-12">
       <div className="flex justify-between items-start">
         <div>
-          <h1 className="text-3xl font-extrabold uppercase tracking-tight mb-2">Platform Visuals</h1>
-          <p className="text-muted-foreground">Manage dynamic identity assets and trust indicators.</p>
+          <h1 className="text-3xl font-extrabold uppercase tracking-tight mb-2">Platform Configuration</h1>
+          <p className="text-muted-foreground">Manage dynamic identity assets, trust indicators, and institutional legal standards.</p>
         </div>
         <Button variant="outline" size="sm" onClick={fetchSettings} disabled={isLoading} className="border-white/10">
           <RefreshCcw className={cn("w-4 h-4 mr-2", isLoading && "animate-spin")} />
-          Reload Settings
+          Sync Data
         </Button>
       </div>
 
-      <div className="grid gap-12">
-        {/* Brand Identity Section */}
-        <Card className="bg-card border-white/5 gold-glow overflow-hidden">
-          <CardHeader className="bg-white/5 border-b border-white/5">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                <Moon className="w-5 h-5" />
-              </div>
-              <CardTitle className="text-xl font-bold uppercase tracking-tight">Brand Identity</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent className="p-8">
-            <div className="grid md:grid-cols-2 gap-8 items-center">
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Brand Logo Icon</Label>
-                  <div className="flex gap-2">
-                    <Input 
-                      value={settings.brand_logo_url || ''} 
-                      onChange={(e) => setSettings(prev => ({ ...prev, brand_logo_url: e.target.value }))}
-                      placeholder="https://..." 
-                      className="bg-background/50 h-10 text-xs"
-                    />
-                    <Button size="icon" className="h-10 w-10 shrink-0" onClick={() => handleSave('brand_logo_url', settings.brand_logo_url)} disabled={isSaving.brand_logo_url}>
-                      {isSaving.brand_logo_url ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                    </Button>
+      <Tabs defaultValue="visuals" className="space-y-12">
+        <TabsList className="bg-white/5 border border-white/5 p-1 h-12 rounded-2xl">
+          <TabsTrigger value="visuals" className="rounded-xl px-8 font-bold uppercase tracking-widest text-[10px] data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all">
+            <ImageIcon className="w-4 h-4 mr-2" />
+            Visual Assets
+          </TabsTrigger>
+          <TabsTrigger value="standards" className="rounded-xl px-8 font-bold uppercase tracking-widest text-[10px] data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all">
+            <Shield className="w-4 h-4 mr-2" />
+            Institutional Standards
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="visuals" className="space-y-12 animate-in fade-in slide-in-from-bottom-2">
+          <div className="grid gap-12">
+            {/* Brand Identity Section */}
+            <Card className="bg-card border-white/5 gold-glow overflow-hidden">
+              <CardHeader className="bg-white/5 border-b border-white/5">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                    <Moon className="w-5 h-5" />
+                  </div>
+                  <CardTitle className="text-xl font-bold uppercase tracking-tight">Brand Identity</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="p-8">
+                <div className="grid md:grid-cols-2 gap-8 items-center">
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Brand Logo Icon</Label>
+                      <div className="flex gap-2">
+                        <Input 
+                          value={settings.brand_logo_url || ''} 
+                          onChange={(e) => setSettings(prev => ({ ...prev, brand_logo_url: e.target.value }))}
+                          placeholder="https://..." 
+                          className="bg-background/50 h-10 text-xs"
+                        />
+                        <Button size="icon" className="h-10 w-10 shrink-0" onClick={() => handleSave('brand_logo_url', settings.brand_logo_url)} disabled={isSaving.brand_logo_url}>
+                          {isSaving.brand_logo_url ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="relative border-2 border-dashed rounded-2xl border-white/10 hover:border-white/20 bg-background/30 transition-all flex flex-col items-center justify-center p-6 gap-3 text-center cursor-pointer group overflow-hidden">
+                      <input 
+                        type="file" 
+                        className="absolute inset-0 opacity-0 cursor-pointer" 
+                        onChange={(e) => {
+                          const file = e.target.files?.[0]
+                          if (file) uploadImage('brand_logo_url', file)
+                        }}
+                      />
+                      {isUploading.brand_logo_url ? (
+                        <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                      ) : (
+                        <>
+                          <Upload className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
+                          <p className="text-[10px] font-bold uppercase tracking-widest">Upload Logo</p>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex justify-center">
+                    <div className="relative w-24 h-24 rounded-2xl overflow-hidden border border-white/10 bg-background/50 flex items-center justify-center">
+                      {settings.brand_logo_url ? (
+                        <Image src={settings.brand_logo_url} alt="Logo Preview" fill className="object-contain p-2" unoptimized />
+                      ) : (
+                        <Moon className="w-8 h-8 opacity-10" />
+                      )}
+                    </div>
                   </div>
                 </div>
-                <div className="relative border-2 border-dashed rounded-2xl border-white/10 hover:border-white/20 bg-background/30 transition-all flex flex-col items-center justify-center p-6 gap-3 text-center cursor-pointer group overflow-hidden">
-                  <input 
-                    type="file" 
-                    className="absolute inset-0 opacity-0 cursor-pointer" 
-                    onChange={(e) => {
-                      const file = e.target.files?.[0]
-                      if (file) uploadImage('brand_logo_url', file)
-                    }}
-                  />
-                  {isUploading.brand_logo_url ? (
-                    <Loader2 className="w-6 h-6 animate-spin text-primary" />
-                  ) : (
-                    <>
-                      <Upload className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
-                      <p className="text-[10px] font-bold uppercase tracking-widest">Upload Logo</p>
-                    </>
-                  )}
+              </CardContent>
+            </Card>
+
+            {/* Hero Section */}
+            <Card className="bg-card border-white/5 overflow-hidden">
+              <CardHeader className="bg-white/5 border-b border-white/5">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                    <ImageIcon className="w-5 h-5" />
+                  </div>
+                  <CardTitle className="text-xl font-bold uppercase tracking-tight">Hero Banner Identity</CardTitle>
                 </div>
+              </CardHeader>
+              <CardContent className="p-8">
+                <ImageConfigItem 
+                  id="hero_image_url"
+                  label="Main Banner URL"
+                  value={settings.hero_image_url}
+                  isSaving={isSaving.hero_image_url}
+                  isUploading={isUploading.hero_image_url}
+                  onChange={(v: string) => setSettings(prev => ({ ...prev, hero_image_url: v }))}
+                  onSave={() => handleSave('hero_image_url', settings.hero_image_url)}
+                  onUpload={(f: File) => uploadImage('hero_image_url', f)}
+                />
+              </CardContent>
+            </Card>
+
+            {/* Trust Indicators Section */}
+            <div className="space-y-6">
+              <div className="flex items-center gap-3">
+                <Shield className="w-6 h-6 text-secondary" />
+                <h2 className="text-2xl font-bold uppercase tracking-tight">Trust Indicator Visuals</h2>
               </div>
-              <div className="flex justify-center">
-                <div className="relative w-24 h-24 rounded-2xl overflow-hidden border border-white/10 bg-background/50 flex items-center justify-center">
-                  {settings.brand_logo_url ? (
-                    <Image src={settings.brand_logo_url} alt="Logo Preview" fill className="object-contain p-2" unoptimized />
-                  ) : (
-                    <Moon className="w-8 h-8 opacity-10" />
-                  )}
-                </div>
+              <div className="grid md:grid-cols-3 gap-8">
+                <SettingCard 
+                  id="trust_image_1_url"
+                  label="Expert Forensics"
+                  icon={<Shield className="w-4 h-4" />}
+                  value={settings.trust_image_1_url}
+                  isSaving={isSaving.trust_image_1_url}
+                  isUploading={isUploading.trust_image_1_url}
+                  onChange={(v: string) => setSettings(prev => ({ ...prev, trust_image_1_url: v }))}
+                  onSave={() => handleSave('trust_image_1_url', settings.trust_image_1_url)}
+                  onUpload={(f: File) => uploadImage('trust_image_1_url', f)}
+                />
+                <SettingCard 
+                  id="trust_image_2_url"
+                  label="Global Consultations"
+                  icon={<Globe className="w-4 h-4" />}
+                  value={settings.trust_image_2_url}
+                  isSaving={isSaving.trust_image_2_url}
+                  isUploading={isUploading.trust_image_2_url}
+                  onChange={(v: string) => setSettings(prev => ({ ...prev, trust_image_2_url: v }))}
+                  onSave={() => handleSave('trust_image_2_url', settings.trust_image_2_url)}
+                  onUpload={(f: File) => uploadImage('trust_image_2_url', f)}
+                />
+                <SettingCard 
+                  id="trust_image_3_url"
+                  label="Encrypted Systems"
+                  icon={<Lock className="w-4 h-4" />}
+                  value={settings.trust_image_3_url}
+                  isSaving={isSaving.trust_image_3_url}
+                  isUploading={isUploading.trust_image_3_url}
+                  onChange={(v: string) => setSettings(prev => ({ ...prev, trust_image_3_url: v }))}
+                  onSave={() => handleSave('trust_image_3_url', settings.trust_image_3_url)}
+                  onUpload={(f: File) => uploadImage('trust_image_3_url', f)}
+                />
               </div>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Hero Section */}
-        <Card className="bg-card border-white/5 overflow-hidden">
-          <CardHeader className="bg-white/5 border-b border-white/5">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                <ImageIcon className="w-5 h-5" />
-              </div>
-              <CardTitle className="text-xl font-bold uppercase tracking-tight">Hero Banner Identity</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent className="p-8">
-            <ImageConfigItem 
-              id="hero_image_url"
-              label="Main Banner URL"
-              value={settings.hero_image_url}
-              isSaving={isSaving.hero_image_url}
-              isUploading={isUploading.hero_image_url}
-              onChange={(v: string) => setSettings(prev => ({ ...prev, hero_image_url: v }))}
-              onSave={() => handleSave('hero_image_url', settings.hero_image_url)}
-              onUpload={(f: File) => uploadImage('hero_image_url', f)}
-            />
-          </CardContent>
-        </Card>
-
-        {/* Trust Indicators Section */}
-        <div className="space-y-6">
-          <div className="flex items-center gap-3">
-            <Shield className="w-6 h-6 text-secondary" />
-            <h2 className="text-2xl font-bold uppercase tracking-tight">Trust Indicator Visuals</h2>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            <SettingCard 
-              id="trust_image_1_url"
-              label="Expert Forensics"
-              icon={<Shield className="w-4 h-4" />}
-              value={settings.trust_image_1_url}
-              isSaving={isSaving.trust_image_1_url}
-              isUploading={isUploading.trust_image_1_url}
-              onChange={(v: string) => setSettings(prev => ({ ...prev, trust_image_1_url: v }))}
-              onSave={() => handleSave('trust_image_1_url', settings.trust_image_1_url)}
-              onUpload={(f: File) => uploadImage('trust_image_1_url', f)}
-            />
-            <SettingCard 
-              id="trust_image_2_url"
-              label="Global Consultations"
-              icon={<Globe className="w-4 h-4" />}
-              value={settings.trust_image_2_url}
-              isSaving={isSaving.trust_image_2_url}
-              isUploading={isUploading.trust_image_2_url}
-              onChange={(v: string) => setSettings(prev => ({ ...prev, trust_image_2_url: v }))}
-              onSave={() => handleSave('trust_image_2_url', settings.trust_image_2_url)}
-              onUpload={(f: File) => uploadImage('trust_image_2_url', f)}
-            />
-            <SettingCard 
-              id="trust_image_3_url"
-              label="Encrypted Systems"
-              icon={<Lock className="w-4 h-4" />}
-              value={settings.trust_image_3_url}
-              isSaving={isSaving.trust_image_3_url}
-              isUploading={isUploading.trust_image_3_url}
-              onChange={(v: string) => setSettings(prev => ({ ...prev, trust_image_3_url: v }))}
-              onSave={() => handleSave('trust_image_3_url', settings.trust_image_3_url)}
-              onUpload={(f: File) => uploadImage('trust_image_3_url', f)}
-            />
-          </div>
-        </div>
-      </div>
+        </TabsContent>
+
+        <TabsContent value="standards" className="space-y-12 animate-in fade-in slide-in-from-bottom-2">
+           <div className="grid gap-8">
+             <LegalConfigItem 
+               id="legal_privacy_policy"
+               label="Privacy Policy"
+               value={settings.legal_privacy_policy}
+               isSaving={isSaving.legal_privacy_policy}
+               onChange={(v) => setSettings(prev => ({ ...prev, legal_privacy_policy: v }))}
+               onSave={() => handleSave('legal_privacy_policy', settings.legal_privacy_policy)}
+             />
+             <LegalConfigItem 
+               id="legal_terms_of_engagement"
+               label="Terms of Engagement"
+               value={settings.legal_terms_of_engagement}
+               isSaving={isSaving.legal_terms_of_engagement}
+               onChange={(v) => setSettings(prev => ({ ...prev, legal_terms_of_engagement: v }))}
+               onSave={() => handleSave('legal_terms_of_engagement', settings.legal_terms_of_engagement)}
+             />
+             <LegalConfigItem 
+               id="legal_security_audit"
+               label="Security Audit Protocol"
+               value={settings.legal_security_audit}
+               isSaving={isSaving.legal_security_audit}
+               onChange={(v) => setSettings(prev => ({ ...prev, legal_security_audit: v }))}
+               onSave={() => handleSave('legal_security_audit', settings.legal_security_audit)}
+             />
+             <LegalConfigItem 
+               id="legal_case_confidentiality"
+               label="Case Confidentiality Policy"
+               value={settings.legal_case_confidentiality}
+               isSaving={isSaving.legal_case_confidentiality}
+               onChange={(v) => setSettings(prev => ({ ...prev, legal_case_confidentiality: v }))}
+               onSave={() => handleSave('legal_case_confidentiality', settings.legal_case_confidentiality)}
+             />
+           </div>
+        </TabsContent>
+      </Tabs>
     </div>
+  )
+}
+
+function LegalConfigItem({ id, label, value, isSaving, onChange, onSave }: any) {
+  return (
+    <Card className="bg-card border-white/5 overflow-hidden">
+      <CardHeader className="bg-white/5 p-6 border-b border-white/5 flex flex-row items-center justify-between">
+        <div className="flex items-center gap-3">
+          <FileText className="w-5 h-5 text-primary" />
+          <CardTitle className="text-sm font-bold uppercase tracking-widest">{label}</CardTitle>
+        </div>
+        <Button size="sm" className="h-9 px-6 font-bold uppercase tracking-widest text-[10px]" onClick={onSave} disabled={isSaving}>
+          {isSaving ? <Loader2 className="w-3 h-3 animate-spin mr-2" /> : <Save className="w-3 h-3 mr-2" />}
+          Update Standard
+        </Button>
+      </CardHeader>
+      <CardContent className="p-6">
+        <Textarea 
+          value={value || ''} 
+          onChange={(e) => onChange(e.target.value)} 
+          placeholder={`Enter professional ${label.toLowerCase()} content...`}
+          className="min-h-[200px] bg-background/30 text-sm leading-relaxed"
+        />
+      </CardContent>
+    </Card>
   )
 }
 
