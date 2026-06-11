@@ -26,9 +26,9 @@ export function Footer() {
   }, [])
 
   return (
-    <footer className="bg-background pt-24 pb-12 border-t border-white/5">
+    <footer className="bg-background pt-16 lg:pt-24 pb-8 lg:pb-12 border-t border-white/5">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12 mb-12 lg:mb-16">
           <div className="space-y-6">
             <Link href="/" className="flex items-center gap-3 group">
               {logoUrl && (
@@ -64,11 +64,11 @@ export function Footer() {
             <h4 className="font-bold mb-6 uppercase text-xs tracking-[0.2em] text-primary">Contact Us</h4>
             <ul className="space-y-4 text-sm text-muted-foreground">
               <li className="flex items-center gap-3">
-                <Mail className="w-4 h-4 text-primary" />
-                investigation@jlmoons.com
+                <Mail className="w-4 h-4 text-primary shrink-0" />
+                <span className="truncate">investigation@jlmoons.com</span>
               </li>
               <li className="flex items-center gap-3">
-                <Clock className="w-4 h-4 text-primary" />
+                <Clock className="w-4 h-4 text-primary shrink-0" />
                 24/7 Forensic Monitoring
               </li>
             </ul>
@@ -85,7 +85,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground uppercase tracking-widest">
+        <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[9px] lg:text-xs text-muted-foreground uppercase tracking-widest text-center md:text-left">
           <p>© {new Date().getFullYear()} JLMOONS DIGITAL ASSET RECOVERY & FORENSICS. All rights reserved.</p>
           <p>Global Leaders in Cryptographic Restoration</p>
         </div>

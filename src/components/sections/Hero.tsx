@@ -27,30 +27,30 @@ export function Hero() {
   }, [])
 
   return (
-    <section className="relative overflow-hidden pt-32 pb-20 bg-background flex flex-col items-center">
+    <section className="relative overflow-hidden pt-24 lg:pt-32 pb-16 lg:pb-20 bg-background flex flex-col items-center">
       {/* Institutional Background Atmosphere */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] bg-primary/5 rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full lg:w-[1200px] h-[600px] bg-primary/5 rounded-full blur-[160px] pointer-events-none" />
       
       <div className="container mx-auto px-4 relative z-10 flex flex-col items-center text-center">
         {/* Section 1: The Institutional Statement */}
-        <div className="space-y-8 max-w-5xl mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-bold tracking-[0.4em] uppercase mx-auto">
+        <div className="space-y-6 lg:space-y-8 max-w-5xl mb-12 lg:mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[9px] lg:text-[10px] font-bold tracking-[0.4em] uppercase mx-auto">
             <ShieldCheck className="w-3.5 h-3.5" />
             Global Digital Asset Forensics
           </div>
           
-          <h1 className="text-6xl md:text-8xl lg:text-[9rem] font-black leading-[0.85] tracking-tighter uppercase text-foreground">
+          <h1 className="text-5xl md:text-8xl lg:text-[9rem] font-black leading-[0.9] lg:leading-[0.85] tracking-tighter uppercase text-foreground">
             Investigate.<br />
             <span className="text-primary italic">Trace.</span><br />
             Restore.
           </h1>
           
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto font-medium leading-relaxed">
+          <p className="text-base md:text-xl lg:text-2xl text-muted-foreground max-w-2xl mx-auto font-medium leading-relaxed px-4">
             JLMOONS is an independent intelligence firm providing technical attribution and forensic restoration for complex cryptographic losses.
           </p>
 
-          <div className="flex flex-col sm:flex-row justify-center gap-6 pt-4">
-            <Button size="lg" className="h-16 px-12 text-lg font-bold uppercase tracking-widest rounded-2xl gold-glow bg-primary hover:bg-primary/90 transition-all group" asChild>
+          <div className="flex flex-col sm:flex-row justify-center gap-4 lg:gap-6 pt-4 px-4">
+            <Button size="lg" className="h-14 lg:h-16 px-10 lg:px-12 text-base lg:text-lg font-bold uppercase tracking-widest rounded-2xl gold-glow bg-primary hover:bg-primary/90 transition-all group w-full sm:w-auto" asChild>
               <Link href="#recovery-form">
                 Start Recovery
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -60,13 +60,13 @@ export function Hero() {
         </div>
 
         {/* Section 2: Full-Width Intelligence Canvas */}
-        <div className="w-full max-w-7xl mx-auto mb-20 relative group">
-          <div className="absolute -top-10 left-1/2 -translate-x-1/2 text-[10px] font-bold tracking-[0.3em] uppercase text-primary/40 flex items-center gap-2">
+        <div className="w-full max-w-7xl mx-auto mb-16 lg:mb-20 relative group px-2 lg:px-0">
+          <div className="absolute -top-6 lg:-top-10 left-1/2 -translate-x-1/2 text-[8px] lg:text-[10px] font-bold tracking-[0.3em] uppercase text-primary/40 flex items-center gap-2 whitespace-nowrap">
             <Radar className="w-3 h-3 animate-pulse" />
             Live Forensic Case Map
           </div>
           
-          <div className="relative aspect-[21/9] w-full rounded-[3rem] bg-card/30 border border-white/5 shadow-2xl overflow-hidden backdrop-blur-3xl flex items-center justify-center p-4 lg:p-12">
+          <div className="relative aspect-[4/3] lg:aspect-[21/9] w-full rounded-[1.5rem] lg:rounded-[3rem] bg-card/30 border border-white/5 shadow-2xl overflow-hidden backdrop-blur-3xl flex items-center justify-center p-2 lg:p-12">
             {/* Glass Surface Grid */}
             <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
               <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -126,53 +126,53 @@ export function Hero() {
             </svg>
 
             {/* Canvas Status Tags */}
-            <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end">
-               <div className="space-y-2">
-                 <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                    <span className="text-[9px] font-black text-foreground uppercase tracking-[0.2em]">Forensic Scan Active</span>
+            <div className="absolute bottom-4 lg:bottom-8 left-4 lg:left-8 right-4 lg:right-8 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2 sm:gap-0">
+               <div className="space-y-1 lg:space-y-2">
+                 <div className="flex items-center gap-2 lg:gap-3">
+                    <div className="w-1.5 h-1.5 lg:w-2 lg:h-2 rounded-full bg-primary animate-pulse" />
+                    <span className="text-[8px] lg:text-[9px] font-black text-foreground uppercase tracking-[0.2em]">Forensic Scan Active</span>
                  </div>
-                 <div className="text-[10px] font-mono text-muted-foreground opacity-60">ID-TRACER_V4.0 // BLOCK_HEIGHT: 872,341</div>
+                 <div className="text-[8px] lg:text-[10px] font-mono text-muted-foreground opacity-60">ID-TRACER_V4.0</div>
                </div>
-               <div className="px-4 py-2 bg-black/40 border border-white/10 rounded-xl backdrop-blur-md">
-                 <span className="text-[9px] font-bold text-secondary uppercase tracking-widest">Risk Factor: High</span>
+               <div className="px-3 lg:px-4 py-1.5 lg:py-2 bg-black/40 border border-white/10 rounded-lg lg:rounded-xl backdrop-blur-md">
+                 <span className="text-[8px] lg:text-[9px] font-bold text-secondary uppercase tracking-widest">Risk Factor: High</span>
                </div>
             </div>
           </div>
         </div>
 
         {/* Section 3: Forensic Metrics */}
-        <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-12 mb-28">
+        <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 mb-16 lg:mb-28 px-4">
            {[
              { label: 'Cases Reviewed', value: '3,800+', desc: 'Forensic Intake Global' },
              { label: 'Assets Investigated', value: '$8.2M+', desc: 'Cryptographic Volume' },
              { label: 'Qualification Accuracy', value: '94%', desc: 'Technical Success Ratio' },
            ].map((stat, i) => (
-             <div key={i} className="space-y-3 relative">
+             <div key={i} className="space-y-2 lg:space-y-3 relative text-center md:text-left">
                {i !== 0 && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[1px] h-10 bg-white/5 hidden md:block" />}
-               <div className="text-4xl md:text-5xl font-black text-foreground">{stat.value}</div>
-               <div className="space-y-1">
-                 <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">{stat.label}</div>
-                 <div className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest opacity-60">{stat.desc}</div>
+               <div className="text-3xl md:text-5xl font-black text-foreground">{stat.value}</div>
+               <div className="space-y-0.5 lg:space-y-1">
+                 <div className="text-[9px] lg:text-[10px] font-bold uppercase tracking-[0.2em] text-primary">{stat.label}</div>
+                 <div className="text-[8px] lg:text-[9px] font-medium text-muted-foreground uppercase tracking-widest opacity-60">{stat.desc}</div>
                </div>
              </div>
            ))}
         </div>
 
         {/* Section 4: Operational Triage (Case Entry Points) */}
-        <div className="w-full max-w-6xl">
-          <div className="text-[11px] font-black uppercase tracking-[0.4em] text-muted-foreground mb-8">Operational Triage</div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="w-full max-w-6xl px-4 pb-12">
+          <div className="text-[10px] lg:text-[11px] font-black uppercase tracking-[0.4em] text-muted-foreground mb-6 lg:mb-8">Operational Triage</div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 lg:gap-4">
             {caseTypes.map((type) => (
               <Link 
                 key={type.id} 
                 href="#recovery-form"
-                className="group p-6 rounded-2xl bg-card/50 border border-white/5 hover:border-primary/40 transition-all duration-300 flex flex-col items-center gap-4 hover:-translate-y-1"
+                className="group p-4 lg:p-6 rounded-xl lg:rounded-2xl bg-card/50 border border-white/5 hover:border-primary/40 transition-all duration-300 flex flex-col items-center gap-3 lg:gap-4 hover:-translate-y-1"
               >
-                <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                  <type.icon className="w-5 h-5" />
+                <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-lg lg:rounded-xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                  <type.icon className="w-4 h-4 lg:w-5 lg:h-5" />
                 </div>
-                <span className="text-[9px] font-bold uppercase tracking-widest text-center leading-tight">
+                <span className="text-[8px] lg:text-[9px] font-bold uppercase tracking-widest text-center leading-tight">
                   {type.label}
                 </span>
               </Link>
