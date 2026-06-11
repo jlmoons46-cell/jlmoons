@@ -40,10 +40,10 @@ export function Hero() {
                 Global Forensic Intelligence
               </div>
               
-              <h1 className="text-5xl lg:text-[5.5rem] font-extrabold leading-[0.9] tracking-tighter uppercase text-foreground">
+              <h1 className="text-6xl lg:text-[7rem] font-extrabold leading-[0.85] tracking-tighter uppercase text-foreground">
                 Crypto Asset <br />
                 <span className="text-primary italic">Recovery</span>
-                <span className="block text-2xl lg:text-4xl mt-4 tracking-normal text-muted-foreground font-headline font-medium normal-case">
+                <span className="block text-2xl lg:text-4xl mt-6 tracking-normal text-muted-foreground font-headline font-medium normal-case">
                   & Blockchain Intelligence
                 </span>
               </h1>
@@ -70,20 +70,19 @@ export function Hero() {
               </Button>
             </div>
 
-            {/* Credibility Legend */}
-            <div className="pt-10 border-t border-white/5 grid grid-cols-2 sm:grid-cols-4 gap-8">
+            {/* Credibility Legend - Simplified and Clarified */}
+            <div className="pt-10 border-t border-white/5 grid grid-cols-1 sm:grid-cols-3 gap-8">
               {[
-                { label: 'Attributed', value: '3,800+', icon: Binary },
-                { label: 'Recovered', value: '$8.2M+', icon: Activity },
-                { label: 'Accuracy', value: '94%', icon: ShieldCheck },
-                { label: 'Uptime', value: '24/7', icon: Radar },
+                { label: 'Cases Reviewed', value: '3,800+', icon: Binary },
+                { label: 'Assets Investigated', value: '$8.2M+', icon: Activity },
+                { label: 'Qualification Accuracy', value: '94%', icon: ShieldCheck },
               ].map((stat, i) => (
                 <div key={i} className="space-y-1.5">
                   <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-1.5">
                     <stat.icon className="w-3 h-3 text-primary" />
                     {stat.label}
                   </div>
-                  <div className="text-2xl font-black text-foreground">{stat.value}</div>
+                  <div className="text-3xl font-black text-foreground">{stat.value}</div>
                 </div>
               ))}
             </div>
@@ -234,7 +233,7 @@ export function Hero() {
                     <div className={cn("w-3 h-3 rounded-full transition-all duration-500", 
                       phase === 0 && "bg-foreground animate-pulse",
                       phase === 1 && "bg-foreground",
-                      phase === 2 && "bg-secondary shadow-[0_0_10px_rgba(255,184,77,0.5)]",
+                      phase === 2 && "bg-secondary shadow-[0_0_100px_rgba(255,184,77,0.5)]",
                       phase === 3 && "bg-primary animate-pulse",
                       phase >= 4 && "bg-primary shadow-[0_0_15px_rgba(0,255,178,0.5)]"
                     )} />
@@ -257,13 +256,15 @@ export function Hero() {
           </div>
         </div>
 
+        {/* Forensic Intelligence Standards Section */}
         <div className="mt-28 pt-12 border-t border-white/5 flex flex-col items-center gap-6">
-          <p className="text-muted-foreground text-sm uppercase tracking-[0.3em] font-bold">Trusted Technical Partners</p>
-          <div className="flex flex-wrap justify-center items-center gap-x-16 gap-y-8 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
-             <div className="font-headline font-black text-2xl tracking-tighter uppercase italic">Blockchain.com</div>
-             <div className="font-headline font-black text-2xl tracking-tighter uppercase italic">Ledger.</div>
-             <div className="font-headline font-black text-2xl tracking-tighter uppercase italic">Binance</div>
-             <div className="font-headline font-black text-2xl tracking-tighter uppercase italic">Coinbase</div>
+          <p className="text-muted-foreground text-[10px] uppercase tracking-[0.4em] font-black">Digital Asset Intelligence Platform</p>
+          <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-4 opacity-30 text-center">
+             <div className="font-headline font-bold text-sm tracking-[0.2em] uppercase">Advanced Blockchain Forensics</div>
+             <div className="w-1.5 h-1.5 rounded-full bg-primary/40 hidden md:block" />
+             <div className="font-headline font-bold text-sm tracking-[0.2em] uppercase">Cryptographic Audit Standards</div>
+             <div className="w-1.5 h-1.5 rounded-full bg-primary/40 hidden md:block" />
+             <div className="font-headline font-bold text-sm tracking-[0.2em] uppercase">Global Restoration Protocols</div>
           </div>
         </div>
       </div>
