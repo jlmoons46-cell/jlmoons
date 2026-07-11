@@ -11,6 +11,7 @@
         "phone": { "type": "string" },
         "country": { "type": "string" },
         "recoveryType": { "type": "string" },
+        "estimatedAssetValue": { "type": "string" },
         "qualification_status": { "type": "string", "enum": ["priority", "standard", "low_threshold"] },
         "message": { "type": "string" },
         "submitted_at": { "type": "string", "format": "date-time" }
